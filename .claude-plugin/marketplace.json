@@ -1,0 +1,14 @@
+{
+  "name": "guild",
+  "owner": {
+    "name": "Guild.ai, Inc.",
+    "email": "support@guild.ai"
+  },
+  "plugins": [
+    {
+      "name": "guild",
+      "source": "./",
+      "description": "Build, publish, and run Guild AI agents from Claude."
+    }
+  ]
+}

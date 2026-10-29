@@ -1,0 +1,18 @@
+{
+  "name": "guild",
+  "version": "0.1.0",
+  "description": "Build, publish, and run Guild AI agents from Claude.",
+  "author": {
+    "name": "Guild.ai, Inc.",
+    "email": "support@guild.ai",
+    "url": "https://www.guild.ai"
+  },
+  "homepage": "https://docs.guild.ai/api-reference/mcp",
+  "repository": "https://github.com/guildaidev/guild-claude-plugin",
+  "keywords": [
+    "agents",
+    "mcp",
+    "guild"
+  ],
+  "privacyPolicyUrl": "https://www.guild.ai/privacy-policy"
+}
