@@ -1,3 +1,16 @@
+<!-- Copied from guildcode cli/docs/skills by scripts/sync-cli-skills.sh. Do not edit. -->
+
+> This reference is written for the Guild CLI. In this plugin, use the MCP
+> tools instead and never run `guild`, `npm` or `git`:
+>
+> | CLI                                   | MCP tool                                        |
+> | ------------------------------------- | ----------------------------------------------- |
+> | `guild integration list`              | `guild_search_integrations`                     |
+> | `guild integration operation list`    | `guild_list_integration_tools`                  |
+> | `npm install <package>`               | add it to `dependencies` in `package.json`      |
+> | `npm run build`, `guild agent save`   | `guild_create_agent_version`, then `guild_get_agent_version_validation` |
+> | `guild workspace variable set`        | `guild_set_workspace_variable`                  |
+
 # Project Layout, Packaging, and CLI Reference
 
 Read this when setting up or repairing a project: `package.json`, external

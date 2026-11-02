@@ -5,8 +5,8 @@ description: Build a Guild agent that runs on a GitHub event (pull request opene
 
 # Build an agent that runs on a GitHub event
 
-The Guild MCP tools (`guild_*`) cover most of this. Two steps need the `guild`
-CLI, and one decision up front decides whether the trigger ever fires.
+Do all of this with the Guild MCP tools (`guild_*`). Never run the `guild` CLI,
+`npm` or `git`. One decision up front decides whether the trigger ever fires.
 
 ## 1. Decide who owns the workspace
 
@@ -36,21 +36,19 @@ under that organization too (`guild_create_agent` with `owner_id`).
    in a workspace variable: `guild_set_workspace_variable`. Never put a secret
    in one.
 
-## 3. Create the triggers with the CLI
+## 3. Create the triggers
 
-The MCP tool for webhook triggers is refused under an OAuth token, so use the
-CLI, which signs in as the user. One trigger per event and action:
+1. `guild_search_integrations` for GitHub. Its `webhook_config` gives the
+   config ID, the events and actions it sends, and the `service_config_fields`
+   a trigger needs (`repo`, as `owner/repo`).
+2. `guild_list_installed_agents` for the install's `workspace_agent_id`.
+3. `guild_create_webhook_trigger`, one per event and action, for example
+   `pull_request` with `opened`. Filter by action in the trigger rather than in
+   the agent, so the agent does not run on every `synchronize` or `labeled`
+   event.
 
-```
-guild trigger create --workspace <owner~workspace> --type webhook \
-  --agent <owner~agent> --name pr-opened --integration github \
-  --event pull_request --action opened \
-  --service-config '{"repo": "<owner/repo>"}'
-```
-
-Without `--input` the agent receives the event payload itself. Filter by action
-in the trigger rather than in the agent, so the agent does not run on every
-`synchronize` or `labeled` event.
+If the tool is refused, tell the user to create the trigger in the Guild web app
+instead. Don't fall back to the CLI.
 
 ## 4. Test with a real event
 

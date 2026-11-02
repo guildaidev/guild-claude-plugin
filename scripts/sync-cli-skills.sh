@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
-# Copy the Guild CLI's Claude skills from a guildcode checkout into skills/.
-# guildcode is the source of truth; never edit the copies by hand. Rerun this
-# instead, and commit the result.
+# Copy the agent-writing reference from the Guild CLI's Claude skill in a
+# guildcode checkout into skills/agent-development/references/. guildcode is the
+# source of truth; never edit the copies by hand. Rerun this instead, and commit
+# the result.
+#
+# Only the parts about writing agent code are copied. The CLI workflow (init,
+# build, save) is replaced by the MCP workflow in agent-development/SKILL.md.
 #
 # usage: scripts/sync-cli-skills.sh <path-to-guildcode> [ref]   (ref defaults to origin/main)
 set -euo pipefail
@@ -9,33 +13,36 @@ set -euo pipefail
 src=${1:?usage: sync-cli-skills.sh <path-to-guildcode> [ref]}
 ref=${2:-origin/main}
 root=$(cd "$(dirname "$0")/.." && pwd)
+out="$root/skills/agent-development/references"
 commit=$(git -C "$src" rev-parse "$ref")
 
 show() { git -C "$src" show "$commit:cli/docs/skills/$1"; }
 
-prereq='> These steps use the Guild CLI. Run `guild --version` first. If it is
-> missing, install it with `npm install -g @guildai/cli`, then sign in with
-> `guild auth login`.'
+header() {
+  cat <<'EOF'
+<!-- Copied from guildcode cli/docs/skills by scripts/sync-cli-skills.sh. Do not edit. -->
 
-# <cli doc> <plugin skill name>
-write_skill() {
-  local doc=$1 name=$2 out="$root/skills/$2/SKILL.md"
-  mkdir -p "$(dirname "$out")"
-  # Rename the skill, and put the prerequisite under the first heading.
-  show "$doc" | PREREQ="$prereq" awk -v name="$name" '
-    NR > 1 && !done_name && /^name:/ { print "name: " name; done_name = 1; next }
-    !done_prereq && /^# / { print; print ""; print ENVIRON["PREREQ"]; done_prereq = 1; next }
-    { print }
-  ' > "$out"
+> This reference is written for the Guild CLI. In this plugin, use the MCP
+> tools instead and never run `guild`, `npm` or `git`:
+>
+> | CLI                                   | MCP tool                                        |
+> | ------------------------------------- | ----------------------------------------------- |
+> | `guild integration list`              | `guild_search_integrations`                     |
+> | `guild integration operation list`    | `guild_list_integration_tools`                  |
+> | `npm install <package>`               | add it to `dependencies` in `package.json`      |
+> | `npm run build`, `guild agent save`   | `guild_create_agent_version`, then `guild_get_agent_version_validation` |
+> | `guild workspace variable set`        | `guild_set_workspace_variable`                  |
+
+EOF
 }
 
-write_skill agent-dev.md agent-development
-write_skill integrations.md integrations
-write_skill factory-setup.md factory-setup
+mkdir -p "$out"
 
-mkdir -p "$root/skills/agent-development/references"
+# The CLI skill's second half, from "## SDK Essentials" on, is how to write the code.
+{ header; show agent-dev.md | awk '/^## SDK Essentials/ { p = 1 } p'; } > "$out/sdk.md"
+
 for f in compiler.md integrations.md project.md; do
-  show "agent-dev-references/$f" > "$root/skills/agent-development/references/$f"
+  { header; show "agent-dev-references/$f"; } > "$out/$f"
 done
 
 echo "$commit" > "$root/skills/CLI_SKILLS_SOURCE"

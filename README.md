@@ -13,8 +13,12 @@ The first tool call opens a Guild sign-in in your browser. You can disconnect at
 
 ## Skills
 
-- `agent-development`, `integrations` and `factory-setup` are the Guild CLI's own skills, the ones `guild setup` installs. They are copied from `cli/docs/skills` in guildcode; do not edit them here. To update them, run `scripts/sync-cli-skills.sh <path-to-guildcode>` and commit. `skills/CLI_SKILLS_SOURCE` records the guildcode commit they came from.
-- `build-triggered-agent` is written for this plugin.
+Both skills work only through the MCP tools, so they run the same in Claude Code, Claude Desktop and claude.ai. Neither uses the `guild` CLI, `npm` or `git`.
+
+- `agent-development` builds, tests, publishes and installs an agent.
+- `build-triggered-agent` builds an agent that runs on a GitHub event.
+
+`skills/agent-development/references/` is the SDK documentation from the Guild CLI's skill in guildcode (`cli/docs/skills`). Don't edit it here. To update it, run `scripts/sync-cli-skills.sh <path-to-guildcode>` and commit. `skills/CLI_SKILLS_SOURCE` records the guildcode commit it came from.
 
 ## Docs
 
