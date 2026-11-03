@@ -8,6 +8,9 @@ description: Build a Guild agent that runs on a GitHub event (pull request opene
 Do all of this with the Guild MCP tools (`guild_*`). Never run the `guild` CLI,
 `npm` or `git`. One decision up front decides whether the trigger ever fires.
 
+If no `guild_*` tools are available, the user hasn't signed in to Guild yet.
+Tell them how and stop, as the `agent-development` skill describes.
+
 ## 1. Decide who owns the workspace
 
 A webhook trigger receives events only through the GitHub connection it was
