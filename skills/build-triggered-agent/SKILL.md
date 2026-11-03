@@ -30,7 +30,8 @@ under that organization too (`guild_create_agent` with `owner_id`).
 2. `guild_create_agent_version` with every source file and `publish: true`.
    The agent's input is the raw webhook payload, so validate it with a schema
    that matches GitHub's (`action`, `pull_request`, `issue`, `repository`).
-3. Poll `guild_get_agent_version_validation` until it passes.
+3. Call `guild_wait_for_job` once with the returned `version_id` and `job_id`.
+   Follow the `agent-development` skill's build-wait and failure handling.
 4. `guild_create_workspace` if needed, then `guild_install_agent`.
 5. Anything the agent reads from its environment, such as a Slack member ID, goes
    in a workspace variable: `guild_set_workspace_variable`. Never put a secret

@@ -23,7 +23,10 @@ the user to connect it and stop.
      and the model decides what to call. Most agents are this, for example
      "summarize a GitHub PR". Guild writes the code.
    - **Code.** The agent needs fixed steps, loops, state, or calls to other
-     agents. You write TypeScript.
+     agents, or needs no integration tools. You write TypeScript. A prompt-only
+     agent with no tools uses `llmAgent({ tools: {}, useWorkspaceAgents: false,
+     mode: "one-shot", systemPrompt })`; do not add unrelated tools merely to
+     satisfy `guild_configure_llm_agent`, which requires at least one tool.
 
 ## 2. Find the tools
 
@@ -39,7 +42,7 @@ the user to connect it and stop.
 
 1. `guild_create_agent` with a lowercase, hyphenated `name`, the `owner_id`, and
    a one-line `description`.
-2. Poll `guild_get_agent` until its status is `READY`.
+2. Call `guild_wait_for_agent` once with the created agent ID to wait for `READY`.
 
 ### Prompt and tools
 
@@ -63,19 +66,29 @@ the user to connect it and stop.
 
 ## 4. Wait for the build
 
-Poll `guild_get_agent_version_validation` until it finishes. If it fails, read
-the failing step's log, fix the files, and commit a new version with
-`guild_create_agent_version`. Compiler errors are listed in
-`references/compiler.md`.
+Call `guild_wait_for_job` once with the `version_id` and `job_id` returned by
+the create/configure/publish/revalidate operation. If it fails, read
+`guild_get_agent_version_validation` for the failing step's log, fix the files,
+and commit a new version with `guild_create_agent_version`. Compiler errors
+are listed in `references/compiler.md`.
 
 ## 5. Test it
 
 1. `guild_start_agent_test_session` on the version, in a workspace where its
    integrations are connected. A draft version can be tested before publishing.
 2. `guild_send_session_message` with a realistic input, such as a real PR URL.
-3. `guild_get_session_events` with `from_id` set to the message you sent and
-   `types: "user_message,agent_notification_message"`, until the reply appears.
-   `guild_get_session` says whether the session is still running.
+3. Call `guild_wait_for_session` once with the session ID, the send result's
+   `id` as `user_event_id`, and its `wait_after_event_id` unchanged as
+   `after_event_id`. Read the output from the completed event.
+4. If the result is `ACTION_REQUIRED`, explain the requested input or missing
+   connection and stop waiting. If it is an error, report that error.
+
+Wait tools hold the call open and deliver the final result. Omit
+`timeout_seconds` for a normal wait. Do not loop over get/status/event tools
+or shell sleeps. A disconnected wait does not mean the remote run failed:
+retry only the same wait with the same IDs. Do not resend input or create
+another execution to recover. Read session events once after completion only
+if needed to retrieve the final reply.
 
 Show the user the agent's reply, not a summary of the events.
 
