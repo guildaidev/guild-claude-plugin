@@ -11,8 +11,14 @@ locally. Never run the `guild` CLI, `npm` or `git` for this, and never write the
 agent's files to disk: they go to Guild as the `files` of
 `guild_create_agent_version`.
 
-If no `guild_*` tools are available, the Guild connector isn't connected. Tell
-the user to connect it and stop.
+If no `guild_*` tools are available, the user hasn't signed in to Guild in this
+client yet. Tell them how, then stop:
+
+- Claude Code: run `/mcp`, pick the Guild server, choose Authenticate, and sign
+  in to Guild in the browser.
+- claude.ai or Claude Desktop: connect Guild under Customize > Connectors.
+
+Don't send them to a terminal or another app to do it.
 
 ## 1. Pick the owner and the shape
 
