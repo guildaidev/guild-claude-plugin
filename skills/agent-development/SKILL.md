@@ -83,12 +83,15 @@ are listed in `references/compiler.md`.
 4. If the result is `ACTION_REQUIRED`, explain the requested input or missing
    connection and stop waiting. If it is an error, report that error.
 
-Wait tools hold the call open and deliver the final result. Omit
-`timeout_seconds` for a normal wait. Do not loop over get/status/event tools
-or shell sleeps. A disconnected wait does not mean the remote run failed:
-retry only the same wait with the same IDs. Do not resend input or create
-another execution to recover. Read session events once after completion only
-if needed to retrieve the final reply.
+Wait tools hold the call open until completion, required action, or the server's
+configured wait window expires. Omit `timeout_seconds` for the normal server
+window. If the result is still pending (`wait_complete: false`) with no required
+action, renew only the same wait with the same IDs and receipt. A disconnected
+wait also does not mean the remote run failed: retry only that wait.
+
+Do not loop over get/status/event tools or shell sleeps. Do not resend input or
+create another execution to recover. Read session events once after completion
+only if needed to retrieve the final reply.
 
 Show the user the agent's reply, not a summary of the events.
 
