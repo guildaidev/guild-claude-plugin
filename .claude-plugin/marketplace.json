@@ -1,5 +1,6 @@
 {
   "name": "guild",
+  "description": "Guild's plugin for Claude: build, publish, and run Guild agents.",
   "owner": {
     "name": "Guild.ai, Inc.",
     "email": "support@guild.ai"
