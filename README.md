@@ -54,8 +54,7 @@ Every 20 seconds each watched session that is still running is read again with `
 | File | What it holds |
 | --- | --- |
 | `hooks/hooks.json` | Names the hooks module |
-| `hooks/register.tsx` | The watched list, the pane, the footer, the command, the `watch_sessions`, `unwatch_sessions` and `pane_state` tools, the refresh loop |
-| `hooks/guild.ts` | The Guild calls: finding the server, reading an oversized result from the file Claude Code saved it to (then removing that file), parsing sessions and timelines, looking up a chat session's agent in its events |
+| `hooks/register.tsx` | The pane, footer, command, local tools, refresh loop and Guild reads. Capability helpers share the hooks module so the directory scanner can trace them. |
 | `types/index.d.ts` | The pane's `$.state` contract, named in `plugin.json` as `types` |
 | `tests/guild-sessions.test.tsx` | Tests against recorded Guild answers |
 
@@ -79,7 +78,7 @@ The pane calls this plugin's Guild connector, or another connected server exposi
 
 The mod uses Claude Code's plugin store to persist watched Guild session IDs, keyed by Claude Code session ID, and a last-watched timestamp. Its 200-conversation and 50-session limits are count limits, not expiration periods. It uses plugin state for the displayed session metadata and timeline. The last 30 connector-call diagnostics are held in module memory, including tool names, timing, errors and short response excerpts. `pane_state` returns the pane's data and diagnostics to Claude when called. The mod does not include a separate analytics uploader or a Claude transcript collector.
 
-When Claude Code saves an oversized Guild tool result to a file, the pane reads `CLAUDE_CONFIG_DIR`, or `HOME` for the default `~/.claude`, to locate Claude Code's configuration directory. It checks the complete reported path is under that directory with a `projects/<project>/<session>/tool-results/` layout, has no `.` or `..` path segments, and names the server and tool it called. It reads that file, then invokes `/bin/rm -f -- <path>` to remove the saved copy. A refused path is neither read nor removed. A cleanup failure is recorded in the connector-call diagnostics.
+When Claude Code saves an oversized Guild tool result to a file, the pane reads `CLAUDE_CONFIG_DIR`, or `HOME` for the default `~/.claude`, to locate Claude Code's configuration directory. It checks the complete reported path is under that directory with a `projects/<project>/<session>/tool-results/` layout, has no `.` or `..` path segments, and names the server and tool it called. It reads the saved result without deleting it. A refused path is not read. The mod starts no programs or shell commands; saved copies remain under Claude Code's file management.
 
 To remove a session from the stored watch list and stop polling it, ask Claude to unwatch it. Unwatching the last session removes that conversation's stored list. `/clear` starts a different list; resuming an older conversation restores its saved list. Closing the pane does not unwatch sessions. To stop the hooks, disable or uninstall the plugin and reload or close active Claude Code sessions. This does not delete Guild agents or session history. To revoke the connection, use Guild's Security > Connected apps.
 
