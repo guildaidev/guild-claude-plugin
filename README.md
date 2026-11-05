@@ -74,13 +74,13 @@ The [reviewer guide](docs/reviewer-guide.md) has three example workflows, expect
 
 The declared connector is `https://api.guild.ai/mcp`. Building and running agents sends the arguments Claude supplies to Guild, including agent source, configuration, workspace identifiers and test inputs. Guild processes these to build and execute the requested agents. Agents can use the models and integrations configured for their workspace; their credentials and permissions are managed in Guild.
 
-The pane calls this plugin's Guild connector, or another connected server exposing Guild's tools as described above. It sends watched Guild session IDs to read their status and events, which can include the agent's input, output and errors. Polling continues while the pane is closed and the Claude Code session is running. With nothing watched, the pane makes no Guild session reads.
+The pane calls only this plugin's Guild connector, `plugin_guild_guild`, by its fixed name. It sends watched Guild session IDs to read their status and events, which can include the agent's input, output and errors. Polling continues while the pane is closed and the Claude Code session is running. With nothing watched, the pane makes no Guild session reads.
 
 The mod uses Claude Code's plugin store to persist watched Guild session IDs, keyed by Claude Code session ID, and a last-watched timestamp. Its 200-conversation and 50-session limits are count limits, not expiration periods. It uses plugin state for the displayed session metadata and timeline. The last 30 connector-call diagnostics are held in module memory, including tool names, timing, errors and short response excerpts. `pane_state` returns the pane's data and diagnostics to Claude when called. The mod does not include a separate analytics uploader or a Claude transcript collector.
 
 ### Calls the mod makes without a model request
 
-The pane makes these read-only MCP calls from its own code, subject to the allow rules above. The server is the declared Guild connector at `https://api.guild.ai/mcp` when connected, or another user-connected MCP server exposing Guild's tools. The fallback uses that server's configured destination and permissions. The mod does not register additional MCP servers or send the data to a separate analytics service.
+The pane makes these read-only MCP calls from its own code, subject to the allow rules above. The server is always the plugin's declared Guild connector at `https://api.guild.ai/mcp`, named as fixed text at each call. The mod does not read the tool list, does not call another server, does not register additional MCP servers and does not send the data to a separate analytics service.
 
 | Tool | When and arguments |
 | --- | --- |
