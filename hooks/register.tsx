@@ -11,6 +11,8 @@ import type { GuildEventRow, GuildFeed, GuildRunState, GuildSessionDetail, Guild
 // yet.
 const OWN_SERVER = 'plugin_guild_guild'
 const PROBE_TOOL = 'guild_get_session'
+const PREFIX = 'mcp__'
+const SUFFIX = `__${PROBE_TOOL}`
 
 /** One connector call the pane made, newest last; what `pane_state` reports. */
 type GuildCall = { at: string; tool: string; ms: number; outcome: string }
@@ -45,12 +47,14 @@ type Raw = Record<string, any>
 // fallback is retried.
 async function guildServer($: EngineInterface): Promise<string> {
   if (server !== undefined) return server
-  // The directory reads a capability call only as a plain statement, so the
-  // list is taken first and searched after.
+  // The directory reads a capability call only as a plain statement, and
+  // reads a bare dollar sign in a template as the engine object, so the list
+  // is taken first and searched with string methods.
   const tools = await $.tool.list()
   const found = tools
-    .map(tool => new RegExp(`^mcp__(.+)__${PROBE_TOOL}$`).exec(tool.name)?.[1])
-    .filter((name): name is string => name !== undefined)
+    .map(tool => tool.name)
+    .filter(name => name.startsWith(PREFIX) && name.endsWith(SUFFIX) && name.length > PREFIX.length + SUFFIX.length)
+    .map(name => name.slice(PREFIX.length, name.length - SUFFIX.length))
   server = found.includes(OWN_SERVER) ? OWN_SERVER : found[0]
 
   return server ?? OWN_SERVER
