@@ -97,6 +97,9 @@ does not delete server records. Keep the test account active during review.
 
 ## Release and submission checks
 
+Use the [directory submission notes](directory-submission.md) for the portal's
+mod findings, data-handling questions and compliance acknowledgements.
+
 1. Review the [directory checklist](https://claude.com/docs/plugins/pre-submission-checklist)
    and [directory policy](https://support.claude.com/en/articles/13145358-anthropic-software-directory-policy).
    Keep component files inside the plugin folder, retain the license and
