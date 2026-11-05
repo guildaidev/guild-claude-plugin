@@ -693,6 +693,50 @@ test("the pane calls the plugin's own Guild server by fixed name, whatever the t
   expect(servers).toEqual(['plugin_guild_guild'])
 })
 
+const NOT_CONNECTED = (server: string, tool: string) => ({ deny: `no connected MCP tool "${tool}" on a server named "${server}"` })
+
+test("the claude.ai Guild connector answers when the plugin's own server is not connected", async ($, on) => {
+  const clock = mock.clock(on, { now: NOW })
+  host(on, { store: { watched: { 'conversation-1': { ids: [FORWARDER], at: NOW - 60_000 } } } })
+  const servers: string[] = []
+  on('mcp.call', (_, e) => {
+    servers.push(e.server)
+    if (e.server !== 'claude_ai_Guild_ai') return NOT_CONNECTED(e.server, e.tool)
+
+    return answer(SESSIONS[String(e.args.session_id)])
+  })
+
+  await $.session.start({ cwd: '/', surface: 'terminal', isInteractive: true })
+  await clock.advance(1)
+  const ui = await $.ui.mount({ ...PANE, surface: 'terminal' })
+  expect(await ui.find({ type: 'Link', text: /pr-activity-forwarder/ })).toBeDefined()
+  await ui.unmount()
+  // The own server was tried first, once; the connector answers the next poll alone.
+  expect(servers).toEqual(['plugin_guild_guild', 'claude_ai_Guild_ai'])
+  await clock.advance(20_000)
+  expect(servers).toEqual(['plugin_guild_guild', 'claude_ai_Guild_ai', 'claude_ai_Guild_ai'])
+})
+
+test('with neither Guild server connected the pane shows the reason and tries the own server first again', async ($, on) => {
+  const clock = mock.clock(on, { now: NOW })
+  host(on, { store: { watched: { 'conversation-1': { ids: [FORWARDER], at: NOW - 60_000 } } } })
+  const servers: string[] = []
+  on('mcp.call', (_, e) => {
+    servers.push(e.server)
+
+    return NOT_CONNECTED(e.server, e.tool)
+  })
+
+  await $.session.start({ cwd: '/', surface: 'terminal', isInteractive: true })
+  await clock.advance(1)
+  const ui = await $.ui.mount({ ...PANE, surface: 'terminal' })
+  expect(await ui.find({ type: 'Text', text: /no connected MCP tool/ })).toBeDefined()
+  await ui.unmount()
+  expect(servers).toEqual(['plugin_guild_guild', 'claude_ai_Guild_ai'])
+  await clock.advance(20_000)
+  expect(servers.slice(2)).toEqual(['plugin_guild_guild', 'claude_ai_Guild_ai'])
+})
+
 test('a session the connector cannot read is not watched', async ($, on) => {
   const clock = mock.clock(on, { now: NOW })
   host(on)
