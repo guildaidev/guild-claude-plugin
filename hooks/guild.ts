@@ -85,11 +85,27 @@ async function callGuild($: EngineInterface, tool: string, args: Record<string, 
   // A result past the tool-output limit comes back as a notice naming the
   // file the engine saved it to; the whole answer is in that file, which
   // nothing else reads, so it goes once read.
-  const saved = /saved to (\/\S+?\.(?:txt|json))\b/.exec(text)
+  const saved = /Output has been saved to ([^\r\n]+)\.\r?\nFormat:/.exec(text)
   let fromFile = ''
   if (saved?.[1]) {
-    text = await $.fs.read(saved[1])
-    fromFile = ` (read from the saved file, ${await removeSaved($, saved[1], tool)})`
+    const path = saved[1]
+    const filename = path.slice(path.lastIndexOf('/') + 1)
+    const configured = await $.env.get('CLAUDE_CONFIG_DIR')
+    const home = configured ? undefined : await $.env.get('HOME')
+    const root = (configured || (home ? `${home}/.claude` : '')).replace(/\/+$/, '')
+    const relative = root && path.startsWith(`${root}/`) ? path.slice(root.length + 1) : ''
+    if (
+      !SAVED_FILE.test(relative) ||
+      path.split('/').some(part => part === '.' || part === '..') ||
+      !filename.startsWith(`mcp-${name}-${tool}-`)
+    ) {
+      await note('refused saved result path')
+      throw new Error(
+        `${tool} returned a saved result outside its expected Claude Code tool-results path. Open the session in Guild to inspect it.`,
+      )
+    }
+    text = await $.fs.read(path)
+    fromFile = ` (read from the saved file, ${await removeSaved($, path)})`
   }
   try {
     const parsed = JSON.parse(text) as Raw
@@ -104,13 +120,9 @@ async function callGuild($: EngineInterface, tool: string, args: Record<string, 
 
 // The engine's own copy of one Guild tool's answer, in a session's
 // tool-results folder; nothing else is ever removed.
-const SAVED_FILE = /^\/.+\/\.claude\/projects\/[^/]+\/[^/]+\/tool-results\/mcp-[^/]+\.(?:txt|json)$/
+const SAVED_FILE = /^projects\/[^/]+\/[^/]+\/tool-results\/mcp-[^/]+\.(?:txt|json)$/
 
-async function removeSaved($: EngineInterface, path: string, tool: string): Promise<string> {
-  const name = path.slice(path.lastIndexOf('/') + 1)
-  if (!SAVED_FILE.test(path) || path.includes('/../') || !name.includes(`-${tool}-`)) {
-    return 'kept: not a saved result file'
-  }
+async function removeSaved($: EngineInterface, path: string): Promise<string> {
   try {
     const { exitCode, stderr } = await $.process.run(['/bin/rm', '-f', '--', path], { timeoutMs: 5000 })
 

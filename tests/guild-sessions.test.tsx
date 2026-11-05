@@ -224,9 +224,11 @@ function host(
     connector = { server: 'Guild_ai' as string | null },
     // Other servers with Guild's tools, listed ahead of the connector.
     otherServers = [] as string[],
+    environment = { HOME: '/Users/k' } as Record<string, string>,
   } = {},
 ) {
   mock.store(on, store)
+  on('env.get', (_, e) => ({ value: environment[e.name] }))
   // The engine's own mode labels, drawn when the mod passes the footer on.
   on('ui.render', { component: 'SessionMode' }, ($, e) => {
     const { Text } = $.ui.resolve(e)
@@ -803,13 +805,15 @@ test("auto mode's refusal tells the person which rules to add", async ($, on) =>
 
 const SAVED_TO = '/Users/k/.claude/projects/-Users-k-code/0f1e/tool-results/mcp-Guild_ai-guild_get_session-1.txt'
 
-for (const [name, savedTo, removed] of [
-  ['a result past the output limit is read from its saved file, then removed', SAVED_TO, [SAVED_TO]],
-  ['a saved file outside a tool-results folder is read and kept', '/tmp/notes/mcp-guild_get_session-1.txt', []],
+for (const [name, savedTo, environment] of [
+  ['txt', SAVED_TO, { HOME: '/Users/k' }],
+  ['json', SAVED_TO.replace('.txt', '.json'), { HOME: '/Users/k' }],
+  ['a custom config directory', SAVED_TO.replace('/Users/k/.claude', '/Users/k/.claude-review'), { HOME: '/Users/k', CLAUDE_CONFIG_DIR: '/Users/k/.claude-review' }],
+  ['a config directory with spaces', SAVED_TO.replace('/Users/k/.claude', '/tmp/Claude review'), { HOME: '/Users/k', CLAUDE_CONFIG_DIR: '/tmp/Claude review' }],
 ] as const) {
-  test(name, async ($, on) => {
+  test(`an oversized result in ${name} is read and removed`, async ($, on) => {
     const clock = mock.clock(on, { now: NOW })
-    host(on)
+    host(on, { environment })
     const ran: string[][] = []
     on('process.run', (_, e) => {
       ran.push([...e.argv])
@@ -842,7 +846,52 @@ for (const [name, savedTo, removed] of [
     const ui = await $.ui.mount({ ...PANE, surface: 'desktop' })
     expect(await ui.find({ key: `row-${FORWARDER}` })).toBeDefined()
     await ui.unmount()
-    expect(ran).toEqual(removed.map(path => ['/bin/rm', '-f', '--', path]))
+    expect(ran).toEqual([['/bin/rm', '-f', '--', savedTo]])
+  })
+}
+
+for (const [name, savedTo] of [
+  ['outside tool-results', '/tmp/notes/mcp-Guild_ai-guild_get_session-1.txt'],
+  ['with parent traversal', '/Users/k/../k/.claude/projects/-Users-k-code/0f1e/tool-results/mcp-Guild_ai-guild_get_session-1.txt'],
+  ['with a dot segment', '/Users/k/./.claude/projects/-Users-k-code/0f1e/tool-results/mcp-Guild_ai-guild_get_session-1.txt'],
+  ['for another tool', '/Users/k/.claude/projects/-Users-k-code/0f1e/tool-results/mcp-Guild_ai-guild_get_session_events-1.txt'],
+  ['for another server', '/Users/k/.claude/projects/-Users-k-code/0f1e/tool-results/mcp-other-guild_get_session-1.txt'],
+  ['with a misleading tool suffix', '/Users/k/.claude/projects/-Users-k-code/0f1e/tool-results/mcp-Guild_ai-other-guild_get_session-1.txt'],
+  ['with an extra extension', `${SAVED_TO}.bak`],
+  ['with traversal after an extension', `${SAVED_TO}/../../unrelated.txt`],
+  ['under another user home', SAVED_TO.replace('/Users/k/', '/Users/other/')],
+] as const) {
+  test(`a saved result ${name} is refused without reading or deleting it`, async ($, on) => {
+    const clock = mock.clock(on, { now: NOW })
+    host(on)
+    const reads: string[] = []
+    const ran: string[][] = []
+    on('mcp.call', () => ({
+      value: {
+        content: [{ type: 'text', text: `Output has been saved to ${savedTo}.\nFormat: Plain text` }],
+        isError: false,
+      },
+    }))
+    on('fs.read', (_, e) => {
+      reads.push(e.path)
+
+      return { value: JSON.stringify(SESSIONS[FORWARDER]) }
+    })
+    on('process.run', (_, e) => {
+      ran.push([...e.argv])
+
+      return { value: { exitCode: 0, stdout: '', stderr: '', isStdoutTruncated: false, isStderrTruncated: false } }
+    })
+
+    await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
+    await clock.advance(1)
+    const refused = await $.tool.call({ tool: WATCH, session_ids: [FORWARDER] })
+
+    expect(refused.deny).toContain('expected Claude Code tool-results path')
+    expect(reads).toEqual([])
+    expect(ran).toEqual([])
+    const report = JSON.parse(textOf(await $.tool.call({ tool: STATE })))
+    expect(report.watched).toEqual([])
   })
 }
 
