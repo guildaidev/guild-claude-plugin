@@ -5,10 +5,17 @@ import type { GuildEventRow, GuildFeed, GuildRunState, GuildSessionDetail, Guild
 
 // The directory scanner follows capability arguments only into helpers in this file.
 
-// This plugin's own server, `guild` in .mcp.json, as its tool names spell it.
-// The directory reads a server or tool name only as fixed text at the call, so
-// every call below names it as a literal, and nothing else is called.
+// This plugin's own server, `guild` in .mcp.json, as its tool names spell it,
+// and the Guild connector from claude.ai, as a terminal session's tool list
+// spells it. The directory reads a server or tool name only as fixed text at
+// the call, so every call below names one of these two as a literal.
 const OWN_SERVER = 'plugin_guild_guild'
+const CONNECTOR = 'claude_ai_Guild_ai'
+type GuildServer = typeof OWN_SERVER | typeof CONNECTOR
+// The server that last answered: the own server until the engine says it is
+// not connected, then the connector until it says the same.
+let server: GuildServer = OWN_SERVER
+const NOT_CONNECTED = /no connected MCP tool|not connected/i
 
 /** One connector call the pane made, newest last; what `pane_state` reports. */
 type GuildCall = { at: string; tool: string; ms: number; outcome: string }
@@ -37,29 +44,48 @@ const lookups = new Map<string, Promise<string | null>>()
 
 type Raw = Record<string, any>
 
-async function callGuild(
-  $: EngineInterface,
-  tool: 'guild_get_session' | 'guild_get_session_events',
-  args: Record<string, unknown>,
-): Promise<Raw> {
+type GuildTool = 'guild_get_session' | 'guild_get_session_events'
+
+// One call, server and tool each spelled out, so the directory can list every
+// call the pane makes.
+async function callServer($: EngineInterface, at: GuildServer, tool: GuildTool, args: Record<string, unknown>) {
+  if (at === OWN_SERVER) {
+    return tool === 'guild_get_session'
+      ? await $.mcp.call('plugin_guild_guild', 'guild_get_session', args)
+      : await $.mcp.call('plugin_guild_guild', 'guild_get_session_events', args)
+  }
+
+  return tool === 'guild_get_session'
+    ? await $.mcp.call('claude_ai_Guild_ai', 'guild_get_session', args)
+    : await $.mcp.call('claude_ai_Guild_ai', 'guild_get_session_events', args)
+}
+
+async function callGuild($: EngineInterface, tool: GuildTool, args: Record<string, unknown>): Promise<Raw> {
   const started = await $.clock.now()
+  let at = server
   let result
   try {
-    result =
-      tool === 'guild_get_session'
-        ? await $.mcp.call('plugin_guild_guild', 'guild_get_session', args)
-        : await $.mcp.call('plugin_guild_guild', 'guild_get_session_events', args)
+    try {
+      result = await callServer($, at, tool, args)
+    } catch (error) {
+      if (!NOT_CONNECTED.test(messageOf(error))) throw error
+      // That server is not connected: the other one answers from now on.
+      at = at === OWN_SERVER ? CONNECTOR : OWN_SERVER
+      result = await callServer($, at, tool, args)
+    }
+    server = at
   } catch (error) {
+    server = OWN_SERVER
     const message = messageOf(error)
     await noteCall($, tool, started, `threw: ${message}`)
     // A call the pane makes from code has no model request for auto mode's
     // classifier to judge, so only a settings allow rule lets it through.
     if (message.includes('auto mode classifier')) {
       throw new Error(
-        `Auto mode can't approve the pane's own calls to Guild. Add allow rules for mcp__${OWN_SERVER}__guild_get_session and mcp__${OWN_SERVER}__guild_get_session_events to permissions.allow in your settings.`,
+        `Auto mode can't approve the pane's own calls to Guild. Add allow rules for mcp__${at}__guild_get_session and mcp__${at}__guild_get_session_events to permissions.allow in your settings.`,
       )
     }
-    throw new Error(`The Guild connector call ${tool} on server "${OWN_SERVER}" failed: ${message}`)
+    throw new Error(`The Guild connector call ${tool} on server "${at}" failed: ${message}`)
   }
   let text = result.content.map(block => (block.type === 'text' ? (block.text ?? '') : '')).join('')
   if (result.isError) {
@@ -80,7 +106,7 @@ async function callGuild(
     if (
       !SAVED_FILE.test(relative) ||
       path.split('/').some(part => part === '.' || part === '..') ||
-      !filename.startsWith(`mcp-${OWN_SERVER}-${tool}-`)
+      !filename.startsWith(`mcp-${at}-${tool}-`)
     ) {
       await noteCall($, tool, started, 'refused saved result path')
       throw new Error(
@@ -489,9 +515,17 @@ export const register: Register = on => {
       read($, paneOpen),
     ])
     const shown = rows.filter(row => ids.includes(row.id))
-    const getTool = 'mcp__plugin_guild_guild__guild_get_session'
-    const probe = await $.tool.check({ tool: 'mcp__plugin_guild_guild__guild_get_session', input: { session_id: ids[0] ?? '00000000-0000-0000-0000-000000000000' } })
-      .catch(error => ({ threw: String(error) }))
+    const getTool = server === OWN_SERVER ? 'mcp__plugin_guild_guild__guild_get_session' : 'mcp__claude_ai_Guild_ai__guild_get_session'
+    const input = { session_id: ids[0] ?? '00000000-0000-0000-0000-000000000000' }
+    let probe
+    try {
+      probe =
+        server === OWN_SERVER
+          ? await $.tool.check({ tool: 'mcp__plugin_guild_guild__guild_get_session', input })
+          : await $.tool.check({ tool: 'mcp__claude_ai_Guild_ai__guild_get_session', input })
+    } catch (error) {
+      probe = { threw: String(error) }
+    }
     const line = state.fetchedAt === null ? null : footerLineOf(runningLineOf(shown, runMap))
     const report = {
       conversation: await $.session.id(),
