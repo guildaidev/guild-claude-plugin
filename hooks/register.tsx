@@ -45,7 +45,10 @@ type Raw = Record<string, any>
 // fallback is retried.
 async function guildServer($: EngineInterface): Promise<string> {
   if (server !== undefined) return server
-  const found = (await $.tool.list())
+  // The directory reads a capability call only as a plain statement, so the
+  // list is taken first and searched after.
+  const tools = await $.tool.list()
+  const found = tools
     .map(tool => new RegExp(`^mcp__(.+)__${PROBE_TOOL}$`).exec(tool.name)?.[1])
     .filter((name): name is string => name !== undefined)
   server = found.includes(OWN_SERVER) ? OWN_SERVER : found[0]
