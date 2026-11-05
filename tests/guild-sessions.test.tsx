@@ -220,9 +220,8 @@ function host(
     conversation = { id: 'conversation-1' },
     // What the mod's store holds when the session starts.
     store = {} as Record<string, unknown>,
-    // The Guild connector's server name in the tool list; null while it is not connected.
-    connector = { server: 'Guild_ai' as string | null },
-    // Other servers with Guild's tools, listed ahead of the connector.
+    // The servers with Guild's tools in the tool list. The mod never reads
+    // it: it calls its own server, plugin_guild_guild, by fixed name.
     otherServers = [] as string[],
     environment = { HOME: '/Users/k' } as Record<string, string>,
   } = {},
@@ -250,7 +249,7 @@ function host(
   on('tool.list', () => ({
     value: [
       { name: 'Bash', description: '', mcp: false },
-      ...[...otherServers, ...(connector.server === null ? [] : [connector.server])].map(server => ({
+      ...otherServers.map(server => ({
         name: `mcp__${server}__guild_get_session`,
         description: '',
         mcp: true,
@@ -284,7 +283,7 @@ function lookupOf(answers: Lookup['answers'] = { [WATCHER]: answer(ROOT_EVENTS) 
 // answers from `lookup` instead, an empty page for a session it does not list.
 function guild(on: On, asked: string[] = [], lookup: Lookup = lookupOf()) {
   on('mcp.call', async (_, e) => {
-    expect(e.server).toBe('Guild_ai')
+    expect(e.server).toBe('plugin_guild_guild')
     asked.push(e.tool)
     if (e.tool === 'guild_get_session') {
       const session = SESSIONS[String(e.args.session_id)]
@@ -675,39 +674,10 @@ test('each conversation has its own list, kept past a /clear and a resume', asyn
   expect(report.watched).toEqual([RECORDER])
 })
 
-test('a connector that connects after the session starts is found on the next refresh', async ($, on) => {
+test("the pane calls the plugin's own Guild server by fixed name, whatever the tool list names", async ($, on) => {
   const clock = mock.clock(on, { now: NOW })
-  // A resumed conversation that watched the forwarder; the terminal's
-  // claude.ai connectors connect only after the first refresh.
-  const connector = { server: null as string | null }
-  host(on, { connector, store: { watched: { 'conversation-1': { ids: [FORWARDER], at: NOW - 60_000 } } } })
-  const servers: string[] = []
-  on('mcp.call', (_, e) => {
-    servers.push(e.server)
-    if (e.server !== 'claude_ai_Guild_ai') return { deny: `no connected MCP tool "${e.tool}" on a server named "${e.server}"` }
-
-    return answer(SESSIONS[String(e.args.session_id)])
-  })
-
-  await $.session.start({ cwd: '/', surface: 'terminal', isInteractive: true })
-  await clock.advance(1)
-  const ui = await $.ui.mount({ ...PANE, surface: 'terminal' })
-  expect(await ui.find({ type: 'Text', text: /no connected MCP tool/ })).toBeDefined()
-
-  connector.server = 'claude_ai_Guild_ai'
-  await clock.advance(20_000)
-  // The first refresh tried this plugin's own server, which had not connected.
-  expect(servers).toEqual(['plugin_guild_guild', 'claude_ai_Guild_ai'])
-  expect(await ui.find({ type: 'Text', text: /no connected MCP tool/ })).toBeUndefined()
-  expect(await ui.find({ type: 'Link', text: /pr-activity-forwarder/ })).toBeDefined()
-  await ui.unmount()
-})
-
-test("the plugin's own Guild server is called ahead of a claude.ai connector", async ($, on) => {
-  const clock = mock.clock(on, { now: NOW })
-  // The claude.ai connector comes first in the tool list.
+  // Only a claude.ai connector is in the tool list; the mod does not read it.
   host(on, {
-    connector: { server: 'plugin_guild_guild' },
     otherServers: ['claude_ai_Guild_ai'],
     store: { watched: { 'conversation-1': { ids: [FORWARDER], at: NOW - 60_000 } } },
   })
@@ -785,14 +755,14 @@ test('a refused call names the server and the reason', async ($, on) => {
   await clock.advance(1)
 
   const refused = await $.tool.call({ tool: WATCH, session_ids: [RECORDER] })
-  expect(refused.deny).toMatch(/on server "Guild_ai" failed: .*the permission check refused it/)
+  expect(refused.deny).toMatch(/on server "plugin_guild_guild" failed: .*the permission check refused it/)
 })
 
 test("auto mode's refusal tells the person which rules to add", async ($, on) => {
   const clock = mock.clock(on, { now: NOW })
   host(on)
   on('mcp.call', () => ({
-    deny: 'The server-side auto mode classifier gave no verdict for mcp__Guild_ai__guild_get_session: the request that produced this action did not ask for one.',
+    deny: 'The server-side auto mode classifier gave no verdict for mcp__plugin_guild_guild__guild_get_session: the request that produced this action did not ask for one.',
   }))
 
   await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
@@ -800,10 +770,10 @@ test("auto mode's refusal tells the person which rules to add", async ($, on) =>
 
   const refused = await $.tool.call({ tool: WATCH, session_ids: [RECORDER] })
   expect(refused.deny).toContain("Auto mode can't approve")
-  expect(refused.deny).toContain('mcp__Guild_ai__guild_get_session_events to permissions.allow')
+  expect(refused.deny).toContain('mcp__plugin_guild_guild__guild_get_session_events to permissions.allow')
 })
 
-const SAVED_TO = '/Users/k/.claude/projects/-Users-k-code/0f1e/tool-results/mcp-Guild_ai-guild_get_session-1.txt'
+const SAVED_TO = '/Users/k/.claude/projects/-Users-k-code/0f1e/tool-results/mcp-plugin_guild_guild-guild_get_session-1.txt'
 
 for (const [name, savedTo, environment] of [
   ['txt', SAVED_TO, { HOME: '/Users/k' }],
@@ -851,12 +821,12 @@ for (const [name, savedTo, environment] of [
 }
 
 for (const [name, savedTo] of [
-  ['outside tool-results', '/tmp/notes/mcp-Guild_ai-guild_get_session-1.txt'],
-  ['with parent traversal', '/Users/k/../k/.claude/projects/-Users-k-code/0f1e/tool-results/mcp-Guild_ai-guild_get_session-1.txt'],
-  ['with a dot segment', '/Users/k/./.claude/projects/-Users-k-code/0f1e/tool-results/mcp-Guild_ai-guild_get_session-1.txt'],
-  ['for another tool', '/Users/k/.claude/projects/-Users-k-code/0f1e/tool-results/mcp-Guild_ai-guild_get_session_events-1.txt'],
+  ['outside tool-results', '/tmp/notes/mcp-plugin_guild_guild-guild_get_session-1.txt'],
+  ['with parent traversal', '/Users/k/../k/.claude/projects/-Users-k-code/0f1e/tool-results/mcp-plugin_guild_guild-guild_get_session-1.txt'],
+  ['with a dot segment', '/Users/k/./.claude/projects/-Users-k-code/0f1e/tool-results/mcp-plugin_guild_guild-guild_get_session-1.txt'],
+  ['for another tool', '/Users/k/.claude/projects/-Users-k-code/0f1e/tool-results/mcp-plugin_guild_guild-guild_get_session_events-1.txt'],
   ['for another server', '/Users/k/.claude/projects/-Users-k-code/0f1e/tool-results/mcp-other-guild_get_session-1.txt'],
-  ['with a misleading tool suffix', '/Users/k/.claude/projects/-Users-k-code/0f1e/tool-results/mcp-Guild_ai-other-guild_get_session-1.txt'],
+  ['with a misleading tool suffix', '/Users/k/.claude/projects/-Users-k-code/0f1e/tool-results/mcp-plugin_guild_guild-other-guild_get_session-1.txt'],
   ['with an extra extension', `${SAVED_TO}.bak`],
   ['with traversal after an extension', `${SAVED_TO}/../../unrelated.txt`],
   ['under another user home', SAVED_TO.replace('/Users/k/', '/Users/other/')],
