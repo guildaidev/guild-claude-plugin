@@ -811,7 +811,7 @@ for (const [name, savedTo, environment] of [
   ['a custom config directory', SAVED_TO.replace('/Users/k/.claude', '/Users/k/.claude-review'), { HOME: '/Users/k', CLAUDE_CONFIG_DIR: '/Users/k/.claude-review' }],
   ['a config directory with spaces', SAVED_TO.replace('/Users/k/.claude', '/tmp/Claude review'), { HOME: '/Users/k', CLAUDE_CONFIG_DIR: '/tmp/Claude review' }],
 ] as const) {
-  test(`an oversized result in ${name} is read and removed`, async ($, on) => {
+  test(`an oversized result in ${name} is read without starting a program`, async ($, on) => {
     const clock = mock.clock(on, { now: NOW })
     host(on, { environment })
     const ran: string[][] = []
@@ -846,7 +846,7 @@ for (const [name, savedTo, environment] of [
     const ui = await $.ui.mount({ ...PANE, surface: 'desktop' })
     expect(await ui.find({ key: `row-${FORWARDER}` })).toBeDefined()
     await ui.unmount()
-    expect(ran).toEqual([['/bin/rm', '-f', '--', savedTo]])
+    expect(ran).toEqual([])
   })
 }
 
