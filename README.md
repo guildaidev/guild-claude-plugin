@@ -41,6 +41,8 @@ Every 20 seconds each watched session that is still running is read again with `
    ```
 
    The pane calls Guild from code, with no model request behind the call, so auto mode's classifier refuses it and only an allow rule lets it through. The pane calls this plugin's own server first. When that server is not connected it uses any other server with Guild's tools, such as the claude.ai Guild connector, and the rules then carry that server's name. If a rule is missing, the `watch_sessions` refusal and the pane show the exact names to add.
+
+   You or your administrator add these rules. The plugin does not edit permission settings or approve its own calls.
 2. For clickable rows in the desktop app's Terminal panel, `FORCE_HYPERLINK=1` in the CLI's environment. Claude Code sends links only to terminals it recognizes, and that panel (`TERM_PROGRAM=claude-desktop`) is not one of them, though it opens links. Without it a row is plain text there. iTerm, Ghostty, kitty, WezTerm and VS Code need nothing. One line in `~/.zshrc` sets it for that panel alone:
 
    ```bash
@@ -66,6 +68,22 @@ claude plugin validate .
 ```bash
 claude plugin test .
 ```
+
+The [reviewer guide](docs/reviewer-guide.md) has three example workflows, expected results, and the maintainer steps for a directory submission.
+
+## Data handling
+
+The declared connector is `https://api.guild.ai/mcp`. Building and running agents sends the arguments Claude supplies to Guild, including agent source, configuration, workspace identifiers and test inputs. Guild processes these to build and execute the requested agents. Agents can use the models and integrations configured for their workspace; their credentials and permissions are managed in Guild.
+
+The pane calls this plugin's Guild connector, or another connected server exposing Guild's tools as described above. It sends watched Guild session IDs to read their status and events, which can include the agent's input, output and errors. Polling continues while the pane is closed and the Claude Code session is running. With nothing watched, the pane makes no Guild session reads.
+
+The mod uses Claude Code's plugin store to persist watched Guild session IDs, keyed by Claude Code session ID, and a last-watched timestamp. Its 200-conversation and 50-session limits are count limits, not expiration periods. It uses plugin state for the displayed session metadata and timeline. The last 30 connector-call diagnostics are held in module memory, including tool names, timing, errors and short response excerpts. `pane_state` returns the pane's data and diagnostics to Claude when called. The mod does not include a separate analytics uploader or a Claude transcript collector.
+
+When Claude Code saves an oversized Guild tool result to a file, the pane reads `CLAUDE_CONFIG_DIR`, or `HOME` for the default `~/.claude`, to locate Claude Code's configuration directory. It checks the complete reported path is under that directory with a `projects/<project>/<session>/tool-results/` layout, has no `.` or `..` path segments, and names the server and tool it called. It reads that file, then invokes `/bin/rm -f -- <path>` to remove the saved copy. A refused path is neither read nor removed. A cleanup failure is recorded in the connector-call diagnostics.
+
+To remove a session from the stored watch list and stop polling it, ask Claude to unwatch it. Unwatching the last session removes that conversation's stored list. `/clear` starts a different list; resuming an older conversation restores its saved list. Closing the pane does not unwatch sessions. To stop the hooks, disable or uninstall the plugin and reload or close active Claude Code sessions. This does not delete Guild agents or session history. To revoke the connection, use Guild's Security > Connected apps.
+
+Guild-side use and retention are governed by the applicable customer agreement and [Guild's privacy policy](https://www.guild.ai/privacy-policy); the plugin does not set a server retention period. The policy describes retaining personal data as necessary for the stated purposes and legal obligations. For deletion or privacy questions, contact privacy@guild.ai, or your organization's administrator when Guild processes the data on its behalf. These controls do not delete copies retained by Claude.
 
 ## Docs
 
