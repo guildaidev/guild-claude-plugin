@@ -78,11 +78,32 @@ The pane calls this plugin's Guild connector, or another connected server exposi
 
 The mod uses Claude Code's plugin store to persist watched Guild session IDs, keyed by Claude Code session ID, and a last-watched timestamp. Its 200-conversation and 50-session limits are count limits, not expiration periods. It uses plugin state for the displayed session metadata and timeline. The last 30 connector-call diagnostics are held in module memory, including tool names, timing, errors and short response excerpts. `pane_state` returns the pane's data and diagnostics to Claude when called. The mod does not include a separate analytics uploader or a Claude transcript collector.
 
+### Calls the mod makes without a model request
+
+The pane makes these read-only MCP calls from its own code, subject to the allow rules above. The server is the declared Guild connector at `https://api.guild.ai/mcp` when connected, or another user-connected MCP server exposing Guild's tools. The fallback uses that server's configured destination and permissions. The mod does not register additional MCP servers or send the data to a separate analytics service.
+
+| Tool | When and arguments |
+| --- | --- |
+| `guild_get_session` | Before accepting a watch request, on refresh, and every 20 seconds while a watched session runs. Sends its Guild `session_id`. |
+| `guild_get_session_events` | To identify a chat session's agent or load the selected session's timeline. Sends its Guild `session_id`, event `types` and `limit`; later timeline reads can include `from_id`. |
+
+The mod reads the Claude Code session ID to choose a watch list, and reads its own plugin state and store. It does not call Claude's conversation-message or prompt-reading APIs. Local paths, environment-variable values, Claude conversation IDs and the pane's diagnostic log are not arguments to its MCP calls. Guild session inputs, outputs and errors are read back from Guild and can themselves contain personal data. The mod starts no local programs, downloads no executable code and makes no direct HTTP requests. Building or running a Guild agent through a skill is a separate, user-requested operation through Guild's MCP tools.
+
+### Tools and hooks implemented by the mod
+
+The mod registers and answers only its three local tools: `mcp__guild__watch_sessions` validates and watches accessible Guild session IDs; `mcp__guild__unwatch_sessions` removes IDs from the watch list; `mcp__guild__pane_state` returns local pane data and diagnostics to Claude and checks the read tool's permission without executing that tool. These handlers implement the tools the mod adds. They do not replace Bash, file tools or another connector's tools.
+
+The `ui.close` hook is filtered to the `guild-sessions` pane. It lets the close proceed, then records that the pane is closed so the footer becomes an open button. The render hooks draw the Guild pane and its footer; the session hooks restore the matching watch list and start its timers. `/guild-sessions` opens the pane. No hook intercepts submitted prompts or model requests, changes permission settings, or approves tool calls.
+
+### Saved tool results and removal
+
 When Claude Code saves an oversized Guild tool result to a file, the pane reads `CLAUDE_CONFIG_DIR`, or `HOME` for the default `~/.claude`, to locate Claude Code's configuration directory. It checks the complete reported path is under that directory with a `projects/<project>/<session>/tool-results/` layout, has no `.` or `..` path segments, and names the server and tool it called. It reads the saved result without deleting it. A refused path is not read. The mod starts no programs or shell commands; saved copies remain under Claude Code's file management.
 
 To remove a session from the stored watch list and stop polling it, ask Claude to unwatch it. Unwatching the last session removes that conversation's stored list. `/clear` starts a different list; resuming an older conversation restores its saved list. Closing the pane does not unwatch sessions. To stop the hooks, disable or uninstall the plugin and reload or close active Claude Code sessions. This does not delete Guild agents or session history. To revoke the connection, use Guild's Security > Connected apps.
 
 Guild-side use and retention are governed by the applicable customer agreement and [Guild's privacy policy](https://www.guild.ai/privacy-policy); the plugin does not set a server retention period. The policy describes retaining personal data as necessary for the stated purposes and legal obligations. For deletion or privacy questions, contact privacy@guild.ai, or your organization's administrator when Guild processes the data on its behalf. These controls do not delete copies retained by Claude.
+
+The [directory submission notes](docs/directory-submission.md) map the portal's findings to these disclosures and explain which data-handling answers and acknowledgements need the submission owner's confirmation.
 
 ## Docs
 
