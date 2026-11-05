@@ -1,2 +1,3 @@
-# Written by Claude Code when it loads the hooks module from this folder (--plugin-dir)
-.claude-plugin/types/
+.DS_Store
+Thumbs.db
+node_modules/
