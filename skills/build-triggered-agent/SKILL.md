@@ -24,11 +24,15 @@ repository arrive under the installation of the account that owns it.
 - Repository owned by the user: a personal workspace works.
 
 Check the connection before building anything: `guild_list_credentials` with
-the organization, or the user, as `account_id_or_name` and `guildai~github` as
-`integration`. If there is none, `guild_get_integration_connect_url` for
-`guildai~github` with that owner as `owner_id`, give the user the link, and
-confirm with `guild_list_credentials` once they say it is done. A trigger made
-before the connection exists is bound to nothing.
+the workspace's owner as `account_id_or_name` and `guildai~github` as
+`integration`. A trigger runs for the organization, not for one member, so it
+needs the organization's shared connection: a credential with no `target`. If
+there is none, `guild_get_integration_connect_url` for `guildai~github` with
+the organization as `owner_id`. Only an organization admin may request that
+link. If the call is refused, tell the user an admin must connect GitHub for the
+organization in Guild, and stop until they confirm. A member's own connection,
+the one made with `workspace_id` alone, does not serve a trigger. Confirm with
+`guild_list_credentials` once they say it is done.
 
 A private agent owned by a user cannot be installed in an organization's
 workspace. When the workspace belongs to an organization, create the agent
