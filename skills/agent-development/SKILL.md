@@ -40,9 +40,28 @@ Don't send them to a terminal or another app to do it.
    Jira and so on).
 2. `guild_list_integration_tools` for the exact tool names. Never guess a tool
    name; an invented one fails validation.
-3. `guild_list_my_workspaces` and check the user has connected each integration
-   in the workspace you will test in. If not, tell them to connect it in Guild
-   before testing.
+3. `guild_list_my_workspaces` and pick the workspace you will test in. Then
+   `guild_list_credentials` with that workspace's owner as `account_id_or_name`
+   and each integration's full name as `integration`. This is an inventory of
+   what is connected under that owner, never a token, and not a promise that
+   the workspace can use it: a workspace can restrict its owner's credentials,
+   and a credential with a membership `target` serves one member's runs only.
+   The test session in step 5 is the real check.
+4. For each integration with no credential, get a link with
+   `guild_get_integration_connect_url` and the integration's full name:
+   - For the user's own runs, pass the test workspace as `workspace_id` and no
+     `owner_id`. This binds the credential to the user's membership in the
+     workspace's organization, or to their own account, and any member can do
+     it.
+   - For a connection the whole organization shares, such as an agent that runs
+     for other people or on a trigger, pass the organization as `owner_id`.
+     Only an organization admin may do this. If the call is refused, the user
+     is not an admin: tell them which integration an admin must connect, and
+     go on with the user's own connection for testing.
+
+   Give the user the link, ask them to open it and say when they are done, then
+   `guild_list_credentials` again to confirm it landed. Do not send them to find
+   the page in Guild themselves.
 
 ## 3. Create the agent
 
@@ -86,8 +105,10 @@ are listed in `references/compiler.md`.
 3. Call `guild_wait_for_session` once with the session ID, the send result's
    `id` as `user_event_id`, and its `wait_after_event_id` unchanged as
    `after_event_id`. Read the output from the completed event.
-4. If the result is `ACTION_REQUIRED`, explain the requested input or missing
-   connection and stop waiting. If it is an error, report that error.
+4. If the result is `ACTION_REQUIRED`, explain the requested input and stop
+   waiting. For a missing connection, hand out the connect link as in step 2,
+   with the session's workspace as `workspace_id`, then start a new test
+   session once it is confirmed. If it is an error, report that error.
 
 Wait tools hold the call open until completion, required action, or the server's
 configured wait window expires. Omit `timeout_seconds` for the normal server
