@@ -23,6 +23,13 @@ repository arrive under the installation of the account that owns it.
   person's own installation and never receives the organization's events.
 - Repository owned by the user: a personal workspace works.
 
+Check the connection before building anything: `guild_list_credentials` with
+the organization, or the user, as `account_id_or_name` and `guildai~github` as
+`integration`. If there is none, `guild_get_integration_connect_url` for
+`guildai~github` with that owner as `owner_id`, give the user the link, and
+confirm with `guild_list_credentials` once they say it is done. A trigger made
+before the connection exists is bound to nothing.
+
 A private agent owned by a user cannot be installed in an organization's
 workspace. When the workspace belongs to an organization, create the agent
 under that organization too (`guild_create_agent` with `owner_id`).

@@ -40,9 +40,15 @@ Don't send them to a terminal or another app to do it.
    Jira and so on).
 2. `guild_list_integration_tools` for the exact tool names. Never guess a tool
    name; an invented one fails validation.
-3. `guild_list_my_workspaces` and check the user has connected each integration
-   in the workspace you will test in. If not, tell them to connect it in Guild
-   before testing.
+3. `guild_list_credentials` with the owner from step 1 as `account_id_or_name`
+   and each integration's full name as `integration`. A credential with no
+   `target` serves every workspace of that owner; one with a `target` serves
+   that workspace only. The call shows what is connected, never a token.
+4. For each integration with no credential, `guild_get_integration_connect_url`
+   with its full name and the owner as `owner_id`. Give the user the link, ask
+   them to open it and say when they are done, then `guild_list_credentials`
+   again to confirm it landed. Do not send them to find the page in Guild
+   themselves, and do not build or test until every integration is connected.
 
 ## 3. Create the agent
 
@@ -86,8 +92,10 @@ are listed in `references/compiler.md`.
 3. Call `guild_wait_for_session` once with the session ID, the send result's
    `id` as `user_event_id`, and its `wait_after_event_id` unchanged as
    `after_event_id`. Read the output from the completed event.
-4. If the result is `ACTION_REQUIRED`, explain the requested input or missing
-   connection and stop waiting. If it is an error, report that error.
+4. If the result is `ACTION_REQUIRED`, explain the requested input and stop
+   waiting. For a missing connection, hand out the connect link as in step 2,
+   then start a new test session once it is confirmed. If it is an error,
+   report that error.
 
 Wait tools hold the call open until completion, required action, or the server's
 configured wait window expires. Omit `timeout_seconds` for the normal server
