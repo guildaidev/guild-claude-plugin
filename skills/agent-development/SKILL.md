@@ -110,17 +110,34 @@ are listed in `references/compiler.md`.
    with the session's workspace as `workspace_id`, then start a new test
    session once it is confirmed. If it is an error, report that error.
 
-Wait tools hold the call open until completion, required action, or the server's
-configured wait window expires. Omit `timeout_seconds` for the normal server
-window. If the result is still pending (`wait_complete: false`) with no required
-action, renew only the same wait with the same IDs and receipt. A disconnected
-wait also does not mean the remote run failed: retry only that wait.
+### Following any wait
+
+Omit `timeout_seconds` unless the user asks for an observation deadline. Follow
+the response from `guild_wait_for_agent`, `guild_wait_for_job` or
+`guild_wait_for_session`:
+
+- **Background task:** if Claude reports a server-side task and says it will
+  notify you, let the client track it. Give one short running update and leave
+  the conversation available for other work. Do not call another wait or a
+  status tool while that task is pending. Resume from its delivered result.
+- **Foreground wait:** the call stays open over HTTP/SSE until the result or
+  the server's wait window ends. If it returns `wait_complete: false` with no
+  required action, renew the same wait with the same IDs and receipt. If the
+  connection drops without a recoverable background task, retry only that wait.
+
+A completed background task means the wait returned. Inspect its result:
+`ACTION_REQUIRED` needs the user's action, `ERROR` is a failure, and a pending
+result needs the same wait renewed. Neither ending a wait nor stopping its
+background task cancels the remote agent.
 
 Do not loop over get/status/event tools or shell sleeps. Do not resend input or
 create another execution to recover. Read session events once after completion
 only if needed to retrieve the final reply.
 
-Show the user the agent's reply, not a summary of the events.
+When the result arrives, lead with the agent's actual reply or error, then the
+session link. Keep receipts and transport details for troubleshooting. Report
+elapsed time only from recorded timestamps; descriptions, version summaries
+and keepalive messages do not establish a run's duration or expected finish time.
 
 ## 6. Install and run it
 

@@ -13,12 +13,22 @@ The first tool call opens a Guild sign-in in your browser. You can disconnect at
 
 ## Skills
 
-Both skills work only through the MCP tools, so they run the same in Claude Code, Claude Desktop and claude.ai. Neither uses the `guild` CLI, `npm` or `git`.
+Both skills work through the MCP tools in Claude Code, Claude Desktop and claude.ai. How a long wait appears depends on the client's Tasks support. Neither skill uses the `guild` CLI, `npm` or `git`.
 
 - `agent-development` builds, tests, publishes and installs an agent.
 - `build-triggered-agent` builds an agent that runs on a GitHub event.
 
 `skills/agent-development/references/` is the SDK documentation from the Guild CLI's skill in guildcode (`cli/docs/skills`). Don't edit it here. To update it, run `scripts/sync-cli-skills.sh <path-to-guildcode>` and commit. `skills/CLI_SKILLS_SOURCE` records the guildcode commit it came from.
+
+## Following long-running work
+
+In a Claude Code session with [native MCP Tasks support](https://code.claude.com/docs/en/mcp#mcp-tasks-that-run-on-the-server), a pending Guild wait becomes a background task. You can continue the conversation; Claude reports the result when its client retrieves it. The client makes short status requests in the background, without repeated model tool calls. A result that is already ready returns directly.
+
+Clients without Tasks support use a foreground HTTP/SSE wait. Guild streams progress and the result during that call. A bounded wait can expire while the agent is still running; the skill renews the same observation using its receipt. An error or a request for input or credentials is reported to you. Finishing a wait does not by itself mean the agent succeeded, and cancelling the observation does not stop the remote agent.
+
+The plugin requests compact session-start, message-send and session-wait results with `X-Guild-MCP-Result-Format: compact`. Guild keeps execution IDs, status, required actions and the full final output while omitting repeated entity metadata. Other tools, including the pane's session and event reads, retain their full responses. Servers that do not support this preference continue returning full results.
+
+After updating the plugin through `/plugin`, run `/reload-plugins` or start a new Claude Code session. Check `/mcp` for the Guild connection and `/tasks` for background tasks. The [reviewer guide](docs/reviewer-guide.md#try-a-background-run) includes a customer-feedback example and what to observe.
 
 ## Guild sessions pane
 

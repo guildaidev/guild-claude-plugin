@@ -84,6 +84,33 @@ successful result. The pane accepts an accessible failed session and shows its
 failed status and error timeline. An account cannot watch sessions Guild
 refuses it permission to read.
 
+## Try a background run
+
+Use an interactive terminal Claude Code session with
+[native MCP Tasks support](https://code.claude.com/docs/en/mcp#mcp-tasks-that-run-on-the-server).
+Update the plugin and reload it before starting. Use synthetic feedback or
+information you are authorized to send to Guild.
+
+> In the review workspace, build a draft Guild agent that turns a batch of
+> customer feedback into a product brief: the three recurring problems,
+> supporting quotes, affected customer segments, and suggested next steps.
+> Use only the feedback I provide and flag missing evidence. Test it on this
+> batch: [paste feedback]. Do not publish, install or schedule it. Show me the
+> brief and the session link when it finishes.
+
+While the run is pending, ask Claude to help write a short agenda for reviewing
+the brief. Expected: Claude can answer while the existing Guild task runs and
+delivers the brief when the result arrives. It does not start a second run or
+loop over status tools. Check `/tasks` for the background task. A quick run may
+finish before a task is created; that demonstrates direct completion, not a
+long-running background wait.
+
+Record the plugin and Claude Code versions, surface, session link, wait call
+count and observed result. A native task's completion notification can also
+carry an error or an action request; verify Claude reports that outcome. The
+client's internal task status requests and the pane's 20-second refresh are
+expected and are separate from model-driven polling.
+
 ## Cleanup
 
 Ask Claude to unwatch the sample sessions. Their rows disappear and the last
