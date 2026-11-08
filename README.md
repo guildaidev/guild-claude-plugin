@@ -1,6 +1,6 @@
 # Guild plugin for Claude
 
-Connects Claude Code to Guild's hosted MCP server at `https://api.guild.ai/mcp`, so Claude can build, publish, install, run and schedule Guild agents and read their sessions. In Claude Code it also adds a pane beside the chat that follows the Guild sessions a conversation works with.
+Connects Claude Code to Guild's hosted MCP server at `https://api.guild.ai/mcp`, so Claude can build, privately test and improve agents on Guild, then publish, install, run and schedule them and read their sessions. In Claude Code it also adds a pane beside the chat that follows the Guild sessions a conversation works with.
 
 ## Install
 
@@ -13,7 +13,7 @@ The first tool call opens a Guild sign-in in your browser. You can disconnect at
 
 ## Skills
 
-Both skills work only through the MCP tools, so they run the same in Claude Code, Claude Desktop and claude.ai. Neither uses the `guild` CLI, `npm` or `git`.
+Both skills use Guild MCP tools for agent development and execution. They are designed for Claude Code, Claude Desktop and claude.ai; the full development loop has been verified in Claude Code terminal. Desktop surfaces remain acceptance follow-ups. Neither skill requires the user to run the `guild` CLI, `npm` or `git`.
 
 - `agent-development` turns an idea into a private candidate, prepares an
   ordinary organization workspace and gateway profile, tests the exact version,
@@ -45,6 +45,8 @@ Prompt configuration publishes a private candidate version after validation;
 source candidates can stay unpublished. Neither path installs the prototype.
 
 `skills/agent-development/references/` is the SDK documentation from the Guild CLI's skill in guildcode (`cli/docs/skills`). Don't edit it here. To update it, run `scripts/sync-cli-skills.sh <path-to-guildcode>` and commit. `skills/CLI_SKILLS_SOURCE` records the guildcode commit it came from.
+
+For colleague trial instructions, backend prerequisites and a sample build/test/revise workflow, see [Trying the development workflow](docs/development-testing.md).
 
 ## Guild sessions pane
 

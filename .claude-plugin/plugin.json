@@ -1,8 +1,8 @@
 {
   "name": "guild",
-  "version": "0.2.8",
+  "version": "0.3.0",
   "license": "Apache-2.0",
-  "description": "Build, publish, and run Guild AI agents from Claude, and follow their sessions in a pane beside the chat in Claude Code.",
+  "description": "Build, test, and improve agents on Guild from Claude, then publish, run, and manage them. Follow Guild sessions in a pane beside the chat in Claude Code.",
   "author": {
     "name": "Guild.ai, Inc.",
     "email": "support@guild.ai",
