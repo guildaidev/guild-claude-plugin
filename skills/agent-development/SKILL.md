@@ -69,6 +69,10 @@ required `@guildai-services/<owner>~<name>` dependencies. Send every project
 file to `guild_create_agent_version`, with a summary and without
 package-lock.json. Source candidates can remain unpublished for testing.
 
+Put conditional awaited tool or child-agent calls in explicit `if` blocks.
+Avoid awaited operands in ternary, short-circuit and optional-chain expressions:
+the agent compiler can evaluate those calls even when that branch is unselected.
+
 Wait with the exact `version_id` and `job_id` from the build using
 `guild_wait_for_job`. A timeout renews only that wait. On failure read
 `guild_get_agent_version_validation`, repair the same prototype, and create a
