@@ -46,7 +46,7 @@ source candidates can stay unpublished. Neither path installs the prototype.
 
 `skills/agent-development/references/` is the SDK documentation from the Guild CLI's skill in guildcode (`cli/docs/skills`). Don't edit it here. To update it, run `scripts/sync-cli-skills.sh <path-to-guildcode>` and commit. `skills/CLI_SKILLS_SOURCE` records the guildcode commit it came from.
 
-For colleague trial instructions, backend prerequisites and a sample build/test/revise workflow, see [Trying the development workflow](docs/development-testing.md).
+To set up and verify the workflow from a fresh Claude Code session, copy the prompt in [Development testing](docs/development-testing.md).
 
 ## Guild sessions pane
 
