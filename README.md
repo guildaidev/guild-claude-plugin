@@ -15,8 +15,34 @@ The first tool call opens a Guild sign-in in your browser. You can disconnect at
 
 Both skills work only through the MCP tools, so they run the same in Claude Code, Claude Desktop and claude.ai. Neither uses the `guild` CLI, `npm` or `git`.
 
-- `agent-development` builds, tests, publishes and installs an agent.
-- `build-triggered-agent` builds an agent that runs on a GitHub event.
+- `agent-development` turns an idea into a private candidate, prepares an
+  ordinary organization workspace and gateway profile, tests the exact version,
+  shows actual output, and revises the same candidate from feedback. Explicit
+  acceptance produces an exact-version handoff to Logan for production setup,
+  promotion, smoke and operation.
+- `build-triggered-agent` handles explicitly authorized production GitHub
+  triggers after the prototype and accepted-version handoff. Prototype testing
+  does not activate installs, schedules or triggers.
+
+Profile-bound testing requires `guild_start_profile_agent_test_session` and the
+profile-management tools on the connected Guild MCP server. If that capability
+is missing, the skill reports the server requirement and stops before execution;
+it never falls back to an unbound test. The profile constrains Guild-brokered
+integration calls with live connection and policy settings. It is not OS or
+network isolation for arbitrary code. Browser connection permissions remain
+in force, and credential inventory does not prove test readiness.
+
+The three required workflow modules are packaged under
+`skills/agent-development/workflows/`: profile setup, test/iteration and the
+v1 `guild.agent-test-result` envelope. Claude Code reads them with its `Read`
+tool; Desktop chat uses its skill-file reader. A client must make the packaged
+modules available to the skill. The output includes actual candidate, version,
+workspace, profile, session and evidence references, and is shown directly in
+chat with a JSON fallback. Kristof can replace presentation independently.
+No sessions pane, local server or end-user source files are required. A
+completed test is distinct from user acceptance and production readiness.
+Prompt configuration publishes a private candidate version after validation;
+source candidates can stay unpublished. Neither path installs the prototype.
 
 `skills/agent-development/references/` is the SDK documentation from the Guild CLI's skill in guildcode (`cli/docs/skills`). Don't edit it here. To update it, run `scripts/sync-cli-skills.sh <path-to-guildcode>` and commit. `skills/CLI_SKILLS_SOURCE` records the guildcode commit it came from.
 
