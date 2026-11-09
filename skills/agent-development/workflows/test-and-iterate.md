@@ -10,8 +10,8 @@ is not a fallback and cannot accept the required profile binding.
 1. Call `guild_start_profile_agent_test_session` with the selected
    `workspace_id_or_name`, exact `agent_version_id`, and required profile UUID
    as `profile_id`. A validated source version can remain unpublished.
-2. Verify the returned `profile_id`, workspace reference and
-   `agent_version_override.id` match the intended profile, workspace and
+2. Verify the returned `profile.id`, `profile.workspace.id`, session workspace
+   reference and `agent_version_override.id` match the intended profile, workspace and
    candidate version. If missing or mismatched, stop before sending input and
    report the binding failure. Retain actual returned identifiers.
 3. `guild_send_session_message` with `session_id` and agreed test `content`.
