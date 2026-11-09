@@ -9,7 +9,7 @@
     {
       "name": "guild",
       "source": "./",
-      "description": "Build, publish, and run Guild AI agents from Claude, and follow their sessions in a pane beside the chat in Claude Code."
+      "description": "Build, test, publish, install and run Guild AI agents from Claude through Guild's MCP server."
     }
   ]
 }
