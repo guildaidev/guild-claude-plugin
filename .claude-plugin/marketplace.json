@@ -1,6 +1,6 @@
 {
   "name": "guild",
-  "description": "Build, publish, and run Guild.ai agents.",
+  "description": "Build, test, improve, and run agents on Guild.",
   "owner": {
     "name": "Guild.ai, Inc.",
     "email": "support@guild.ai"
@@ -9,7 +9,7 @@
     {
       "name": "guild",
       "source": "./",
-      "description": "Build, test, publish, install and run Guild AI agents from Claude through Guild's MCP server."
+      "description": "Build, test, and improve agents on Guild from Claude, then publish, run, and manage them."
     }
   ]
 }

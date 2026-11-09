@@ -1,6 +1,6 @@
 # Guild plugin for Claude
 
-Connects Claude to Guild's hosted MCP server at `https://api.guild.ai/mcp`, so Claude can build, test, publish, install, run and schedule Guild agents and read their sessions. It works the same in Claude Code, Claude Desktop and claude.ai.
+Connects Claude Code to Guild's hosted MCP server at `https://api.guild.ai/mcp`, so Claude can build, privately test and revise agents on Guild, then publish, install, run and schedule them and read their sessions. It works in Claude Code, Claude Desktop and claude.ai.
 
 ## Install
 
@@ -13,10 +13,23 @@ The first tool call opens a Guild sign-in in your browser. You can disconnect at
 
 ## Skills
 
-Both skills work only through the MCP tools. Neither uses the `guild` CLI, `npm` or `git`.
+Both skills work through Guild MCP tools in Claude Code, Claude Desktop and
+claude.ai. Neither requires the user to run the `guild` CLI, `npm` or `git`.
 
-- `agent-development` builds, tests, publishes and installs an agent. It checks which integrations the test workspace has connected and hands out a connect link for a missing one.
+- `agent-development` guides workspace and connection setup, builds a private
+  candidate, tests it on Guild, and revises it from feedback. Acceptance records
+  the exact tested version for a separately requested production release.
 - `build-triggered-agent` builds an agent that runs on a GitHub event.
+
+Tests use a gateway profile to select integrations and credentials. The connected
+Guild server must expose `guild_start_profile_agent_test_session` and the profile
+setup tools; the skill stops if they are unavailable. A profile governs
+Guild-brokered calls and does not make production services into test services.
+
+To try a local checkout, start a new Claude Code session with
+`claude --plugin-dir /absolute/path/to/guild-claude-plugin`, authenticate Guild
+through `/mcp`, then invoke `/guild:agent-development` with your agent idea.
+Loading a local plugin does not deploy changes to the connected Guild backend.
 
 ### Updating the SDK reference
 
@@ -58,7 +71,7 @@ The [reviewer guide](docs/reviewer-guide.md) has two example workflows, expected
 
 The declared connector is `https://api.guild.ai/mcp`. Building and running agents sends the arguments Claude supplies to Guild, including agent source, configuration, workspace identifiers and test inputs. Guild processes these to build and execute the requested agents. Agents can use the models and integrations configured for their workspace; their credentials and permissions are managed in Guild.
 
-The plugin is two skills, an icon and the connector declaration. It has no hooks module, runs no code of its own, reads no local files, starts no programs and makes no direct HTTP requests. Every Guild call is a tool call Claude makes through the declared connector, with Claude Code's normal permission prompts. The plugin does not send data to any other service and has no analytics.
+The plugin contains two skills, their documentation, an icon and the connector declaration. It contains no executable code, reads no local files, starts no programs and makes no direct HTTP requests. Every Guild call is a tool call Claude makes through the declared connector, with Claude Code's normal permission prompts. The plugin does not send data to any other service and has no analytics.
 
 Guild session inputs, outputs and errors are read back from Guild through the same tools and can themselves contain personal data.
 

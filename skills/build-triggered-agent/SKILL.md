@@ -1,81 +1,55 @@
 ---
 name: build-triggered-agent
-description: Build a Guild agent that runs on a GitHub event (pull request opened, issue opened) and acts on it, for example DMs someone in Slack. Use when the user wants an agent that reacts to a repository event, or when a Guild webhook trigger never fires.
+description: Build and activate Guild agents for GitHub events. Use for repository-event workflows or webhook triggers that do not fire.
 ---
 
-# Build an agent that runs on a GitHub event
+# Run a Guild agent on GitHub events
 
-Do all of this with the Guild MCP tools (`guild_*`). Never run the `guild` CLI,
-`npm` or `git`. One decision up front decides whether the trigger ever fires.
+Use Guild MCP tools only. If unavailable, follow the connection instructions in `agent-development`.
+Activate a trigger only after the user requests release and confirms the version and destination.
 
-If no `guild_*` tools are available, the user hasn't signed in to Guild yet.
-Tell them how and stop, as the `agent-development` skill describes.
+## 1. Choose the workspace and GitHub connection
 
-## 1. Decide who owns the workspace
+1. Match the workspace owner to the repository owner.
+   For organization repositories, use the Guild organization with that organization's GitHub App installation.
+   For personal repositories, use the user's workspace and installation.
+   A trigger receives events from its GitHub App installation.
+2. Inspect `guild_list_credentials` with the workspace owner as `account_id_or_name` and `guildai~github` as `integration`.
+   Organization triggers need a shared credential with no `target`. A member's connection does not serve them.
+3. If missing, use `guild_get_integration_connect_url` with `guildai~github` and the workspace owner as `owner_id`.
+   Organization setup requires an admin. If denied, explain the admin action. Stop until setup is confirmed.
+   Recheck `guild_list_credentials` after browser setup.
+4. Check that the accepted agent's owner permits installation in this workspace.
+   A user's private agent cannot be installed in an organization's workspace.
+   If ownership differs, stop before activation. A replacement requires another test and acceptance.
 
-A webhook trigger receives events only through the GitHub connection it was
-created with. That connection is a GitHub App installation, and events from a
-repository arrive under the installation of the account that owns it.
+## 2. Prepare the accepted version
 
-- Repository owned by a GitHub organization: put the agent in a workspace owned
-  by the matching Guild organization, whose GitHub connection is that
-  organization's installation. A personal GitHub connection is usually the
-  person's own installation and never receives the organization's events.
-- Repository owned by the user: a personal workspace works.
-
-Check the connection before building anything: `guild_list_credentials` with
-the workspace's owner as `account_id_or_name` and `guildai~github` as
-`integration`. A trigger runs for the organization, not for one member, so it
-needs the organization's shared connection: a credential with no `target`. If
-there is none, `guild_get_integration_connect_url` for `guildai~github` with
-the organization as `owner_id`. Only an organization admin may request that
-link. If the call is refused, tell the user an admin must connect GitHub for the
-organization in Guild, and stop until they confirm. A member's own connection,
-the one made with `workspace_id` alone, does not serve a trigger. Confirm with
-`guild_list_credentials` once they say it is done.
-
-A private agent owned by a user cannot be installed in an organization's
-workspace. When the workspace belongs to an organization, create the agent
-under that organization too (`guild_create_agent` with `owner_id`).
-
-## 2. Create and publish the agent
-
-1. `guild_create_agent` with the owner from step 1.
-2. `guild_create_agent_version` with every source file and `publish: true`.
-   The agent's input is the raw webhook payload, so validate it with a schema
-   that matches GitHub's (`action`, `pull_request`, `issue`, `repository`).
-3. Call `guild_wait_for_job` once with the returned `version_id` and `job_id`.
-   Follow the `agent-development` skill's build-wait and failure handling.
-4. `guild_create_workspace` if needed, then `guild_install_agent`.
-5. Anything the agent reads from its environment, such as a Slack member ID, goes
-   in a workspace variable: `guild_set_workspace_variable`. Never put a secret
-   in one.
+1. Retain the accepted agent ID, version ID and test evidence from `agent-development`.
+   If absent, use that skill to build and test a private prototype first.
+   The agent must handle the GitHub webhook payload: `action`, `pull_request`, `issue` and `repository`.
+   If source changes are needed, repeat testing and acceptance. Do not publish over an auto-updating production agent.
+2. Follow section 6, steps 1 and 2, of `agent-development` to publish and install the accepted version.
+   That procedure pins and verifies the version before activation. Keep the verified `workspace_agent_id`.
+   Do not recreate the agent or version during activation.
 
 ## 3. Create the triggers
 
-1. `guild_search_integrations` for GitHub. Its `webhook_config` gives the
-   config ID, the events and actions it sends, and the `service_config_fields`
-   a trigger needs (`repo`, as `owner/repo`).
-2. `guild_list_installed_agents` for the install's `workspace_agent_id`.
-3. `guild_create_webhook_trigger`, one per event and action, for example
-   `pull_request` with `opened`. Filter by action in the trigger rather than in
-   the agent, so the agent does not run on every `synchronize` or `labeled`
-   event.
+1. Find GitHub with `guild_search_integrations`.
+   Read its `webhook_config` for the config ID, events, actions and `service_config_fields`.
+   Set `repo` to `owner/repo`.
+2. Use the verified install's `workspace_agent_id` with `guild_create_webhook_trigger`.
+   Create one trigger per required event and action, such as `pull_request` with `opened`.
+   Set action filters on the trigger to avoid unnecessary runs.
+3. If the tool refuses the operation, direct the user to the Guild web app.
+   Do not use the CLI as a fallback.
 
-If the tool is refused, tell the user to create the trigger in the Guild web app
-instead. Don't fall back to the CLI.
+## 4. Test the trigger
 
-## 4. Test with a real event
-
-A test session wraps its input as a text message, so it cannot stand in for a
-webhook payload. Cause a real event instead: open an issue whose title matches
-the agent's filter, check `guild_list_trigger_sessions`, read the result with
-`guild_get_session_events`, then close the issue.
-
-If no session appears within a minute, the trigger is bound to the wrong GitHub
-installation. Go back to step 1.
-
-## What to tell the user
-
-Agent messages sent to Slack always end with a footer linking the session that
-sent them. Guild adds it for traceability and it cannot be turned off.
+1. Agree on a safe real event, such as a test issue.
+   A text-message test session cannot reproduce webhook input delivery.
+2. Create only the agreed event. Check `guild_list_trigger_sessions`.
+   Read the result with `guild_get_session_events`. Remove the test issue if agreed.
+3. If no session appears, check the GitHub installation and event filters.
+   Show the result and session link.
+   Explain that Guild adds a session-link footer to Slack messages. This footer cannot be disabled.
