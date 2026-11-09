@@ -71,7 +71,7 @@ The [reviewer guide](docs/reviewer-guide.md) has two example workflows, expected
 
 The declared connector is `https://api.guild.ai/mcp`. Building and running agents sends the arguments Claude supplies to Guild, including agent source, configuration, workspace identifiers and test inputs. Guild processes these to build and execute the requested agents. Agents can use the models and integrations configured for their workspace; their credentials and permissions are managed in Guild.
 
-The plugin is two skills, an icon and the connector declaration. It has no hooks module, runs no code of its own, reads no local files, starts no programs and makes no direct HTTP requests. Every Guild call is a tool call Claude makes through the declared connector, with Claude Code's normal permission prompts. The plugin does not send data to any other service and has no analytics.
+The plugin contains two skills, their documentation, an icon and the connector declaration. It contains no executable code, reads no local files, starts no programs and makes no direct HTTP requests. Every Guild call is a tool call Claude makes through the declared connector, with Claude Code's normal permission prompts. The plugin does not send data to any other service and has no analytics.
 
 Guild session inputs, outputs and errors are read back from Guild through the same tools and can themselves contain personal data.
 
