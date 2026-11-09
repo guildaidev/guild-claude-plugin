@@ -9,7 +9,7 @@
     {
       "name": "guild",
       "source": "./",
-      "description": "Build, test, and improve agents on Guild from Claude, then publish, run, and manage them. Follow Guild sessions in a pane beside the chat in Claude Code."
+      "description": "Build, test, and improve agents on Guild from Claude, then publish, run, and manage them."
     }
   ]
 }

@@ -8,8 +8,7 @@ description: Use when the user wants to create, prototype, test, revise, publish
 Use Guild MCP tools (`guild_*`) for this workflow. Guild builds and validates
 versions remotely. Send source as `files` to `guild_create_agent_version`;
 never require the user to run the Guild CLI, npm or git, or save agent source
-locally. Claude Code and Desktop chat use the same workflow. The sessions pane
-is optional presentation.
+locally. Claude Code and Desktop chat use the same workflow.
 
 If Guild tools are unavailable, explain how to connect, then stop:
 

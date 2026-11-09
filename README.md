@@ -1,6 +1,6 @@
 # Guild plugin for Claude
 
-Connects Claude Code to Guild's hosted MCP server at `https://api.guild.ai/mcp`, so Claude can build, privately test and revise agents on Guild, then publish, install, run and schedule them and read their sessions. In Claude Code it also adds a pane beside the chat that follows the Guild sessions a conversation works with.
+Connects Claude Code to Guild's hosted MCP server at `https://api.guild.ai/mcp`, so Claude can build, privately test and revise agents on Guild, then publish, install, run and schedule them and read their sessions. It works in Claude Code, Claude Desktop and claude.ai.
 
 ## Install
 
@@ -26,14 +26,14 @@ Guild server must expose `guild_start_profile_agent_test_session` and the profil
 setup tools; the skill stops if they are unavailable. A profile governs
 Guild-brokered calls and does not make production services into test services.
 
-`skills/agent-development/references/` is the SDK documentation from the Guild CLI's skill in guildcode (`cli/docs/skills`). Don't edit it here. To update it, run `scripts/sync-cli-skills.sh <path-to-guildcode>` and commit. `skills/CLI_SKILLS_SOURCE` records the guildcode commit it came from.
-
 To try a local checkout, start a new Claude Code session with
 `claude --plugin-dir /absolute/path/to/guild-claude-plugin`, authenticate Guild
 through `/mcp`, then invoke `/guild:agent-development` with your agent idea.
 Loading a local plugin does not deploy changes to the connected Guild backend.
 
-## Guild sessions pane
+### Updating the SDK reference
+
+`skills/agent-development/references/` is a copy of the agent-writing half of the Guild CLI's skill in guildcode (`cli/docs/skills`). guildcode is the source of truth. Do not edit the copies here. `skills/CLI_SKILLS_SOURCE.txt` records the guildcode commit they came from.
 
 To update them from a guildcode checkout at `$SRC`:
 
