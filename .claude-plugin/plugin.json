@@ -1,8 +1,8 @@
 {
   "name": "guild",
-  "version": "0.2.9",
+  "version": "0.3.1",
   "license": "Apache-2.0",
-  "description": "Build, publish, and run Guild AI agents from Claude, and follow their sessions in a pane beside the chat in Claude Code.",
+  "description": "Build, test, publish, install and run Guild AI agents from Claude through Guild's MCP server.",
   "author": {
     "name": "Guild.ai, Inc.",
     "email": "support@guild.ai",
@@ -16,5 +16,6 @@
     "guild"
   ],
   "privacyPolicyUrl": "https://www.guild.ai/privacy-policy",
-  "types": "./types/index.d.ts"
+  "termsOfServiceUrl": "https://www.guild.ai/terms",
+  "supportUrl": "https://www.guild.ai/contact"
 }

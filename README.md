@@ -1,6 +1,6 @@
 # Guild plugin for Claude
 
-Connects Claude Code to Guild's hosted MCP server at `https://api.guild.ai/mcp`, so Claude can build, publish, install, run and schedule Guild agents and read their sessions. In Claude Code it also adds a pane beside the chat that follows the Guild sessions a conversation works with.
+Connects Claude to Guild's hosted MCP server at `https://api.guild.ai/mcp`, so Claude can build, test, publish, install, run and schedule Guild agents and read their sessions. It works in Claude Code, Claude Desktop and claude.ai.
 
 ## Install
 
@@ -13,12 +13,36 @@ The first tool call opens a Guild sign-in in your browser. You can disconnect at
 
 ## Skills
 
-Both skills work through the MCP tools in Claude Code, Claude Desktop and claude.ai. How a long wait appears depends on the client's Tasks support. Neither skill uses the `guild` CLI, `npm` or `git`.
+Both skills work through the MCP tools. How a long wait appears depends on the client's Tasks support. Neither skill uses the `guild` CLI, `npm` or `git`.
 
-- `agent-development` builds, tests, publishes and installs an agent.
+- `agent-development` builds, tests, publishes and installs an agent. It checks which integrations the test workspace has connected and hands out a connect link for a missing one.
 - `build-triggered-agent` builds an agent that runs on a GitHub event.
 
-`skills/agent-development/references/` is the SDK documentation from the Guild CLI's skill in guildcode (`cli/docs/skills`). Don't edit it here. To update it, run `scripts/sync-cli-skills.sh <path-to-guildcode>` and commit. `skills/CLI_SKILLS_SOURCE` records the guildcode commit it came from.
+### Updating the SDK reference
+
+`skills/agent-development/references/` is a copy of the agent-writing half of the Guild CLI's skill in guildcode (`cli/docs/skills`). guildcode is the source of truth. Do not edit the copies here. `skills/CLI_SKILLS_SOURCE.txt` records the guildcode commit they came from.
+
+To update them from a guildcode checkout at `$SRC`:
+
+1. Write the header below to the top of each of the four files. It tells Claude which MCP tool stands in for each CLI command the text mentions.
+2. Below the header, put the `## SDK Essentials` section and everything after it from `cli/docs/skills/agent-dev.md` into `sdk.md`.
+3. Below the header, put `cli/docs/skills/agent-dev-references/compiler.md`, `integrations.md` and `project.md` into the files of the same name.
+4. Write the guildcode commit hash to `skills/CLI_SKILLS_SOURCE.txt` and commit.
+
+```markdown
+<!-- Copied from guildcode cli/docs/skills. See "Updating the SDK reference" in the README. Do not edit. -->
+
+> This reference is written for the Guild CLI. In this plugin, use the MCP
+> tools instead and never run `guild`, `npm` or `git`:
+>
+> | CLI                                   | MCP tool                                        |
+> | ------------------------------------- | ----------------------------------------------- |
+> | `guild integration list`              | `guild_search_integrations`                     |
+> | `guild integration operation list`    | `guild_list_integration_tools`                  |
+> | `npm install <package>`               | add it to `dependencies` in `package.json`      |
+> | `npm run build`, `guild agent save`   | `guild_create_agent_version`, then `guild_get_agent_version_validation` |
+> | `guild workspace variable set`        | `guild_set_workspace_variable`                  |
+```
 
 ## Following long-running work
 
@@ -26,94 +50,31 @@ In a Claude Code session with [native MCP Tasks support](https://code.claude.com
 
 Clients without Tasks support use a foreground HTTP/SSE wait. Guild streams progress and the result during that call. A bounded wait can expire while the agent is still running; the skill renews the same observation using its receipt. An error or a request for input or credentials is reported to you. Finishing a wait does not by itself mean the agent succeeded, and cancelling the observation does not stop the remote agent.
 
-The plugin requests compact session-start, message-send and session-wait results with `X-Guild-MCP-Result-Format: compact`. Guild keeps execution IDs, status, required actions and the full final output while omitting repeated entity metadata. Other tools, including the pane's session and event reads, retain their full responses. Servers that do not support this preference continue returning full results.
+The plugin requests compact session-start, message-send and session-wait results with `X-Guild-MCP-Result-Format: compact`. Guild keeps execution IDs, status, required actions and the full final output while omitting repeated entity metadata. Other tools, including `guild_get_session` and `guild_get_session_events`, retain their full responses. Servers that do not support this preference continue returning full results.
 
 After updating the plugin through `/plugin`, run `/reload-plugins` or start a new Claude Code session. Check `/mcp` for the Guild connection and `/tasks` for background tasks. The [reviewer guide](docs/reviewer-guide.md#try-a-background-run) includes a customer-feedback example and what to observe.
 
-## Guild sessions pane
+## Working on the plugin
 
-The pane runs in Claude Code only: the terminal, and the Code tab of the Claude desktop app. It is a hooks module (`hooks/register.tsx`), which Claude Desktop's chat and claude.ai do not load; the connector and the skills work there without it.
-
-- Each conversation keeps a list of watched Guild sessions. Claude adds a session with the `mcp__guild__watch_sessions` tool as soon as it becomes relevant: one Claude starts or triggers, one you name or link, one Claude reads or debugs. The tool is in Claude's tool list from the first turn, so Claude needs no search to find it. Watching reads the session first and refuses an id Guild cannot read. Claude takes sessions off with `mcp__guild__unwatch_sessions`.
-- `/guild-sessions` opens the pane. On the desktop it lists running sessions, then finished ones in a section that folds. A card shows the workspace, the agent and the run time; clicking it opens the session's first input, when it started, its trigger, how it ended, the last 12 events of its timeline and its outcome, with an Open in Guild link. In a terminal each row is the session's link on app.guild.ai.
-- While the conversation watches a session, the prompt footer shows `🤖 N Guild sessions running`. It is a button that opens the pane while the pane is closed.
-- `mcp__guild__pane_state` lets Claude read what the pane shows, including the last 30 Guild calls and how each ended, when you say the pane is wrong.
-
-Every 20 seconds each watched session that is still running is read again with `guild_get_session`, so the footer count stays current; a finished session is read once. A chat session's agent is read once from its events. The list is kept under the Claude Code session id, so it survives a restart and a resume; `/clear` starts an empty one. The pane keeps the 200 conversations that watched something most recently, up to 50 sessions each.
-
-### What the pane needs
-
-1. Two allow rules in `permissions.allow` in `~/.claude/settings.json`, one per read-only Guild tool the pane calls:
-
-   ```json
-   "mcp__plugin_guild_guild__guild_get_session",
-   "mcp__plugin_guild_guild__guild_get_session_events"
-   ```
-
-   The pane calls Guild from code, with no model request behind the call, so auto mode's classifier refuses it and only an allow rule lets it through. The pane calls this plugin's own server first. When that server is not connected it uses any other server with Guild's tools, such as the claude.ai Guild connector, and the rules then carry that server's name. If a rule is missing, the `watch_sessions` refusal and the pane show the exact names to add.
-
-   You or your administrator add these rules. The plugin does not edit permission settings or approve its own calls.
-2. For clickable rows in the desktop app's Terminal panel, `FORCE_HYPERLINK=1` in the CLI's environment. Claude Code sends links only to terminals it recognizes, and that panel (`TERM_PROGRAM=claude-desktop`) is not one of them, though it opens links. Without it a row is plain text there. iTerm, Ghostty, kitty, WezTerm and VS Code need nothing. One line in `~/.zshrc` sets it for that panel alone:
-
-   ```bash
-   [[ "$TERM_PROGRAM" == claude-desktop ]] && export FORCE_HYPERLINK=1
-   ```
-
-### Working on the pane
-
-| File | What it holds |
-| --- | --- |
-| `hooks/hooks.json` | Names the hooks module |
-| `hooks/register.tsx` | The pane, footer, command, local tools, refresh loop and Guild reads. Capability helpers share the hooks module so the directory scanner can trace them. |
-| `types/index.d.ts` | The pane's `$.state` contract, named in `plugin.json` as `types` |
-| `tests/guild-sessions.test.tsx` | Tests against recorded Guild answers |
-
-Run the plugin from a checkout with `claude --plugin-dir .`; saving a file reloads the hooks module. Before a commit:
+Run the plugin from a checkout with `claude --plugin-dir .`. Before a commit:
 
 ```bash
-claude plugin validate .
+claude plugin validate . --profile directory --strict
 ```
 
-```bash
-claude plugin test .
-```
-
-The [reviewer guide](docs/reviewer-guide.md) has three example workflows, expected results, and the maintainer steps for a directory submission.
+The [reviewer guide](docs/reviewer-guide.md) has two example workflows, expected results, and the maintainer steps for a directory submission.
 
 ## Data handling
 
 The declared connector is `https://api.guild.ai/mcp`. Building and running agents sends the arguments Claude supplies to Guild, including agent source, configuration, workspace identifiers and test inputs. Guild processes these to build and execute the requested agents. Agents can use the models and integrations configured for their workspace; their credentials and permissions are managed in Guild.
 
-The pane calls this plugin's Guild connector, `plugin_guild_guild`. When Claude Code says that server is not connected, it calls the claude.ai Guild connector, `claude_ai_Guild_ai`, instead. Both names are fixed text in the code; no other server is called. It sends watched Guild session IDs to read their status and events, which can include the agent's input, output and errors. Polling continues while the pane is closed and the Claude Code session is running. With nothing watched, the pane makes no Guild session reads.
+The plugin is two skills, an icon and the connector declaration. It has no hooks module, runs no code of its own, reads no local files, starts no programs and makes no direct HTTP requests. Every Guild call is a tool call Claude makes through the declared connector, with Claude Code's normal permission prompts. The plugin does not send data to any other service and has no analytics.
 
-The mod uses Claude Code's plugin store to persist watched Guild session IDs, keyed by Claude Code session ID, and a last-watched timestamp. Its 200-conversation and 50-session limits are count limits, not expiration periods. It uses plugin state for the displayed session metadata and timeline. The last 30 connector-call diagnostics are held in module memory, including tool names, timing, errors and short response excerpts. `pane_state` returns the pane's data and diagnostics to Claude when called. The mod does not include a separate analytics uploader or a Claude transcript collector.
+Guild session inputs, outputs and errors are read back from Guild through the same tools and can themselves contain personal data.
 
-### Calls the mod makes without a model request
+To revoke the connection, use Guild's Security > Connected apps. This does not delete Guild agents or session history. Guild-side use and retention are governed by the applicable customer agreement and [Guild's privacy policy](https://www.guild.ai/privacy-policy); the plugin does not set a server retention period. For deletion or privacy questions, contact privacy@guild.ai, or your organization's administrator when Guild processes the data on its behalf. These controls do not delete copies retained by Claude.
 
-The pane makes these read-only MCP calls from its own code, subject to the allow rules above. The server is the plugin's declared Guild connector at `https://api.guild.ai/mcp`, or, when Claude Code reports that server as not connected, the claude.ai Guild connector `claude_ai_Guild_ai`, which reaches the same service under the connector's own permissions. Both names are fixed text at each call. The mod does not read the tool list, does not call any other server, does not register additional MCP servers and does not send the data to a separate analytics service.
-
-| Tool | When and arguments |
-| --- | --- |
-| `guild_get_session` | Before accepting a watch request, on refresh, and every 20 seconds while a watched session runs. Sends its Guild `session_id`. |
-| `guild_get_session_events` | To identify a chat session's agent or load the selected session's timeline. Sends its Guild `session_id`, event `types` and `limit`; later timeline reads can include `from_id`. |
-
-The mod reads the Claude Code session ID to choose a watch list, and reads its own plugin state and store. It does not call Claude's conversation-message or prompt-reading APIs. Local paths, environment-variable values, Claude conversation IDs and the pane's diagnostic log are not arguments to its MCP calls. Guild session inputs, outputs and errors are read back from Guild and can themselves contain personal data. The mod starts no local programs, downloads no executable code and makes no direct HTTP requests. Building or running a Guild agent through a skill is a separate, user-requested operation through Guild's MCP tools.
-
-### Tools and hooks implemented by the mod
-
-The mod registers and answers only its three local tools: `mcp__guild__watch_sessions` validates and watches accessible Guild session IDs; `mcp__guild__unwatch_sessions` removes IDs from the watch list; `mcp__guild__pane_state` returns local pane data and diagnostics to Claude and checks the read tool's permission without executing that tool. These handlers implement the tools the mod adds. They do not replace Bash, file tools or another connector's tools.
-
-The `ui.close` hook is filtered to the `guild-sessions` pane. It lets the close proceed, then records that the pane is closed so the footer becomes an open button. The render hooks draw the Guild pane and its footer; the session hooks restore the matching watch list and start its timers. `/guild-sessions` opens the pane. No hook intercepts submitted prompts or model requests, changes permission settings, or approves tool calls.
-
-### Saved tool results and removal
-
-When Claude Code saves an oversized Guild tool result to a file, the pane reads `CLAUDE_CONFIG_DIR`, or `HOME` for the default `~/.claude`, to locate Claude Code's configuration directory. It checks the complete reported path is under that directory with a `projects/<project>/<session>/tool-results/` layout, has no `.` or `..` path segments, and names the server and tool it called. It reads the saved result without deleting it. A refused path is not read. The mod starts no programs or shell commands; saved copies remain under Claude Code's file management.
-
-To remove a session from the stored watch list and stop polling it, ask Claude to unwatch it. Unwatching the last session removes that conversation's stored list. `/clear` starts a different list; resuming an older conversation restores its saved list. Closing the pane does not unwatch sessions. To stop the hooks, disable or uninstall the plugin and reload or close active Claude Code sessions. This does not delete Guild agents or session history. To revoke the connection, use Guild's Security > Connected apps.
-
-Guild-side use and retention are governed by the applicable customer agreement and [Guild's privacy policy](https://www.guild.ai/privacy-policy); the plugin does not set a server retention period. The policy describes retaining personal data as necessary for the stated purposes and legal obligations. For deletion or privacy questions, contact privacy@guild.ai, or your organization's administrator when Guild processes the data on its behalf. These controls do not delete copies retained by Claude.
-
-The [directory submission notes](docs/directory-submission.md) map the portal's findings to these disclosures and explain which data-handling answers and acknowledgements need the submission owner's confirmation.
+The [directory submission notes](docs/directory-submission.md) map the portal's findings to these disclosures and explain which data-handling answers need the submission owner's confirmation.
 
 ## Docs
 

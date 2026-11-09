@@ -1,4 +1,4 @@
-<!-- Copied from guildcode cli/docs/skills by scripts/sync-cli-skills.sh. Do not edit. -->
+<!-- Copied from guildcode cli/docs/skills. See "Updating the SDK reference" in the README. Do not edit. -->
 
 > This reference is written for the Guild CLI. In this plugin, use the MCP
 > tools instead and never run `guild`, `npm` or `git`:
