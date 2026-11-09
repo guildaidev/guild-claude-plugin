@@ -107,9 +107,11 @@ verify the selected version before activation. `guild_install_agent`
 installs the latest published version, so never assume it is the accepted
 version. Inspect `guild_list_installed_agents` and use
 `guild_update_installed_agent` with the exact `new_version_id` and explicit
-auto-update choice where appropriate. Schedules use `guild_schedule_agent`;
-GitHub activation uses `build-triggered-agent`. Production connections, version
-selection, permissions and smoke are separate gates.
+auto-update choice where appropriate. Schedules use `guild_schedule_agent`.
+For GitHub activation, pass the accepted agent/version IDs, test evidence and
+confirmed production workspace to `build-triggered-agent`. Activation must
+preserve that version; source changes return to testing and review. Production
+connections, version selection, permissions and smoke are separate gates.
 
 ## SDK references
 

@@ -40,28 +40,44 @@ the one made with `workspace_id` alone, does not serve a trigger. Confirm with
 `guild_list_credentials` once they say it is done.
 
 A private agent owned by a user cannot be installed in an organization's
-workspace. When the workspace belongs to an organization, create the agent
-under that organization too (`guild_create_agent` with `owner_id`).
+workspace. For a new prototype, choose the intended owner before building.
+If an accepted prototype cannot be installed under the confirmed owner, stop
+and explain the mismatch. Building a replacement under another owner requires
+its own testing and acceptance before activation.
 
-## 2. Create and publish the agent
+## 2. Prepare the accepted version
 
-1. `guild_create_agent` with the owner from step 1.
-2. `guild_create_agent_version` with every source file and `publish: true`.
-   The agent's input is the raw webhook payload, so validate it with a schema
-   that matches GitHub's (`action`, `pull_request`, `issue`, `repository`).
-3. Call `guild_wait_for_job` once with the returned `version_id` and `job_id`.
-   Follow the `agent-development` skill's build-wait and failure handling.
-4. `guild_create_workspace` if needed, then `guild_install_agent`.
-5. Anything the agent reads from its environment, such as a Slack member ID, goes
-   in a workspace variable: `guild_set_workspace_variable`. Never put a secret
-   in one.
+Retain the accepted agent ID, exact version ID and test evidence from
+`agent-development`. If there is no accepted version, use that skill to build,
+test and review a prototype before continuing. The agent must handle the raw
+GitHub webhook payload (`action`, `pull_request`, `issue`, `repository`). If
+adapting it requires source changes, return to testing and review; acceptance
+of the earlier version does not cover a new version.
+
+1. Reuse the accepted agent and exact version. Do not call `guild_create_agent`
+   or `guild_create_agent_version` as part of activation.
+2. If the accepted version is unpublished, use `guild_publish_agent_version`
+   on that exact ID. Wait with `guild_wait_for_job` using the returned version
+   and job IDs, following `agent-development`'s wait and failure handling.
+3. Find or create the confirmed production workspace. Use
+   `guild_list_installed_agents` to find an install of the accepted agent ID;
+   reuse it, or call `guild_install_agent` if none exists.
+4. `guild_install_agent` selects latest, which may differ from the accepted
+   version. Use `guild_update_installed_agent` with the accepted version ID as
+   `new_version_id` and `should_autoupdate: false` to pin it. Auto-updates
+   require the user's explicit authorization. Re-read the installed agents and
+   confirm the install's version ID matches before creating any trigger. If
+   pinning or verification fails, stop before activation.
+5. Anything the agent reads from its environment, such as a Slack member ID,
+   goes in a workspace variable: `guild_set_workspace_variable`. Never put a
+   secret in one.
 
 ## 3. Create the triggers
 
 1. `guild_search_integrations` for GitHub. Its `webhook_config` gives the
    config ID, the events and actions it sends, and the `service_config_fields`
    a trigger needs (`repo`, as `owner/repo`).
-2. `guild_list_installed_agents` for the install's `workspace_agent_id`.
+2. Use the preceding section's verified install and its `workspace_agent_id`.
 3. `guild_create_webhook_trigger`, one per event and action, for example
    `pull_request` with `opened`. Filter by action in the trigger rather than in
    the agent, so the agent does not run on every `synchronize` or `labeled`
