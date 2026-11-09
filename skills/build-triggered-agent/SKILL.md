@@ -11,16 +11,10 @@ Do all of this with the Guild MCP tools (`guild_*`). Never run the `guild` CLI,
 If no `guild_*` tools are available, the user hasn't signed in to Guild yet.
 Tell them how and stop, as the `agent-development` skill describes.
 
-## Prototype and production boundary
-
-For an idea, prototype, test or revision, use `agent-development` first: build
-one private candidate, validate it and run a profile-bound test. A test result
-or acceptance does not authorize trigger activation. Preserve the accepted
-exact version and evidence for Logan's production workspace, promotion, smoke
-and operation handoff. The steps below apply only to an explicit production
-trigger request after those gates. Real event tests can write externally and
-need the authorized test repository/destination. Do not publish changes to an
-existing auto-updating production agent merely to prototype them.
+For prototyping or revision, use `agent-development` to test a private candidate
+first. Activate a trigger only after the user explicitly requests deployment
+and confirms the version and destination. Do not publish prototype changes over
+an existing auto-updating production agent.
 
 ## 1. Decide who owns the workspace
 

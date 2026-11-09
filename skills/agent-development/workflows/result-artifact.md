@@ -1,10 +1,10 @@
 # Present the actual result and accepted-version handoff
 
 Emit a renderer-neutral v1 application artifact from the actual test session.
-Kristof owns presentation independently of execution. In Code or Desktop chat,
-show usable actual output in the conversation plus the structured envelope as
-JSON when no renderer is available. No hook, local server, end-user file write
-or persistent Guild Artifact entity is required.
+Presentation can change independently of execution. In Code or Desktop chat,
+show the actual output and session reference; provide the structured envelope
+when a renderer needs it or the user requests it. No hook, local server,
+end-user file write or persistent Guild Artifact entity is required.
 
 ## v1 result contract
 
@@ -35,8 +35,8 @@ output references. Preserve a `user_input` action's event/task reference and
 answer receipt when available; distinguish initial input from its answer.
 Include observed connection metadata with its actual confidence, such as
 browser check required and user-confirmed setup, when relevant. Never invent
-provider receipts, verified pins, citations or successful writes. Clearly label
-local scripted fixtures and other evidence limits.
+provider receipts, verified pins, citations or successful writes. State material
+evidence limits.
 
 `execution_status` is exactly one of:
 
@@ -65,7 +65,7 @@ do not invent a download or silently replace output with a summary.
 
 ## Review and explicit acceptance
 
-Present the real output and material limitations first, then the envelope.
+Present the real output and material limitations first.
 Ask for normal feedback on whether it meets the intended behavior. A completed
 test can have a poor result. Acceptance is the user's separate explicit
 decision, never an execution status or automatic production activation.
@@ -75,7 +75,7 @@ when behavior changes, fresh test session and a new result. Resolve which
 exact version was accepted if there are multiple candidates; never substitute
 "latest" for that decision.
 
-## Handoff to Logan after acceptance
+## Record the accepted version
 
 Provide a concrete copyable handoff in the conversation, retaining:
 
@@ -88,10 +88,9 @@ Provide a concrete copyable handoff in the conversation, retaining:
   credential confidence and any remaining connection/policy limitations.
 - Remaining production gates: target workspace and connections, accepted
   version promotion/selection, install and auto-update choice, trigger or
-  schedule setup, authorized smoke test and operation. Logan owns those gates.
+  schedule setup and an authorized smoke test.
 
 Profile configuration remains live, so this evidence records the test's
 observed setup, not a promise about future connections or production readiness.
-Do not message Logan automatically. Prototype acceptance authorizes this
-handoff record; installation, triggers and production writes need their own
-explicit deployment request.
+Prototype acceptance records the selected version; installation, triggers and
+production writes require an explicit deployment request.

@@ -1,6 +1,6 @@
 # Guild plugin for Claude
 
-Connects Claude Code to Guild's hosted MCP server at `https://api.guild.ai/mcp`, so Claude can build, privately test and improve agents on Guild, then publish, install, run and schedule them and read their sessions. In Claude Code it also adds a pane beside the chat that follows the Guild sessions a conversation works with.
+Connects Claude Code to Guild's hosted MCP server at `https://api.guild.ai/mcp`, so Claude can build, privately test and revise agents on Guild, then publish, install, run and schedule them and read their sessions. In Claude Code it also adds a pane beside the chat that follows the Guild sessions a conversation works with.
 
 ## Install
 
@@ -13,44 +13,25 @@ The first tool call opens a Guild sign-in in your browser. You can disconnect at
 
 ## Skills
 
-Both skills use Guild MCP tools for agent development and execution. They are designed for Claude Code, Claude Desktop and claude.ai; the full development loop has been verified in Claude Code terminal. Desktop surfaces remain acceptance follow-ups. Neither skill requires the user to run the `guild` CLI, `npm` or `git`.
+Both skills work through Guild MCP tools in Claude Code, Claude Desktop and
+claude.ai. Neither requires the user to run the `guild` CLI, `npm` or `git`.
 
-- `agent-development` turns an idea into a private candidate, prepares an
-  ordinary organization workspace and gateway profile, tests the exact version,
-  shows actual output, and revises the same candidate from feedback. Explicit
-  acceptance produces an exact-version handoff to Logan for production setup,
-  promotion, smoke and operation.
-- `build-triggered-agent` handles explicitly authorized production GitHub
-  triggers after the prototype and accepted-version handoff. Prototype testing
-  does not activate installs, schedules or triggers.
+- `agent-development` guides workspace and connection setup, builds a private
+  candidate, tests it on Guild, and revises it from feedback. Acceptance records
+  the exact tested version for a separately requested production release.
+- `build-triggered-agent` builds an agent that runs on a GitHub event.
 
-Profile-bound testing requires `guild_start_profile_agent_test_session` and the
-profile-management tools on the connected Guild MCP server. If that capability
-is missing, the skill reports the server requirement and stops before execution;
-it never falls back to an unbound test. The profile constrains Guild-brokered
-integration calls with live connection and policy settings. It is not OS or
-network isolation for arbitrary code. Browser connection permissions remain
-in force, and credential inventory does not prove test readiness.
-
-The three required workflow modules are packaged under
-`skills/agent-development/workflows/`: profile setup, test/iteration and the
-v1 `guild.agent-test-result` envelope. Claude Code reads them with its `Read`
-tool; Desktop chat uses its skill-file reader. A client must make the packaged
-modules available to the skill. The output includes actual candidate, version,
-workspace, profile, session and evidence references, and is shown directly in
-chat with a JSON fallback. Kristof can replace presentation independently.
-No sessions pane, local server or end-user source files are required. A
-completed test is distinct from user acceptance and production readiness.
-Prompt configuration publishes a private candidate version after validation;
-source candidates can stay unpublished. Neither path installs the prototype.
+Tests use a gateway profile to select integrations and credentials. The connected
+Guild server must expose `guild_start_profile_agent_test_session` and the profile
+setup tools; the skill stops if they are unavailable. A profile governs
+Guild-brokered calls and does not make production services into test services.
 
 `skills/agent-development/references/` is the SDK documentation from the Guild CLI's skill in guildcode (`cli/docs/skills`). Don't edit it here. To update it, run `scripts/sync-cli-skills.sh <path-to-guildcode>` and commit. `skills/CLI_SKILLS_SOURCE` records the guildcode commit it came from.
 
-To try local skill changes, start Claude Code in an empty working directory with
+To try a local checkout, start a new Claude Code session with
 `claude --plugin-dir /absolute/path/to/guild-claude-plugin`, authenticate Guild
-through `/mcp`, then invoke `/guild:agent-development` with your agent idea. The
-connected Guild backend must already expose the profile-test tools above;
-loading a local checkout does not deploy backend changes.
+through `/mcp`, then invoke `/guild:agent-development` with your agent idea.
+Loading a local plugin does not deploy changes to the connected Guild backend.
 
 ## Guild sessions pane
 

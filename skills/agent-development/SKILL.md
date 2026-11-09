@@ -95,15 +95,15 @@ invitation to review, never implicit acceptance or installation.
 
 ## Production is an explicit handoff
 
-After explicit acceptance, prepare the exact-version handoff in the result
-module for Logan, who owns production workspace setup, promotion, smoke and
-operation. Prototype requests do not authorize installs, schedules or triggers.
+After explicit acceptance, retain the exact tested version and result as
+described in the result module. Prototype requests do not authorize installs,
+schedules or triggers.
 Acceptance alone does not authorize production activation.
 
-For a separately authorized production deployment, retain existing MCP
-capabilities under Logan's workflow: publish the accepted source version when
-needed and wait for its job; configure nonsecret workspace variables; install
-and verify the selected version before activation. `guild_install_agent`
+For a separately requested production deployment, confirm the target workspace
+and production connections. Publish the accepted source version when needed
+and wait for its job; configure nonsecret workspace variables; install and
+verify the selected version before activation. `guild_install_agent`
 installs the latest published version, so never assume it is the accepted
 version. Inspect `guild_list_installed_agents` and use
 `guild_update_installed_agent` with the exact `new_version_id` and explicit
