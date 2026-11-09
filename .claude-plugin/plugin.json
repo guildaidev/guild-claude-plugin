@@ -16,5 +16,6 @@
     "guild"
   ],
   "privacyPolicyUrl": "https://www.guild.ai/privacy-policy",
-  "types": "./types/index.d.ts"
+  "termsOfServiceUrl": "https://www.guild.ai/terms",
+  "supportUrl": "https://www.guild.ai/contact"
 }
