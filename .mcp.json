@@ -2,7 +2,10 @@
   "mcpServers": {
     "guild": {
       "type": "http",
-      "url": "https://api.guild.ai/mcp"
+      "url": "https://api.guild.ai/mcp",
+      "headers": {
+        "X-Guild-MCP-Result-Format": "compact"
+      }
     }
   }
 }
