@@ -1,24 +1,15 @@
 # Directory submission findings and owner handoff
 
-The directory accepts mods only from Verified organizations.
-Organizations without that status must use Markdown, text, JSON, YAML or image
-files.
-Guild's organization does not have that status.
-Anthropic grants that status after a listing goes live.
-Organizations cannot apply for that status.
-The directory refused version 0.2.8 under those rules.
-
-The plugin contains two skills, MCP settings, documentation and an icon.
-It contains no mod or executable code.
+The plugin contains two skills, MCP settings, documentation, a text provenance
+marker and an icon. Its files use Markdown, text, JSON and image formats.
+The plugin contains no mod or executable code.
 Claude Code and Guild provide MCP Tasks through MCP.
-The `pane-archive` branch contains the sessions pane and its tests.
 
 ## Source findings
 
 | Portal finding | Repository response | What remains |
 | --- | --- | --- |
-| Mods accepted only from Verified organizations | The hooks module is removed. `hooks/hooks.json` no longer exists. | Nothing. |
-| Files outside the allowed types accepted only from Verified organizations | The TypeScript, test, type-declaration and shell files are removed. The SDK-reference sync is a documented procedure in the README. The source marker is `skills/CLI_SKILLS_SOURCE.txt`. | Nothing. |
+| File types outside the directory allowlist | The package contains Markdown, text, JSON and images. The SDK-reference update procedure is in the README, with provenance in `skills/CLI_SKILLS_SOURCE.txt`. | Validate the candidate with the strict directory profile. |
 | Publisher name may be confused with an existing listing | Keep the actual publisher, Guild.ai, Inc., with its `guild.ai` author URL and support email. Supply the Guild repository and domain as identity evidence. | Ask Anthropic to review the reported similarity to Built AI, Inc. Do not misrepresent the publisher to evade a name check. |
 | Unrecognized field in `plugin.json` | `privacyPolicyUrl`, `termsOfServiceUrl` and `supportUrl` are listing fields the directory reads and Claude Code ignores. | Informational. |
 | Images and fonts passed without a code check | The report identifies the bundled `.claude-plugin/icon.png`. | Informational; retain the normal plugin icon. |

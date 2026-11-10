@@ -29,6 +29,11 @@ Before handing over the account:
 Install the plugin as described in the README, then authenticate the Guild
 server through `/mcp` in Claude Code, or connect it in claude.ai.
 
+The examples use profile-based test sessions.
+The connected Guild server must expose `guild_start_profile_agent_test_session`
+and the profile setup tools from the `agent-development` skill.
+If those tools are unavailable, stop before agent creation.
+
 Run these prompts in order, in the same conversation, using the dedicated
 workspace supplied in the private handoff. Both create agents and test
 sessions. They do not require Slack, GitHub or another integration.

@@ -1,7 +1,8 @@
 # Guild plugin for Claude
 
 The plugin connects Claude to Guild's hosted MCP server at `https://api.guild.ai/mcp`.
-Claude can build, test, publish, install, run and schedule Guild agents through this connection.
+Claude can build, test and revise private Guild agents through this connection.
+You can then request a release, installation, schedule or trigger.
 Claude can also read Guild sessions.
 The plugin works in Claude Code, Claude Desktop and claude.ai.
 
@@ -16,11 +17,28 @@ The first tool call opens a Guild sign-in in your browser. You can disconnect at
 
 ## Skills
 
-Both skills use MCP tools. A client's MCP Tasks support determines how it waits for results.
-Neither skill uses the `guild` CLI, `npm` or `git`.
+Both skills use Guild MCP tools. A client's MCP Tasks support determines how it
+waits for results. Neither skill requires the user to run the `guild` CLI,
+`npm` or `git`.
 
-- `agent-development` builds, tests, publishes and installs an agent. It checks which integrations the test workspace has connected and hands out a connect link for a missing one.
+- `agent-development` guides workspace and connection setup. It builds a private
+  candidate, tests it on Guild and revises it from feedback. Acceptance records
+  the exact tested version. Production release requires a separate request.
 - `build-triggered-agent` builds an agent that runs on a GitHub event.
+
+Tests use a gateway profile to select integrations and credentials.
+The connected Guild server must expose `guild_start_profile_agent_test_session`
+and the profile setup tools. The skill stops if those tools are unavailable.
+A profile controls Guild-brokered calls. It does not convert production services
+into test services.
+
+To try a local checkout:
+
+1. Start Claude Code with `claude --plugin-dir /absolute/path/to/guild-claude-plugin`.
+2. Authenticate Guild through `/mcp`.
+3. Invoke `/guild:agent-development` with your agent idea.
+
+A local plugin does not deploy changes to the connected Guild backend.
 
 ### Updating the SDK reference
 
@@ -67,9 +85,9 @@ Claude reports errors and requests for user action.
 Completion of a wait does not mean that the agent succeeded.
 Cancellation of a wait does not stop the remote agent.
 
-The plugin sends `X-Guild-MCP-Result-Format: compact` to request compact results for session creation, message submission and session waits.
-Compact results keep execution IDs, status, required actions and the complete output.
-They omit repeated entity metadata.
+The plugin sends `X-Guild-MCP-Result-Format: compact` to request compact results
+from supported session tools. Compact results keep execution IDs, status,
+required actions and the complete output. They omit repeated entity metadata.
 Other tools, including `guild_get_session` and `guild_get_session_events`, return complete responses.
 Servers without compact-result support return complete responses.
 

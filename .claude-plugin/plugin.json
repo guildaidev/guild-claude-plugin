@@ -1,8 +1,8 @@
 {
   "name": "guild",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "license": "Apache-2.0",
-  "description": "Build, test, publish, install and run Guild AI agents from Claude through Guild's MCP server.",
+  "description": "Build, test, and improve agents on Guild from Claude, then publish, run, and manage them.",
   "author": {
     "name": "Guild.ai, Inc.",
     "email": "support@guild.ai",
