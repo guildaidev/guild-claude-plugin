@@ -63,30 +63,45 @@ to read.
 
 ## Try a background run
 
-Use an interactive terminal Claude Code session with
-[native MCP Tasks support](https://code.claude.com/docs/en/mcp#mcp-tasks-that-run-on-the-server).
-Update the plugin and reload it before starting. Use synthetic feedback or
-information you are authorized to send to Guild.
+This example uses an interactive terminal session in Claude Code.
+Claude Code and Guild provide [native MCP Tasks](https://code.claude.com/docs/en/mcp#mcp-tasks-that-run-on-the-server) through MCP.
+The example does not require the plugin mod or a sessions pane.
 
-> In the review workspace, build a draft Guild agent that turns a batch of
-> customer feedback into a product brief: the three recurring problems,
-> supporting quotes, affected customer segments, and suggested next steps.
-> Use only the feedback I provide and flag missing evidence. Test it on this
-> batch: [paste feedback]. Do not publish, install or schedule it. Show me the
-> brief and the session link when it finishes.
+1. Update the Guild plugin through `/plugin`.
+2. Run `/reload-plugins`, or start a new Claude Code session.
+3. Open `/mcp` to check the Guild connection.
+4. Give Claude synthetic feedback or information you have permission to send
+   to Guild.
+5. Send this prompt:
 
-While the run is pending, ask Claude to help write a short agenda for reviewing
-the brief. Expected: Claude can answer while the existing Guild task runs and
-delivers the brief when the result arrives. It does not start a second run or
-loop over status tools. Check `/tasks` for the background task. A quick run may
-finish before a task is created; that demonstrates direct completion, not a
-long-running background wait.
+> In the review workspace, build a draft Guild agent that converts customer
+> feedback into a product brief.
+> Identify the three recurring problems.
+> Include supporting quotes, affected customer segments and suggested next
+> steps.
+> Use only the feedback I provide.
+> Identify missing evidence.
+> Use this batch for a test: [paste feedback].
+> Do not publish, install or schedule the agent.
+> Show me the brief when the agent finishes.
+> Include the session link.
 
-Record the plugin and Claude Code versions, surface, session link, wait call
-count and observed result. A native task's completion notification can also
-carry an error or an action request; verify Claude reports that outcome. The
-client's internal task status requests are expected and are separate from
-model-driven polling.
+If the wait returns an MCP Task, ask Claude to write an agenda while that task
+runs.
+Open `/tasks` to check the MCP Task.
+Claude should answer the agenda request and report the brief when the task
+returns its result.
+Claude should use the existing execution without repeated status tool calls.
+
+A short run can return its result before Claude Code creates an MCP Task.
+That result verifies direct completion. It does not verify a background wait.
+
+Record the plugin version, Claude Code version, client, session link, wait call
+count and result.
+If an MCP Task returns an error or requests user action, check that Claude
+reports that result.
+The client's own status requests are expected. They do not require repeated
+model tool calls.
 
 ## Cleanup
 

@@ -1,12 +1,17 @@
 # Directory submission findings and owner handoff
 
-The directory accepts a hooks module, and any file that is not Markdown,
-text, JSON, YAML or an image, only from a Verified organization. Guild's
-organization is not Verified, and Anthropic grants that label on its own
-after a listing is live; there is no application. Version 0.2.8 was refused
-on those two rules. From 0.3.0 the plugin is the two skills, the connector
-declaration and the icon. The sessions pane and its tests live on the
-`pane-archive` branch until the organization is Verified.
+The directory accepts mods only from Verified organizations.
+Organizations without that status must use Markdown, text, JSON, YAML or image
+files.
+Guild's organization does not have that status.
+Anthropic grants that status after a listing goes live.
+Organizations cannot apply for that status.
+The directory refused version 0.2.8 under those rules.
+
+The plugin contains two skills, MCP settings, documentation and an icon.
+It contains no mod or executable code.
+Claude Code and Guild provide MCP Tasks through MCP.
+The `pane-archive` branch contains the sessions pane and its tests.
 
 ## Source findings
 

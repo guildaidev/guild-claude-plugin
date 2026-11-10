@@ -110,34 +110,50 @@ are listed in `references/compiler.md`.
    with the session's workspace as `workspace_id`, then start a new test
    session once it is confirmed. If it is an error, report that error.
 
-### Following any wait
+### Handle a wait result
 
-Omit `timeout_seconds` unless the user asks for an observation deadline. Follow
-the response from `guild_wait_for_agent`, `guild_wait_for_job` or
-`guild_wait_for_session`:
+Omit `timeout_seconds` unless the user requests a time limit for the wait.
+Use these instructions for `guild_wait_for_agent`, `guild_wait_for_job` and
+`guild_wait_for_session`.
+Claude Code and Guild manage MCP Tasks through MCP.
+MCP Tasks do not need the plugin mod.
 
-- **Background task:** if Claude reports a server-side task and says it will
-  notify you, let the client track it. Give one short running update and leave
-  the conversation available for other work. Do not call another wait or a
-  status tool while that task is pending. Resume from its delivered result.
-- **Foreground wait:** the call stays open over HTTP/SSE until the result or
-  the server's wait window ends. If it returns `wait_complete: false` with no
-  required action, renew the same wait with the same IDs and receipt. If the
-  connection drops without a recoverable background task, retry only that wait.
+If Claude Code starts an MCP Task and says it will send a notification:
 
-A completed background task means the wait returned. Inspect its result:
-`ACTION_REQUIRED` needs the user's action, `ERROR` is a failure, and a pending
-result needs the same wait renewed. Neither ending a wait nor stopping its
-background task cancels the remote agent.
+1. Let the client track that MCP Task.
+2. Give the user one short progress update.
+3. Keep the conversation available for other work.
+4. Wait for the client's completion notification.
+5. Read the result from that notification.
 
-Do not loop over get/status/event tools or shell sleeps. Do not resend input or
-create another execution to recover. Read session events once after completion
-only if needed to retrieve the final reply.
+Do not call another wait or a status tool while that MCP Task is pending.
 
-When the result arrives, lead with the agent's actual reply or error, then the
-session link. Keep receipts and transport details for troubleshooting. Report
-elapsed time only from recorded timestamps; descriptions, version summaries
-and keepalive messages do not establish a run's duration or expected finish time.
+If the client uses an HTTP/SSE wait in the foreground, let the call continue.
+Guild sends progress and the result through that connection.
+If the result has `wait_complete: false` without a required action, repeat the
+same wait with the same IDs and receipt.
+If the connection fails without a recoverable MCP Task, repeat only that wait.
+
+Completion of an MCP Task means that the wait returned a result.
+Check the result before you report success:
+
+- For `ACTION_REQUIRED`, explain the required user action.
+- For `ERROR`, report the error.
+- For a pending result without a required action, repeat the same wait with
+  the same IDs and receipt.
+
+Cancellation of a wait or its MCP Task does not stop the remote agent.
+Do not make repeated calls to get, status or event tools.
+Do not use shell sleep commands to wait.
+Do not resend the input or create another execution to recover a result.
+Read session events once after completion only if the final reply is missing.
+
+Show the agent's actual reply or error first.
+Then give the session link.
+Use execution receipts and transport details only to troubleshoot a problem.
+Calculate elapsed time from recorded timestamps.
+Do not estimate duration from descriptions, version summaries or keepalive
+messages.
 
 ## 6. Install and run it
 

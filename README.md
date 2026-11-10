@@ -1,6 +1,9 @@
 # Guild plugin for Claude
 
-Connects Claude to Guild's hosted MCP server at `https://api.guild.ai/mcp`, so Claude can build, test, publish, install, run and schedule Guild agents and read their sessions. It works in Claude Code, Claude Desktop and claude.ai.
+The plugin connects Claude to Guild's hosted MCP server at `https://api.guild.ai/mcp`.
+Claude can build, test, publish, install, run and schedule Guild agents through this connection.
+Claude can also read Guild sessions.
+The plugin works in Claude Code, Claude Desktop and claude.ai.
 
 ## Install
 
@@ -13,7 +16,8 @@ The first tool call opens a Guild sign-in in your browser. You can disconnect at
 
 ## Skills
 
-Both skills work through the MCP tools. How a long wait appears depends on the client's Tasks support. Neither skill uses the `guild` CLI, `npm` or `git`.
+Both skills use MCP tools. A client's MCP Tasks support determines how it waits for results.
+Neither skill uses the `guild` CLI, `npm` or `git`.
 
 - `agent-development` builds, tests, publishes and installs an agent. It checks which integrations the test workspace has connected and hands out a connect link for a missing one.
 - `build-triggered-agent` builds an agent that runs on a GitHub event.
@@ -44,15 +48,39 @@ To update them from a guildcode checkout at `$SRC`:
 > | `guild workspace variable set`        | `guild_set_workspace_variable`                  |
 ```
 
-## Following long-running work
+## Wait for remote work
 
-In a Claude Code session with [native MCP Tasks support](https://code.claude.com/docs/en/mcp#mcp-tasks-that-run-on-the-server), a pending Guild wait becomes a background task. You can continue the conversation; Claude reports the result when its client retrieves it. The client makes short status requests in the background, without repeated model tool calls. A result that is already ready returns directly.
+The plugin contains two skills, MCP settings, documentation and an icon.
+It does not include a mod or a sessions pane.
+Claude Code and Guild provide [native MCP Tasks](https://code.claude.com/docs/en/mcp#mcp-tasks-that-run-on-the-server) through the MCP connection.
 
-Clients without Tasks support use a foreground HTTP/SSE wait. Guild streams progress and the result during that call. A bounded wait can expire while the agent is still running; the skill renews the same observation using its receipt. An error or a request for input or credentials is reported to you. Finishing a wait does not by itself mean the agent succeeded, and cancelling the observation does not stop the remote agent.
+If a wait returns an MCP Task, Claude Code tracks that task in the background.
+You can continue the conversation while the Guild agent runs.
+Claude Code makes short status requests and gets the result when it is ready.
+It notifies Claude of the result without repeated model tool calls.
+A wait returns its result directly if the work is already complete.
 
-The plugin requests compact session-start, message-send and session-wait results with `X-Guild-MCP-Result-Format: compact`. Guild keeps execution IDs, status, required actions and the full final output while omitting repeated entity metadata. Other tools, including `guild_get_session` and `guild_get_session_events`, retain their full responses. Servers that do not support this preference continue returning full results.
+Clients without MCP Tasks support use an HTTP/SSE wait in the foreground.
+Guild sends progress and the result through that connection.
+If the wait window ends, the skill repeats the wait with the same execution IDs and receipt.
+Claude reports errors and requests for user action.
+Completion of a wait does not mean that the agent succeeded.
+Cancellation of a wait does not stop the remote agent.
 
-After updating the plugin through `/plugin`, run `/reload-plugins` or start a new Claude Code session. Check `/mcp` for the Guild connection and `/tasks` for background tasks. The [reviewer guide](docs/reviewer-guide.md#try-a-background-run) includes a customer-feedback example and what to observe.
+The plugin sends `X-Guild-MCP-Result-Format: compact` to request compact results for session creation, message submission and session waits.
+Compact results keep execution IDs, status, required actions and the complete output.
+They omit repeated entity metadata.
+Other tools, including `guild_get_session` and `guild_get_session_events`, return complete responses.
+Servers without compact-result support return complete responses.
+
+To try this behavior:
+
+1. Update the Guild plugin through `/plugin`.
+2. Run `/reload-plugins`, or start a new Claude Code session.
+3. Open `/mcp` to check the Guild connection.
+4. Open `/tasks` to check MCP Tasks in the background.
+
+The [reviewer guide](docs/reviewer-guide.md#try-a-background-run) gives a customer-feedback example and the expected results.
 
 ## Working on the plugin
 
@@ -68,7 +96,11 @@ The [reviewer guide](docs/reviewer-guide.md) has two example workflows, expected
 
 The declared connector is `https://api.guild.ai/mcp`. Building and running agents sends the arguments Claude supplies to Guild, including agent source, configuration, workspace identifiers and test inputs. Guild processes these to build and execute the requested agents. Agents can use the models and integrations configured for their workspace; their credentials and permissions are managed in Guild.
 
-The plugin is two skills, an icon and the connector declaration. It has no hooks module, runs no code of its own, reads no local files, starts no programs and makes no direct HTTP requests. Every Guild call is a tool call Claude makes through the declared connector, with Claude Code's normal permission prompts. The plugin does not send data to any other service and has no analytics.
+The plugin contains no executable code or hooks module.
+It reads no local files, starts no programs and makes no direct HTTP requests.
+Claude makes each Guild tool call through the declared connector.
+Claude Code applies its normal permission prompts.
+The plugin sends no data to other services and collects no analytics.
 
 Guild session inputs, outputs and errors are read back from Guild through the same tools and can themselves contain personal data.
 
