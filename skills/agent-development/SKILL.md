@@ -40,7 +40,8 @@ In Claude Code, use `/mcp`. In Desktop chat or claude.ai, use Customize > Connec
 4. Search only needed services with `guild_search_integrations`. Reuse known IDs and limit list results.
    Get exact tool names with `guild_list_integration_tools`.
    If arguments are unclear, read only the selected tool with `guild_get_integration_tool` when available.
-   Do not read local source to infer schemas. Report missing metadata if it blocks the build.
+   Its input schema matches the configured agent. A null schema means metadata is unavailable.
+   Do not guess arguments, retry guessed tool names or read local source. Report missing metadata if it blocks the build.
    Inspect the profile's existing integrations before using `guild_add_profile_integration`.
    To change a mode, use `guild_update_profile_integration`.
    Set `required_credentials_mode` to `MEMBER` for member runs, `SHARED` for organization runs, or null for personal workspaces.
