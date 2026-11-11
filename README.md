@@ -85,9 +85,20 @@ Claude reports errors and requests for user action.
 Completion of a wait does not mean that the agent succeeded.
 Cancellation of a wait does not stop the remote agent.
 
-The plugin sends `X-Guild-MCP-Result-Format: compact` to request compact results
-from supported session tools. Compact results keep execution IDs, status,
-required actions and the complete output. They omit repeated entity metadata.
+The plugin sends `X-Guild-MCP-Result-Format: compact` to request compact results.
+The following session tools support this preference:
+
+- `guild_start_agent_test_session`
+- `guild_send_session_message`
+- `guild_wait_for_session`
+
+The guided test workflow uses `guild_start_profile_agent_test_session`.
+Compact results for that tool require [Guildcode PR #17049](https://github.com/guildaidev/guildcode/pull/17049) to be merged and deployed.
+Until then, profile-based starts return complete receipts.
+The workflow still checks the selected profile, workspace and version before sending input.
+
+Compact results keep execution IDs, status, required actions and the complete output.
+They omit repeated entity metadata.
 Other tools, including `guild_get_session` and `guild_get_session_events`, return complete responses.
 Servers without compact-result support return complete responses.
 
