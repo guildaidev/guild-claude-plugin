@@ -12,12 +12,17 @@ In Claude Code, use `/mcp`. In Desktop chat or claude.ai, use Customize > Connec
 
 ## 1. Choose the owner and agent behavior
 
-1. Identify the user with `guild_whoami`. For organization work, use `guild_list_my_organizations`.
+1. Propose a name and a small first version from the request.
+   Open with the proposed name and one or two related questions. Defer the full plan until the user answers.
+   Reuse supplied topics. Suggest defaults for the name, source and format.
+   For a digest, ask where the result should go before researching sources.
+2. Identify the user with `guild_whoami`. For organization work, use `guild_list_my_organizations`.
    Select an accessible owner. Managed employees can lack personal accounts.
-2. Ask the next necessary question about the desired behavior, owner or service.
-   Reuse answers and suitable defaults. Suggest an agent name. Wait for required answers before dependent actions.
-3. Choose prompt and tools for model-directed integration calls.
-   Choose code for fixed steps, loops, state, child agents or a prompt without tools.
+   Wait for required answers before dependent actions.
+3. Use prompt and tools for a first fetch, summarize or delivery prototype.
+   Use code for required deterministic logic, state, child agents or a prompt without tools.
+   Do not tune feeds, read compiler guides or write local helpers before a first hosted preview.
+   Read `references/digests.md` for news, research or recurring summaries.
    For a prompt without tools, use `llmAgent({ tools: {}, useWorkspaceAgents: false, mode: "one-shot", systemPrompt })`.
    Do not add unrelated tools to satisfy `guild_configure_llm_agent`.
 
@@ -32,13 +37,18 @@ In Claude Code, use `/mcp`. In Desktop chat or claude.ai, use Customize > Connec
    If needed, use `guild_create_gateway_profile` with `workspace_id_or_name` and `name`.
    Read the profile with `guild_get_gateway_profile` using `profile_name`. Keep the profile UUID.
    Ask before changing a profile used by other runs.
-4. Find services with `guild_search_integrations`. Get exact tool names with `guild_list_integration_tools`.
-   Inspect `guild_list_profile_integrations` before adding services with `guild_add_profile_integration`.
+4. Search only needed services with `guild_search_integrations`. Reuse known IDs and limit list results.
+   Get exact tool names with `guild_list_integration_tools`.
+   If arguments are unclear, read only the selected tool with `guild_get_integration_tool` when available.
+   Its input schema matches the configured agent. A null schema means metadata is unavailable.
+   Do not guess arguments, retry guessed tool names or read local source. Report missing metadata if it blocks the build.
+   Inspect the profile's existing integrations before using `guild_add_profile_integration`.
    To change a mode, use `guild_update_profile_integration`.
    Set `required_credentials_mode` to `MEMBER` for member runs, `SHARED` for organization runs, or null for personal workspaces.
    A dedicated connection can serve either organization mode.
-5. Inspect `guild_list_credentials` with the workspace owner as `account_id_or_name` and the integration full name as `integration`.
-   Inventory does not prove connection access. Ask the user when several connections could apply.
+5. If `connection_status` is `not_required`, skip credential inventory and browser setup for that service.
+   Otherwise, inspect `guild_list_credentials` with the workspace owner and integration full name.
+   Inventory does not prove access. Ask when several connections could apply.
 6. If `connection_status` is `browser_check_required`, show the profile's `connection_url` and instructions.
    Wait for confirmation unless the user already confirmed setup for this profile.
    Treat confirmation as user-reported setup, not a verified credential selection.
@@ -70,6 +80,7 @@ Confirm appropriate test credentials and destinations before execution. Profile 
    Wait for `READY` with `guild_wait_for_agent`. Agents default to private.
 3. For prompt and tools, use `guild_configure_llm_agent`.
    This tool validates and publishes the private candidate. Do not publish twice.
+   Submit one complete configuration. Avoid scaffold builds and speculative rewrites.
 4. For code, get any unread project files with `guild_list_agent_versions` and `guild_get_agent_version_code`.
    Read `references/sdk.md`. Declare required `@guildai-services/<owner>~<name>` dependencies.
    Send all project files to `guild_create_agent_version` with a summary. Omit `package-lock.json`.
@@ -80,7 +91,9 @@ Confirm appropriate test credentials and destinations before execution. Profile 
 
 ## 4. Wait for validation
 
-1. Call `guild_wait_for_job` with the returned `version_id` and `job_id`.
+1. State what is running. While the job runs, ask for test input or resolve independent connection setup.
+   Then call `guild_wait_for_job` with the returned `version_id` and `job_id`.
+   Report actual progress and blockers. Do not invent stages or time estimates.
 2. If validation fails, read `guild_get_agent_version_validation`.
    For compiler failures, read `references/compiler.md`.
    Repair the same prototype with a new version. Require successful validation before testing.
@@ -129,7 +142,9 @@ messages.
 
 ## 5. Test and revise
 
-1. Agree on test input and safe destinations.
+1. Agree on test input. Default a digest's first run to a preview in chat.
+   In preview mode, instruct the agent to return the result without calling delivery tools.
+   Confirm before a test sends real email or messages. A profile does not prevent external writes.
    Call `guild_start_profile_agent_test_session` with `workspace_id_or_name`, exact `agent_version_id` and profile UUID as `profile_id`.
    Check the returned `profile.id`, `profile.workspace.id`, session workspace and `agent_version_override.id` against the selected values.
    If values differ, stop before sending input.
@@ -160,7 +175,9 @@ messages.
 
 ## 6. Release only on request
 
-1. Confirm the production workspace, connections and safe smoke test.
+1. Confirm the production workspace, accepted version, connections and safe smoke test.
+   For a schedule, confirm the destination, cadence and time zone.
+   Treat a deferred or unclear answer as pending. Do not infer release approval from test acceptance.
    If unpublished, publish the accepted version with `guild_publish_agent_version`. Wait for that exact job.
    Set nonsecret runtime values with `guild_set_workspace_variable`.
 2. Find the accepted agent with `guild_list_installed_agents`. If absent, use `guild_install_agent`.
@@ -169,6 +186,7 @@ messages.
    Verify the installed version before activation. If verification fails, stop.
 3. For schedules, use `guild_schedule_agent`. For GitHub events, use `build-triggered-agent` with the accepted IDs and test evidence.
    Source or ownership changes require another test and acceptance.
+   Verify the schedule or trigger result before claiming it is active.
    Run only the agreed smoke test. Share its session link.
 
 ## References
