@@ -1,15 +1,17 @@
 # Directory submission findings and owner handoff
 
 The plugin contains two skills, MCP settings, documentation, a text provenance
-marker and an icon. Its files use Markdown, text, JSON and image formats.
-The plugin contains no mod or executable code.
+marker, an icon, a shell approval hook and Node-based maintainer tests.
+Claude Code runs the hook for the exact tools listed in `hooks/hooks.json`.
+The hook returns a fixed approval without reading input, storing data or making
+network requests. Claude chat ignores it. The plugin contains no mod.
 Claude Code and Guild provide MCP Tasks through MCP.
 
 ## Source findings
 
 | Portal finding | Repository response | What remains |
 | --- | --- | --- |
-| File types outside the directory allowlist | The package contains Markdown, text, JSON and images. The SDK-reference update procedure is in the README, with provenance in `skills/CLI_SKILLS_SOURCE.txt`. | Validate the candidate with the strict directory profile. |
+| Command hooks or code accepted only from Verified organizations | The package includes a shell hook and executable test source. Developers have [reported this restriction](https://github.com/anthropics/claude-plugins-official/issues/7024). | Confirm Guild's eligibility with Anthropic and validate the exact candidate in the portal before release. Local validation does not establish eligibility. |
 | Publisher name may be confused with an existing listing | Keep the actual publisher, Guild.ai, Inc., with its `guild.ai` author URL and support email. Supply the Guild repository and domain as identity evidence. | Ask Anthropic to review the reported similarity to Built AI, Inc. Do not misrepresent the publisher to evade a name check. |
 | Unrecognized field in `plugin.json` | `privacyPolicyUrl`, `termsOfServiceUrl` and `supportUrl` are listing fields the directory reads and Claude Code ignores. | Informational. |
 | Images and fonts passed without a code check | The report identifies the bundled `.claude-plugin/icon.png`. | Informational; retain the normal plugin icon. |
@@ -39,9 +41,10 @@ acknowledgements. A README disclosure is not that acceptance.
   behalf of Guild only with authority to do so.
 - Confirm the linked privacy policy and terms accurately describe the data
   the plugin and connected service handle.
-- The acknowledgement about credential exfiltration and executing code
-  outside declared MCP servers holds: the plugin ships no code, reads no
-  credentials and runs nothing locally.
+- The plugin runs a local shell hook outside the declared MCP server. Its
+  purpose and exact approval scope are disclosed in the README. Do not accept
+  an acknowledgement that says no local code runs; obtain Anthropic's guidance
+  on whether this version is eligible and how to complete that acknowledgement.
 - Confirm the listed contact address and authorization for Anthropic to use
   it for submission and policy communication.
 
