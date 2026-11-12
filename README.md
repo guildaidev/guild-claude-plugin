@@ -40,6 +40,26 @@ To try a local checkout:
 
 A local plugin does not deploy changes to the connected Guild backend.
 
+### Tool approvals
+
+In Claude Code, including Desktop's Code tab, a bundled `PreToolUse` hook
+preapproves the exact tool list in [hooks/hooks.json](hooks/hooks.json). It covers
+ADLC discovery and reads, waits, new agents/workspaces/profiles, and profile-bound
+test-session creation. It runs whenever the plugin is enabled, including when
+Claude uses a listed tool without invoking a Guild skill. Explicit ask/deny rules
+and company policy still apply. Claude chat ignores hooks.
+
+Build tools that can publish, profile-integration changes, session messages,
+installation, schedules and other unlisted tools retain normal permission checks.
+The hook does not check which workspace or profile is selected. Guild still
+enforces access; profiles do not isolate external services. Agree on the test
+input and destination before sending a message that can execute an agent.
+
+For customer-managed approval, Claude Code admins can deploy an explicit tool
+allowlist through [managed settings](https://code.claude.com/docs/en/server-managed-settings).
+Claude chat's connector role setting permits members to choose Always allow;
+it does not set each member's personal approval preference.
+
 ### Updating the SDK reference
 
 `skills/agent-development/references/` is a copy of the agent-writing half of the Guild CLI's skill in guildcode (`cli/docs/skills`). guildcode is the source of truth. Do not edit the copies here. `skills/CLI_SKILLS_SOURCE.txt` records the guildcode commit they came from.
@@ -68,7 +88,8 @@ To update them from a guildcode checkout at `$SRC`:
 
 ## Wait for remote work
 
-The plugin contains two skills, MCP settings, documentation and an icon.
+The plugin contains two skills, MCP settings, documentation, an icon and an
+approval hook.
 It does not include a mod or a sessions pane.
 Claude Code and Guild provide [native MCP Tasks](https://code.claude.com/docs/en/mcp#mcp-tasks-that-run-on-the-server) through the MCP connection.
 
@@ -117,6 +138,7 @@ Run the plugin from a checkout with `claude --plugin-dir .`. Before a commit:
 
 ```bash
 claude plugin validate . --profile directory --strict
+node --test tests/approvals.test.mjs
 ```
 
 The [reviewer guide](docs/reviewer-guide.md) has two example workflows, expected results, and the maintainer steps for a directory submission.
@@ -125,11 +147,11 @@ The [reviewer guide](docs/reviewer-guide.md) has two example workflows, expected
 
 The declared connector is `https://api.guild.ai/mcp`. Building and running agents sends the arguments Claude supplies to Guild, including agent source, configuration, workspace identifiers and test inputs. Guild processes these to build and execute the requested agents. Agents can use the models and integrations configured for their workspace; their credentials and permissions are managed in Guild.
 
-The plugin contains no executable code or hooks module.
-It reads no local files, starts no programs and makes no direct HTTP requests.
-Claude makes each Guild tool call through the declared connector.
-Claude Code applies its normal permission prompts.
-The plugin sends no data to other services and collects no analytics.
+For listed tools, Claude Code starts `sh` to run `hooks/approve-adlc.sh`, which
+returns a fixed permission approval. The handler does not inspect hook input,
+read local data, log conversations, change settings, fetch code or make network
+requests. Every Guild call uses the declared connector. The plugin sends no
+data to other services and collects no analytics.
 
 Guild session inputs, outputs and errors are read back from Guild through the same tools and can themselves contain personal data.
 

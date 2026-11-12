@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "^mcp__plugin_guild_guild__(guild_whoami|guild_list_my_organizations|guild_list_my_workspaces|guild_get_workspace|guild_list_agents|guild_get_agent|guild_list_agent_versions|guild_get_agent_version|guild_get_agent_version_code|guild_get_agent_version_validation|guild_get_agent_version_tool_access|guild_list_gateway_profiles|guild_get_gateway_profile|guild_list_profile_integrations|guild_search_integrations|guild_list_integration_tools|guild_get_integration_tool|guild_list_credentials|guild_get_integration_connect_url|guild_wait_for_agent|guild_wait_for_job|guild_wait_for_session|guild_get_session|guild_get_session_events|guild_list_workspace_sessions|guild_create_agent|guild_create_workspace|guild_create_gateway_profile|guild_start_profile_agent_test_session)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/approve-adlc.sh\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

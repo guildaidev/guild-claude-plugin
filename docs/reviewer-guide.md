@@ -1,7 +1,7 @@
 # Reviewing the Guild plugin
 
-This guide covers the two skills. They use Guild's declared MCP connector and
-work in Claude Code, Claude Desktop and claude.ai. See the
+This guide covers the two skills and approval hook. The skills use Guild's
+declared MCP connector and work in Claude Code, Claude Desktop and claude.ai. See the
 [README](../README.md) for installation and data handling.
 
 ## Maintainer setup
@@ -122,10 +122,9 @@ findings, data-handling questions and compliance acknowledgements.
 
 1. Review the [directory checklist](https://claude.com/docs/plugins/pre-submission-checklist)
    and [directory policy](https://support.claude.com/en/articles/13145358-anthropic-software-directory-policy).
-   Keep every file inside the plugin folder as Markdown, text, JSON, YAML or
-   an image. The directory accepts code files only from Verified
-   organizations. Retain the license and README, and increase `plugin.json`'s
-   version for a release.
+   Confirm eligibility for the bundled command hook and code files with
+   Anthropic before release; see the directory submission notes. Retain the
+   license and README, and increase `plugin.json`'s version for a release.
 2. Run `claude plugin validate . --profile directory --strict` from the plugin
    folder.
 3. Complete the private test-account handoff and live checks above. Record
