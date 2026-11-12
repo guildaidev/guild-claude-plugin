@@ -84,9 +84,48 @@ Confirm appropriate test credentials and destinations before execution. Profile 
 2. If validation fails, read `guild_get_agent_version_validation`.
    For compiler failures, read `references/compiler.md`.
    Repair the same prototype with a new version. Require successful validation before testing.
-3. For any pending or disconnected wait, repeat only that wait with the same IDs.
-   Recover native MCP tasks when available. Do not poll status tools, use shell sleeps or restart the operation.
-   Canceling a wait does not prove execution stopped.
+3. Use the wait-result instructions below for every wait.
+
+### Handle a wait result
+
+Omit `timeout_seconds` unless the user requests a time limit for the wait.
+Use these instructions for `guild_wait_for_agent`, `guild_wait_for_job` and
+`guild_wait_for_session`.
+Claude Code and Guild manage MCP Tasks through MCP.
+MCP Tasks do not need the plugin mod.
+
+If Claude Code starts an MCP Task and says it will send a notification:
+
+1. Let the client track that MCP Task.
+2. Give the user one short progress update.
+3. Keep the conversation available for other work.
+4. Wait for the client's completion notification.
+5. Read the result from that notification.
+
+Do not call another wait or a status tool while that MCP Task is pending.
+
+If the client uses an HTTP/SSE wait in the foreground, let the call continue.
+Guild sends progress and the result through that connection.
+If the result has `wait_complete: false` without a required action, repeat the
+same wait with the same IDs and receipt.
+If the connection fails without a recoverable MCP Task, repeat only that wait.
+
+Completion of an MCP Task means that the wait returned a result.
+Check the result before you report success:
+
+- For `ACTION_REQUIRED`, follow the request-specific instructions in section 5.
+- For `ERROR`, report the error.
+- For a pending result without a required action, repeat the same wait with
+  the same IDs and receipt.
+
+Cancellation of a wait or its MCP Task does not stop the remote agent.
+Do not make repeated calls to get, status or event tools.
+Do not use shell sleep commands to wait.
+Do not resend the input or create another execution to recover a result.
+Use execution receipts and transport details only to troubleshoot a problem.
+Calculate elapsed time from recorded timestamps.
+Do not estimate duration from descriptions, version summaries or keepalive
+messages.
 
 ## 5. Test and revise
 
@@ -96,8 +135,8 @@ Confirm appropriate test credentials and destinations before execution. Profile 
    If values differ, stop before sending input.
 2. Send `content` with `guild_send_session_message`.
    Use its `id` as `user_event_id` and `wait_after_event_id` as `after_event_id`.
-   Call `guild_wait_for_session` with those fields and the session ID. Omit `timeout_seconds`.
-   If pending, repeat only the same wait. Never resend input to recover a wait.
+   Call `guild_wait_for_session` with those fields and the session ID.
+   Use the wait-result instructions in section 4. Never resend input to recover a wait.
 3. For `ACTION_REQUIRED`, handle the actual request:
    - `user_input`: ask the question unless the user already answered. Send the answer to the same session.
      Wait with the new message receipt.

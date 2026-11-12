@@ -1,8 +1,9 @@
 # Directory submission findings and owner handoff
 
-The plugin contains two skills, Markdown documentation, the connector
-declaration, a text provenance marker and an icon. Its files use the directory's
-accepted Markdown, text, JSON and image formats.
+The plugin contains two skills, MCP settings, documentation, a text provenance
+marker and an icon. Its files use Markdown, text, JSON and image formats.
+The plugin contains no mod or executable code.
+Claude Code and Guild provide MCP Tasks through MCP.
 
 ## Source findings
 

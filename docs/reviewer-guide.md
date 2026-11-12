@@ -1,7 +1,7 @@
 # Reviewing the Guild plugin
 
 This guide covers the two skills. They use Guild's declared MCP connector and
-run the same in Claude Code, Claude Desktop and claude.ai. See the
+work in Claude Code, Claude Desktop and claude.ai. See the
 [README](../README.md) for installation and data handling.
 
 ## Maintainer setup
@@ -28,6 +28,11 @@ Before handing over the account:
 
 Install the plugin as described in the README, then authenticate the Guild
 server through `/mcp` in Claude Code, or connect it in claude.ai.
+
+The examples use profile-based test sessions.
+The connected Guild server must expose `guild_start_profile_agent_test_session`
+and the profile setup tools from the `agent-development` skill.
+If those tools are unavailable, stop before agent creation.
 
 Run these prompts in order, in the same conversation, using the dedicated
 workspace supplied in the private handoff. Both create agents and test
@@ -60,6 +65,48 @@ Expected: the build succeeds and the test execution fails with the intentional
 sample error. Claude reports the failure and its evidence rather than a
 successful result. An account cannot read sessions Guild refuses it permission
 to read.
+
+## Try a background run
+
+This example uses an interactive terminal session in Claude Code.
+Claude Code and Guild provide [native MCP Tasks](https://code.claude.com/docs/en/mcp#mcp-tasks-that-run-on-the-server) through MCP.
+The example does not require the plugin mod or a sessions pane.
+
+1. Update the Guild plugin through `/plugin`.
+2. Run `/reload-plugins`, or start a new Claude Code session.
+3. Open `/mcp` to check the Guild connection.
+4. Give Claude synthetic feedback or information you have permission to send
+   to Guild.
+5. Send this prompt:
+
+> In the review workspace, build a draft Guild agent that converts customer
+> feedback into a product brief.
+> Identify the three recurring problems.
+> Include supporting quotes, affected customer segments and suggested next
+> steps.
+> Use only the feedback I provide.
+> Identify missing evidence.
+> Use this batch for a test: [paste feedback].
+> Do not publish, install or schedule the agent.
+> Show me the brief when the agent finishes.
+> Include the session link.
+
+If the wait returns an MCP Task, ask Claude to write an agenda while that task
+runs.
+Open `/tasks` to check the MCP Task.
+Claude should answer the agenda request and report the brief when the task
+returns its result.
+Claude should use the existing execution without repeated status tool calls.
+
+A short run can return its result before Claude Code creates an MCP Task.
+That result verifies direct completion. It does not verify a background wait.
+
+Record the plugin version, Claude Code version, client, session link, wait call
+count and result.
+If an MCP Task returns an error or requests user action, check that Claude
+reports that result.
+The client's own status requests are expected. They do not require repeated
+model tool calls.
 
 ## Cleanup
 

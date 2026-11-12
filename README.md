@@ -1,6 +1,10 @@
 # Guild plugin for Claude
 
-Connects Claude Code to Guild's hosted MCP server at `https://api.guild.ai/mcp`, so Claude can build, privately test and revise agents on Guild, then publish, install, run and schedule them and read their sessions. It works in Claude Code, Claude Desktop and claude.ai.
+The plugin connects Claude to Guild's hosted MCP server at `https://api.guild.ai/mcp`.
+Claude can build, test and revise private Guild agents through this connection.
+You can then request a release, installation, schedule or trigger.
+Claude can also read Guild sessions.
+The plugin works in Claude Code, Claude Desktop and claude.ai.
 
 ## Install
 
@@ -13,23 +17,28 @@ The first tool call opens a Guild sign-in in your browser. You can disconnect at
 
 ## Skills
 
-Both skills work through Guild MCP tools in Claude Code, Claude Desktop and
-claude.ai. Neither requires the user to run the `guild` CLI, `npm` or `git`.
+Both skills use Guild MCP tools. A client's MCP Tasks support determines how it
+waits for results. Neither skill requires the user to run the `guild` CLI,
+`npm` or `git`.
 
-- `agent-development` guides workspace and connection setup, builds a private
-  candidate, tests it on Guild, and revises it from feedback. Acceptance records
-  the exact tested version for a separately requested production release.
+- `agent-development` guides workspace and connection setup. It builds a private
+  candidate, tests it on Guild and revises it from feedback. Acceptance records
+  the exact tested version. Production release requires a separate request.
 - `build-triggered-agent` builds an agent that runs on a GitHub event.
 
-Tests use a gateway profile to select integrations and credentials. The connected
-Guild server must expose `guild_start_profile_agent_test_session` and the profile
-setup tools; the skill stops if they are unavailable. A profile governs
-Guild-brokered calls and does not make production services into test services.
+Tests use a gateway profile to select integrations and credentials.
+The connected Guild server must expose `guild_start_profile_agent_test_session`
+and the profile setup tools. The skill stops if those tools are unavailable.
+A profile controls Guild-brokered calls. It does not convert production services
+into test services.
 
-To try a local checkout, start a new Claude Code session with
-`claude --plugin-dir /absolute/path/to/guild-claude-plugin`, authenticate Guild
-through `/mcp`, then invoke `/guild:agent-development` with your agent idea.
-Loading a local plugin does not deploy changes to the connected Guild backend.
+To try a local checkout:
+
+1. Start Claude Code with `claude --plugin-dir /absolute/path/to/guild-claude-plugin`.
+2. Authenticate Guild through `/mcp`.
+3. Invoke `/guild:agent-development` with your agent idea.
+
+A local plugin does not deploy changes to the connected Guild backend.
 
 ### Updating the SDK reference
 
@@ -57,6 +66,51 @@ To update them from a guildcode checkout at `$SRC`:
 > | `guild workspace variable set`        | `guild_set_workspace_variable`                  |
 ```
 
+## Wait for remote work
+
+The plugin contains two skills, MCP settings, documentation and an icon.
+It does not include a mod or a sessions pane.
+Claude Code and Guild provide [native MCP Tasks](https://code.claude.com/docs/en/mcp#mcp-tasks-that-run-on-the-server) through the MCP connection.
+
+If a wait returns an MCP Task, Claude Code tracks that task in the background.
+You can continue the conversation while the Guild agent runs.
+Claude Code makes short status requests and gets the result when it is ready.
+It notifies Claude of the result without repeated model tool calls.
+A wait returns its result directly if the work is already complete.
+
+Clients without MCP Tasks support use an HTTP/SSE wait in the foreground.
+Guild sends progress and the result through that connection.
+If the wait window ends, the skill repeats the wait with the same execution IDs and receipt.
+Claude reports errors and requests for user action.
+Completion of a wait does not mean that the agent succeeded.
+Cancellation of a wait does not stop the remote agent.
+
+The plugin sends `X-Guild-MCP-Result-Format: compact` to request compact results.
+The following session tools support this preference:
+
+- `guild_start_agent_test_session`
+- `guild_send_session_message`
+- `guild_wait_for_session`
+
+The guided test workflow uses `guild_start_profile_agent_test_session`.
+Compact results for that tool require [Guildcode PR #17049](https://github.com/guildaidev/guildcode/pull/17049) to be merged and deployed.
+Until then, profile-based starts return complete receipts.
+The workflow still checks the selected profile, workspace and version before sending input.
+
+Compact results keep execution IDs, status, required actions and the complete output.
+They omit repeated entity metadata.
+Other tools, including `guild_get_session` and `guild_get_session_events`, return complete responses.
+Servers without compact-result support return complete responses.
+
+To try this behavior:
+
+1. Update the Guild plugin through `/plugin`.
+2. Run `/reload-plugins`, or start a new Claude Code session.
+3. Open `/mcp` to check the Guild connection.
+4. Open `/tasks` to check MCP Tasks in the background.
+
+The [reviewer guide](docs/reviewer-guide.md#try-a-background-run) gives a customer-feedback example and the expected results.
+
 ## Working on the plugin
 
 Run the plugin from a checkout with `claude --plugin-dir .`. Before a commit:
@@ -71,7 +125,11 @@ The [reviewer guide](docs/reviewer-guide.md) has two example workflows, expected
 
 The declared connector is `https://api.guild.ai/mcp`. Building and running agents sends the arguments Claude supplies to Guild, including agent source, configuration, workspace identifiers and test inputs. Guild processes these to build and execute the requested agents. Agents can use the models and integrations configured for their workspace; their credentials and permissions are managed in Guild.
 
-The plugin contains two skills, their documentation, an icon and the connector declaration. It contains no executable code, reads no local files, starts no programs and makes no direct HTTP requests. Every Guild call is a tool call Claude makes through the declared connector, with Claude Code's normal permission prompts. The plugin does not send data to any other service and has no analytics.
+The plugin contains no executable code or hooks module.
+It reads no local files, starts no programs and makes no direct HTTP requests.
+Claude makes each Guild tool call through the declared connector.
+Claude Code applies its normal permission prompts.
+The plugin sends no data to other services and collects no analytics.
 
 Guild session inputs, outputs and errors are read back from Guild through the same tools and can themselves contain personal data.
 
