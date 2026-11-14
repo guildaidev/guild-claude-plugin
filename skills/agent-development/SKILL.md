@@ -162,7 +162,23 @@ messages.
    If needed, read `guild_get_session_events` once for output or action details.
    Preserve structured output. Report missing output, partial effects and uncertain connection access.
 
-   A send receipt does not prove consumption. Completion does not prove quality. Ask for feedback.
+    After results arrive, including partial results or an error, automatically use
+    the `visualize-scenario-run` skill; do not ask for a separate visualization
+    request or confirmation. Collect and sanitize the available actual evidence,
+    retaining the exact tested version, workspace, profile and session. Include
+    confirmed effects, failures and missing evidence; do not invent observations.
+    Follow its parent, distinct narrative author, Read-only copy editor,
+    independent read-only fact checker, renderer
+    and presentation instructions. Report unavailable capabilities, verification,
+    rendering or presentation honestly, with any safe artifact reference and gaps.
+    Load that skill before gathering visualization-specific external evidence.
+    Preserve immutable source revision handles when supplied; a current-state
+    read cannot replace historical evidence or the checker's own source calls.
+    Do not rerun the agent, resend input or make external writes to visualize.
+    This local review does not replace output, establish acceptance or authorize
+    release; its renderer exception does not permit local Guild-agent builds.
+    A send receipt does not prove consumption. Completion does not prove quality.
+    Ask for feedback; interpret it in the parent conversation.
 5. For behavior changes, create or configure a new version on the same private agent.
    Repeat sections 4 and 5 with a fresh session. Use a fresh session for new test input.
    Answer active questions in the existing session.

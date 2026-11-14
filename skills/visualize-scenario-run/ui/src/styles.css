@@ -1,0 +1,19 @@
+@import "tailwindcss" source(none);
+@source "./**/*.{jsx,mjs}";
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--text);
+  --color-primary: var(--text);
+  --color-primary-foreground: var(--bg);
+  --color-secondary: var(--surface);
+  --color-secondary-foreground: var(--text);
+  --color-accent: var(--hover);
+  --color-accent-foreground: var(--text);
+  --color-destructive: #9c4444;
+  --color-destructive-foreground: #fff;
+  --color-muted-foreground: var(--muted);
+  --color-input: #555;
+  --color-ring: var(--text);
+}

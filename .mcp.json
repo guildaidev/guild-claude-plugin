@@ -6,6 +6,13 @@
       "headers": {
         "X-Guild-MCP-Result-Format": "compact"
       }
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/readonly",
+      "headers": {
+        "X-MCP-Tools": "get_file_contents"
+      }
     }
   }
 }

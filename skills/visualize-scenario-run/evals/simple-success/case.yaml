@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: simple-success
+expected_outcome: |
+  A synthetic story artifact contains top-level lifecycle and an inline draft,
+  with separate fake reads and no claim of real verification.

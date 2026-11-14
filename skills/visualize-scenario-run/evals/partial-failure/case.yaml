@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: partial-failure
+expected_outcome: |
+  The confirmed draft remains visible alongside the failed send attempt;
+  neither total success nor total loss is claimed.

@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: downstream-session
+expected_outcome: |
+  Both top-level sessions and the relevant indexed-draft chain appear;
+  synthetic verification is not confused with live verification.

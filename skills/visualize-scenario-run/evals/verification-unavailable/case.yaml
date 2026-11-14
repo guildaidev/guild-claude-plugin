@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: verification-unavailable
+expected_outcome: |
+  Failed authorized fake reads are recorded; useful output remains explicitly
+  unverified rather than being called confirmed.
