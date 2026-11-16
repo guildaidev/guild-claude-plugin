@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: render-presentation-failure
+expected_outcome: |
+  Renderer exhaustion returns no successful HTML; controlled presentation
+  failure retains the valid artifact path without a false presented claim.

@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: post-closure-feedback
+expected_outcome: |
+  Artifact-owned copy and manual fallback preserve parent, snapshot, run,
+  scenario and event IDs; automatic host variants are simulations only.

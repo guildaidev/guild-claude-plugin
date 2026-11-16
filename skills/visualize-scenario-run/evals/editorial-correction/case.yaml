@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: editorial-correction
+expected_outcome: |
+  The delivery assertion becomes draft-only and a second checker pass binds
+  to that revision before the HTML is created.

@@ -1,0 +1,12 @@
+{
+  "synthetic": true,
+  "source": "Pinned captured-source archive, not a live document API",
+  "commit_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "session_id": "11111111-2222-4333-8444-555555555555",
+  "read_metadata": { "observed_at": "2026-01-02T12:01:00.000Z", "clock_scope": "synthetic fixed-clock mock response" },
+  "snapshots": [
+    { "document_id": "fixture-timeline-document", "source_event_id": "event-doc-initial-done", "observed_at": "2026-01-02T12:00:08.000Z", "revision_id": "fixture-r0", "text": "\n" },
+    { "document_id": "fixture-timeline-document", "source_event_id": "event-doc-first-done", "observed_at": "2026-01-02T12:00:12.000Z", "revision_id": "fixture-r1", "text": "# Vision model\n\nThe vision model uses outlines and movement to find moving objects.\n" },
+    { "document_id": "fixture-timeline-document", "source_event_id": "event-doc-final-done", "observed_at": "2026-01-02T12:00:20.000Z", "revision_id": "fixture-r2", "text": "# Vision model\n\nThe vision model uses outlines and movement to find moving objects.\n\n# Battery safety\n\nKeep the battery terminals apart. Remove the charger before you replace the battery.\n" }
+  ]
+}

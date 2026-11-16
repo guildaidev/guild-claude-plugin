@@ -1,8 +1,14 @@
 # Reviewing the Guild plugin
 
-This guide covers the two skills. They use Guild's declared MCP connector and
+This guide covers the two development skills. They use Guild's declared MCP connector and
 work in Claude Code, Claude Desktop and claude.ai. See the
 [README](../README.md) for installation and data handling.
+
+The optional `visualize-scenario-run` skill has a local Node.js renderer,
+distinct editor/checker requirements and a separate
+[host acceptance gate](../skills/visualize-scenario-run/references/hosts.md).
+Its [fixture validation record](visualization-validation.md) is not proof of
+live host support or production transport. No automatic feedback adapter is enabled.
 
 ## Maintainer setup
 

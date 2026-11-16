@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: contradictory-verification
+expected_outcome: |
+  Conflicting sources are visible and the effect is unresolved, not silently
+  resolved as success by choosing one source.

@@ -1,0 +1,12 @@
+import * as React from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { Button } from './components/button.jsx';
+import { Card } from './components/card.jsx';
+import { Textarea } from './components/textarea.jsx';
+import ExternalLink from 'lucide-react/icons/external-link';
+import { ArtifactDiff } from './components/artifact-diff.jsx';
+export const buttonHtml = (props, text) => renderToStaticMarkup(<Button type="button" variant="outline" {...props}>{text}</Button>);
+export const textareaHtml = props => renderToStaticMarkup(<Textarea {...props} />);
+export const queueHtml = (title, description) => renderToStaticMarkup(<Card className="queue-current" aria-current="true"><h3>{title}</h3>{description ? <p>{description}</p> : null}</Card>);
+export const externalLinkIconHtml = () => renderToStaticMarkup(<ExternalLink className="external-link-icon" size={14} aria-hidden="true" focusable="false" />);
+export const artifactDiffHtml = props => renderToStaticMarkup(<ArtifactDiff {...props} />);

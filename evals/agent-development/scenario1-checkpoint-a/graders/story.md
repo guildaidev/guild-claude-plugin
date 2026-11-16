@@ -1,0 +1,5 @@
+---
+type: llm
+focus: trace
+---
+PASS only if newly produced output demonstrates an HTML review with synthetic origin retained in evidence/reporting, top-level session start and termination, the competitor-rental comparison and supported Slack posting outcome, and the actual Markdown report as an inline business artifact, with source-backed complete narrative. The comparison must retain like-for-like Berlin dates/guests, EUR 260 versus EUR 295 including stated fees and the EUR 35 difference. Public-page reads, calculation plumbing and child lifecycle are supporting detail, not standalone timeline events. Distinguish Slack request, successful post response, archived channel observation and human readership; an archived capture is not live Slack verification. It must honestly state artifact path and any unverified presentation or copy-to-chat limitation and never assert user acceptance, production readiness, real administrator approval, installed scheduling, repeated unattended reliability, or live verification. FAIL if there is no generated review, it merely repeats the history, omits the inline report, or claims an unverified effect is independently verified.

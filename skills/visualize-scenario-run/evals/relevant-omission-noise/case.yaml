@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: relevant-omission-noise
+expected_outcome: |
+  Relevant downstream effects survive noise filtering, child and unknown
+  lifecycle are excluded, and missing session level remains a gap.

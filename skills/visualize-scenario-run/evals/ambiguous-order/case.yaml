@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: ambiguous-order
+expected_outcome: |
+  Unknown times remain unknown and inferred order is not represented as an
+  observed causal chain; reading order is explicitly editorial.
