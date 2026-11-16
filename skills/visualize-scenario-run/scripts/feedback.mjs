@@ -48,13 +48,16 @@ export function feedbackRuntime() {
   return { labels, key, item, add, remove, validate, compose };
 }
 
-export function feedbackContext(doc) {
+export function feedbackContext(doc, bindingDigest) {
+  // Current server callers use validatedFeedbackContext. Keep this browser-shared
+  // module dependency-free, never importing Node hashing/validation into the UI.
+  if (['1.9', '1.10'].includes(doc.schema_version) && !/^[a-f0-9]{64}$/.test(bindingDigest ?? '')) throw new Error('Validated content binding is required.');
   const header = displayHeader(doc);
   return { schema_version: '1.0', workflow_title: header.application_name, scenario_title: header.scenario_name,
-    ...(['1.7', '1.8'].includes(doc.schema_version) ? { scenario_description: doc.schema_version === '1.8' ? header.scenario_description : `${header.starting_context} ${header.observed_result}`, original_spec: { workflow: doc.workflow, scenario: doc.scenario } } : {}),
+    ...(['1.7', '1.8', '1.9', '1.10'].includes(doc.schema_version) ? { scenario_description: ['1.8', '1.9', '1.10'].includes(doc.schema_version) ? header.scenario_description : `${header.starting_context} ${header.observed_result}`, original_spec: { workflow: doc.workflow, scenario: doc.scenario } } : {}),
     expected_outcome: doc.scenario.expected_outcome, snapshot_id: doc.snapshot_id, run_id: doc.run.id,
     scenario_id: doc.scenario.id, parent_conversation_ref: doc.presentation.parent_conversation_ref,
-    candidate_digest: doc.review.factual_digest,
+    candidate_digest: ['1.9', '1.10'].includes(doc.schema_version) ? bindingDigest : doc.review.factual_digest,
     limitations: sourceLimitations(doc),
     actions: doc.presentation.allowed_actions,
     events: doc.timeline.map((event, index) => ({ id: event.id, step: index + 1, description: event.description,

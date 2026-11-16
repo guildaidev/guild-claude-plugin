@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { validate, factualDigest, prepareRenderSnapshot, snapshotContract } from '../scripts/contracts.mjs';
+import { validate, factualDigest, prepareRenderSnapshot, snapshotContract, factualReviewContract } from '../scripts/contracts.mjs';
 import { bundle, snapshot } from './fixtures.mjs';
 
 test('versioned bundle and checked snapshot accept representative context', async () => {
@@ -35,11 +35,11 @@ test('reject malformed, stale, dangling, removed fields, non-independent and wri
 });
 
 test('HTML input contract excludes origin and gap-impact fields; old checked inputs retain their original review', async () => {
-  assert.equal(snapshotContract.fields.schema_version.values[0], '1.8');
+  assert.equal(snapshotContract.fields.schema_version.values[0], '1.10');
   assert.equal(snapshotContract.fields.coverage.fields.data_origin, undefined);
   assert.equal(snapshotContract.fields.coverage.fields.gaps.items.fields.impact, undefined);
-  assert.equal(snapshotContract.fields.review.fields.data_origin, undefined);
-  assert.equal(snapshotContract.fields.review.fields.checks.items.fields.data_origin, undefined);
+  assert.equal(factualReviewContract.fields.data_origin, undefined);
+  assert.equal(factualReviewContract.fields.checks.items.fields.data_origin, undefined);
   const legacy = await snapshot();
   delete legacy.copy_review;
   delete legacy.copy_review_iterations;

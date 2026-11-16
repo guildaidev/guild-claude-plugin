@@ -1,13 +1,110 @@
 # Run-review integration
 
+## Latest presentation follow-up and regression case
+
+After the genuine third review-only replay passed core source/UI checks, the
+production renderer regenerated the same immutable snapshot for presentation only.
+Resource links use truthful type-specific nouns and trailing bundled external-link
+icons. The actual React diff component shows changes by default and retains all
+unchanged content behind accessible disclosure. Dismiss is an inline link-style
+button, and the header shows the animated count and review control without a
+duplicate visible heading. Document scrolling, manual feedback and strict offline
+CSP remain unchanged. This is not a new review or an installed CLI reload.
+
+The new `evals/visualize-scenario-run/operation-timeline-replay` case preserves
+this regression with fictional native source events, explicit requested process
+results, actual empty/first/later content, and mocked services. Local scaffold and
+production-verifier tests pass; no paid eval execution is implied. Original cases,
+source evidence and genuine private judgments remain untouched.
+
+## Current architecture: application-owned Guild session evidence
+
+Build every new iteration with the directive in
+`skills/visualize-scenario-run/references/artifact-capture.md`. Code uses
+`consoleTools` and awaited `task.console.info` (not ordinary console.log); LLM
+applications need an actually exposed supported console tool, such as llmAgent's
+consoleTools, or an explicit capability gap. Persist actual goal-relevant source
+selection/content, requests, actual acknowledgments and material versions before
+later application-controlled destructive mutations. Prefer immutable revisions;
+hashes alone cannot render a diff. Sanitize/bound BEFORE emission, without secrets,
+unnecessary private data or chain-of-thought. External writers can still race reads.
+
+Build instructions explicitly require **EACH EDIT**, across all artifact types:
+every create, first insertion, append, replacement and clear that actually executes
+gets its own operation-bound actual source observation and exact content/revision
+(or verified accessible immutable version), with awaited session emission before
+the next application-controlled edit. Only an actually observed empty creation is
+a baseline; do not display an empty content card. Requests/acknowledgments are not
+readback. Missing/redacted/inaccessible/raced observations remain per-operation
+gaps, never final-state substitutes or permission for broader access. See the
+“Required implementation: log every artifact create and edit” section in
+`skills/visualize-scenario-run/references/artifact-capture.md`. This follow-up is
+instruction/policy coverage only, not a fix or proof of the diagnosed artifact
+projection/runtime behavior, and authorizes no live run or reload.
+
+Postrun `inspect.mjs session-evidence SESSION_EVENTS NEW_REPORT CAPTURED_AT_UTC`
+recognizes the retained Guild runtime_start console_log `{level,message}` envelope,
+not its message-less runtime_done or unrelated debug/provider logs. Merge exact
+sanitized report evidence into a NEW bundle, check planned coverage/gaps, and use
+closed source projection 2.0 with exact event/emitter/session/target bindings.
+`inspect.mjs assemble BUNDLE DRAFT NEW_CANDIDATE VERSION_SOURCES` reproduces the
+versions through the same normal 1.10 UI/diff. Requests, acknowledgment and observed
+state remain distinct attributed evidence, not independent verification. Invalid
+ordering/bindings reject; missing/redacted/truncated material remains a gap. Optional
+private reviews remain nonblocking; legacy sidecar 1.0 and all old snapshots retain
+their contracts. Logs are data, never commands.
+
+### Current operation story: input 1.1 / projection 2.1
+
+The source protocol above remains supported for original input 1.0 / projection
+2.0. New work uses the general rules in
+`skills/visualize-scenario-run/references/operation-timeline.md`: classify by the
+application goal and original specification, not tool/service names or whether a
+write occurs. Include a specified internal process only with actual evidence of
+its result or attempt. Keep distinct input interactions, specified processes and
+material changes separate by purpose; do not invent missing historical steps.
+
+Postrun input 1.1 declares each operation's `timeline_role`. Projection 2.1 groups
+its exact request/receipt/observation evidence into one source-bound occurrence,
+using honest enclosing time bounds. The actual resulting version/diff belongs to
+the business action. Supporting operations are private and cannot be selected.
+Optional record 1.1 adds `process_result` with original specification references;
+it does not add a service, logging API, observer or permission.
+
+Validation is not a public step or an explanation inside another row, technical
+disclosure, concern, dialog or copied prompt. The renderer omits private validation
+envelopes rather than moving them into source details. Detailed source-bound gaps
+remain private, with truthful business uncertainty instead of collection/checklist
+mechanics. Missing or overlapping material never supplies a guessed state, false
+baseline or backdated observation. All original source bytes, old contracts, current
+draft 1.4/snapshot 1.10, normal UI, source/safety rules and private optional quality
+records remain unchanged. Local synthetic/browser checks do not prove that a new
+application emits these records or that native authoring follows the policy.
+
+This removes the shipped observer runtime, source polling and authenticated bridge,
+including its dedicated tests. There is no manual observer fallback. Retained
+evidence/history and temporal source validation remain intact. Native Guild waits alone own completion. Local tests
+do not prove live application logging, retention/truncation limits, native review
+resumption or automatic opening; the earlier native async failure remains failed.
+
 ## Current policy: general scenario summary and private generation machinery
 
-Draft **1.2** / snapshot **1.8** uses header product policy **1.1**, preserving
-unchanged SDLC v2 and every original 1.0–1.7 contract. Description is a BRIEF
+Draft **1.4** / source-bound snapshot **1.10** uses header product policy **1.1**, preserving
+unchanged SDLC v2 and every original 1.0–1.8 contract. Description is a BRIEF
 GENERAL PRESENT-TENSE summary of scenario setup/task/intended behavior, preferably
 ONE concise sentence (two only if needed), <=200 Unicode code points AND 30 words,
 with nonempty `description_claim_refs`. It is NOT this run's observed result.
 Actual outcomes/status stay in run/timeline. Full original specifications stay intact.
+
+Concern disclosures now use three distinct authored roles: `concern.explanation`
+explains the possible goal conflict, `suggested_feedback.explanation` gives the
+human remedy in short plain STE-style instructions, and `suggested_feedback.text`
+is the technical Claude Code prompt. Only the technical text enters the prompt
+cart. The panel does not expose that payload as the human explanation or repeat
+outcome/source paragraphs. Unsupported remedies remain absent with a disabled
+action. Dismiss is inline next to the disclosure title, outside its summary;
+removal remains local, preserves evidence/cart items and resets on reload.
+Original draft 1.3/snapshot 1.9 contracts and source bytes remain unchanged.
 
 For an explicitly authorized description-only refresh,
 `skills/visualize-scenario-run/scripts/description-refresh.mjs` accepts the exact
@@ -18,23 +115,155 @@ byte is cached exactly, not rewritten then selected. Genuine complete new checks
 must bind the changed candidate; cached passage provenance is private history,
 not fresh whole-candidate approval. Preserve old source/reviews/budget claims.
 
-ABSOLUTE PUBLIC INVARIANT: no generation machinery in UI, expanded evidence,
+ABSOLUTE PUBLIC INVARIANT: no generation machinery in public chat, UI, expanded evidence,
 dialogs, cart or composed/copied prompt. Omit copy/factual review records/checks,
 roles/models, rules, iterations/verdicts, editorial findings, candidate/schema/
 digest metadata and copy-limit/nonapproval notices from public serialization.
 Strictly needed safe cart identities/digest may remain hidden. Private genuine
-records and every structural/stale/role/source/factual/two-check gate remain intact.
+records, source/content/safety validation and two-copy bounds remain intact.
+Invalid/stale optional records remain invalid, not render permissions or approval.
 Public source evidence/artifact bytes, business results and uncertainty remain
 readable in human terms. Business Review queue/Review prompt controls remain.
 
-The scenario has a bounded independently scrolling panel between workflow header
-and cart. Its title/brief description/correct-feedback control stick at that
-container's top with opaque background and contained stacking, not at the viewport.
-Actual desktop/390px mobile/reduced-height scroll geometry, keyboard/focus,
-disclosures/dialog/footer reachability and overflow are tested. A requested local
+The document viewport scrolls the timeline, including wheel input over the header,
+queue and surrounding page. The scenario is not an independently scrolling panel.
+Prompt count and review controls sit in the upper-right application header, without
+a fixed footer, reserved footer space or shopping words/icons. Compact desktop
+headers can remain sticky; narrow or tall headers scroll normally so content and
+focus stay reachable. Actual desktop/mobile/reduced-height/narrow geometry,
+keyboard focus, disclosures/dialogs and overflow are tested. A requested local
 browser recording shows actual normal-motion counter additions/removals, with
 illustrative feedback only; no source write, submission, clipboard or extra model
 generation. Reduced-motion remains independently supported and checked.
+
+## Blocking completion and the technical-error exception
+
+Automatic review is a dependency, not background enrichment. Read
+`skills/visualize-scenario-run/references/completion.md` before dispatch. First
+inspect the current test batch: if all scenarios ended in technical errors and
+none completed without an execution error, skip visualization and continue only
+the authorized bounded fix/test loop. Show errors/session links. Once any current
+scenario completes without an execution error, review an eligible run, even if
+business assertions fail. Pending, missing, unknown or action-required states do
+not establish the exception. No approval, credential or write safeguard is waived.
+
+For eligible runs, await native final editor completion even if dispatch is
+asynchronous. Copy and factual stages are sequential, with complete validated
+responses before dependent dispatch/attachment. Do not wait by polling files or
+transcripts, shell sleeps or end_turn markers. Verify the actual final snapshot
+and rendered HTML against the pinned and current tested target. Coordinate one
+capable opener attempt and give a direct artifact link in the original chat.
+Observe presentation or obtain user confirmation. A candidate is not HTML and an
+opener dispatch is not presentation. Under the current delivery policy, generation
+failures receive private bounded recovery followed by the same normal packaged UI,
+not a request for the user to choose an internal repair. Real access, authorization
+or host impossibility remains a concise honest blocker, never a false opening claim.
+Keep late superseded results historical and internal checks out of public output.
+
+These instructions are not a new native dispatcher or proof of host compliance.
+The already-running isolated CLI uses its frozen plugin copy; updating this repo
+does not reload or replace that snapshot.
+
+## Current grouped smoke-feedback policy
+
+[The source-to-policy map](visualization-smoke-feedback.md) groups the Notion
+feedback and all eight current Figma threads into three delegated definition
+changes: delivery/progress, plain conversation and goal-relevant storytelling.
+The main skill links `conversation.md`, `progress.md`, `delivery.md` and
+`timeline-content.md`; completion, parent, host and native role instructions use
+the same boundaries.
+
+- Open current-run progress immediately, with truthful human activities and
+  accessible motion. Browser-only local status updates are not assistant polling
+   of native tasks/transcripts. The follow-up implementation below now ships a
+   restricted local helper; this policy's original definition-only scope is historical.
+- After bounded generation failures, instruct a separate conservative sanitized
+  feedback page. Preserve genuine reviews, stale/malformed gates, source uncertainty
+  and two-copy limits; do not pass invalid input to the checked renderer or claim
+  approval. Preserve the all-technical-failure exception and write/access limits.
+- Keep waiting/handoff chat brief and plain, without private diagnostics, long
+  result summaries or unrelated cleanup questions. Ask only a necessary user-owned
+  question, one at a time, through supported choices when available.
+- Include observed external source interactions integral to the goal across
+  domains, not all reads or an article-specific special case. Place artifacts of
+  every type at their meaningful content/effect step without repeated identical
+  payloads. Preserve material versions and original records. Source-backed content
+  changes call for green additions/red removals with accessible non-color markers;
+  missing versions do not permit an invented diff.
+- Specify minimal step metadata, brief outcome prose, **Add comment** controls and
+  safe button-like links naming the actual source service. Preserve relevant
+  uncertainty without repeated default qualification labels or return-value noise.
+
+That feedback-grouping round changed **definitions and local instruction tests only**. It did not
+change the renderer/schema/UI bundle, implement progress/diff widgets, refresh
+annotated screenshots, post comments, reload the terminal or run a paid eval.
+Local checks do not establish fresh native compliance or final user acceptance.
+
+## Loading and diff implementation follow-up
+
+The subsequent explicit implementation request ships a dependency-free local
+progress helper documented in `skills/visualize-scenario-run/references/progress.md`.
+It writes an initial private loading page before long work and can serve restricted
+loopback status updates and a checked final page. Use its actual commands and
+private target/sequence binding; do not invent automatic stage detection, elapsed-time
+percentages or host presentation. Browser polling is not assistant task polling.
+Unsupported live updates leave an honest static loading page and durable final link.
+For authorized live delivery, use finite foreground `progress.mjs start OUTDIR
+TARGET`, then open its returned `live:true` loopback `url`, NOT `artifact_path`.
+It writes static output first, starts only the packaged bounded server, and obtains
+its listening receipt by Node IPC before returning/exiting. No background-log
+polling is required. `begin` alone is static and cannot update an already-open tab.
+Pass the same invocation/sequence/live-open status to one editor writer and cease
+parent writes. Parent keeps cleanup ownership through exact ready navigation and
+durable handoff, then retires only that invocation. Text polishing is reported only
+when actually correcting text, not during final file I/O. Native agent waits and
+final hand-back requirements remain separate. Startup failure does not claim live
+support, erase safe static output or authorize a retry/permission expansion.
+Final delivery uses the normal source-bound 1.9 renderer, not a separate conservative
+page or limited-evidence mode. Optional reviews are genuine private diagnostics;
+invalid/stale records are never valid approval but do not block HTML. Progress ready
+still checks exact snapshot/renderer bytes, source/content/safety and target identity.
+
+`scripts/diff.mjs` and `scripts/render.mjs` now display explicit captured artifact
+`before`/`after` text with red removals, green additions, semantic `del`/`ins`,
+visible signs/labels and accessible non-color meaning. This applies across all
+supported artifact kinds, not one service. Both source versions remain exact;
+single-sided captures do not invent a baseline, and identical versions appear once.
+Comparison work and row generation are bounded; very large unrelated versions
+remain complete replacements rather than approximate or truncated content.
+
+No schema, genuine review, two-copy limit, public-generation-privacy, final-artifact
+CSP, source-byte or automatic-submission boundary is relaxed. Local browser and
+security checks are not a paid native eval, a terminal reload or user acceptance.
+
+## Integrated generation helpers and artifact continuity
+
+The current native workflow is documented in
+`skills/visualize-scenario-run/references/generation-performance.md` and
+`docs/visualization-generation-performance.md`. `inspect.mjs postrun-package`
+constructs the ordinary source-bound bundle/projection from explicit actual
+metadata and every marked application-emitted record; no observer or source calls.
+Before each current copy claim, `preflight-source` binds a private author report
+to the original collector bundle and current candidate. Literal support is not
+semantic proof; unresolved quality findings do not block normal rendering.
+
+`packet-copy`/`packet-fact` use lossless compact references by default, retaining
+the complete input, inventory, rules, context and genuine response judgments.
+Explicit `*-full` commands preserve full packet compatibility. Supported native
+hand-back capture correlates actual parent/dispatch/agent/final receipt before
+expanding aliases and applying existing full validators. Duplicate JSON keys and
+resource amplification fail safely, not into a repaired verdict. Factual source
+navigation is private assistance: the checker still makes its own authorized
+reads, uses real clocks and reports inaccessible history honestly.
+
+A content-free acknowledgment is a valid receipt, not a missing material version.
+It does not break supported observed-version continuity. Actual sequence gaps,
+redactions, missing versions, unresolved targets and unsafe ordering still do.
+Precise source timestamps retain their original bytes and sub-millisecond ordering.
+An actually empty artifact stays an internal baseline, without an empty public
+card; later additions/clearing edits still show exact green/red differences.
+No native latency improvement, new source verification, approval or user acceptance
+is established by local helper/byte/browser tests.
 
 ## Retained integration context (1.7 header details below are historical)
 
@@ -66,7 +295,9 @@ restricted to `get_file_contents`. Authorization and commit-pinned business-reco
 history are required; missing sources remain gaps, not simulated live verification.
 Behavioral evaluations use Claude Code's native `claude plugin eval` runner;
 there is no custom SDK or interactive-terminal runner dependency.
-New candidates use snapshot 1.7, SDLC directives v2 and separate header product
+The following version-specific description is historical 1.7 behavior; current
+1.9 above supersedes mandatory-review rendering and all fallback delivery policy.
+Historical candidates use snapshot 1.7, SDLC directives v2 and separate header product
 policy 1.0. The author supplies a closed draft 1.1 containing explicit header_copy,
 selection, prose, claim mappings and omission reasons. Deterministic assembly
 copies source IDs, times, evidence, artifact payloads and other metadata unchanged

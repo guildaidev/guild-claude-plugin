@@ -46,14 +46,14 @@ export const summaryHeaderCopyContract = {
     description_claim_refs: headerCopyContract.fields.claim_refs,
   },
 };
-export const headerPolicyFor = doc => doc.schema_version === '1.8' ? SCENARIO_SUMMARY_POLICY : HEADER_COPY_POLICY;
-export const headerContractFor = doc => doc.schema_version === '1.8' ? summaryHeaderCopyContract : headerCopyContract;
+export const headerPolicyFor = doc => ['1.8', '1.9', '1.10'].includes(doc.schema_version) ? SCENARIO_SUMMARY_POLICY : HEADER_COPY_POLICY;
+export const headerContractFor = doc => ['1.8', '1.9', '1.10'].includes(doc.schema_version) ? summaryHeaderCopyContract : headerCopyContract;
 export const headerTextFieldsFor = doc => Object.keys(headerPolicyFor(doc).fields);
 
 // Must be called only after validating the matching version. Legacy wording is
 // a fallback, not a migration or a deterministic rewrite of checked prose.
 export function displayHeader(doc) {
-  if (['1.7', '1.8'].includes(doc.schema_version)) return doc.header_copy;
+  if (['1.7', '1.8', '1.9', '1.10'].includes(doc.schema_version)) return doc.header_copy;
   return { application_name: doc.workflow.title, workflow_purpose: doc.workflow.intended_world_effect,
     scenario_name: doc.scenario.title, expected_outcome: doc.scenario.expected_outcome };
 }

@@ -5,13 +5,13 @@ import { renderHtml } from '../scripts/render.mjs';
 import { snapshot, fakeChecker, fakeCopyReview } from './fixtures.mjs';
 import { scenario } from './scenarios.mjs';
 
-test('Figma presentation uses dark tokens, queue, sentence-led steps and prompt cart', async () => {
+test('Figma tokens, queue and sentence-led steps retain prompt state in the header', async () => {
   const doc = await snapshot();
   const before = structuredClone(doc);
   const digest = factualDigest(doc);
   const { html, ok } = renderHtml(doc);
   assert.equal(ok, true);
-  for (const token of ['--bg:#191919', '--surface:#202020', '--text:#e6e6e4', '--line:#363636', '--radius:12px', 'grid-template-columns:264px minmax(0,1fr)', 'position:fixed;bottom:0', '@media(max-width:600px)']) {
+  for (const token of ['--bg:#191919', '--surface:#202020', '--text:#e6e6e4', '--line:#363636', '--radius:12px', 'grid-template-columns:264px minmax(0,1fr)', 'class="prompt-state"', '@media(max-width:600px)']) {
     assert.ok(html.includes(token), token);
   }
   assert.equal((html.match(/class="event(?: [^"]*)?"/g) ?? []).length, doc.timeline.length);
@@ -24,13 +24,13 @@ test('Figma presentation uses dark tokens, queue, sentence-led steps and prompt 
   assert.match(html, /font-variant-numeric:tabular-nums;white-space:nowrap/);
   assert.match(html, /class="event-meta">Step 1/);
   assert.doesNotMatch(html, /role="tablist"|localStorage|goldenRuns|Market monitor|Staynest|data-scenario=/);
-  assert.match(html, /id="review-prompt" disabled="">Review prompt/);
+  assert.match(html, /id="review-prompt"[^>]*disabled=""[^>]*>Review prompt/);
   assert.equal((html.match(/class="[^"]*queue-current"/g) ?? []).length, 1);
   assert.equal(factualDigest(doc), digest);
   assert.deepEqual(doc, before);
 });
 
-test('step metadata retains exact source UTC time, bounded and unknown times without invention', async () => {
+test('step metadata shows source times and actual ranges without generic labels', async () => {
   const doc = await snapshot();
   doc.timeline[0].time = { at: '2026-11-13T10:02:02Z' };
   doc.timeline[1].time = { earliest: '2026-11-13T10:02:03Z', latest: '2026-11-13T10:02:07Z' };
@@ -39,8 +39,25 @@ test('step metadata retains exact source UTC time, bounded and unknown times wit
   const { html, ok } = renderHtml(doc);
   assert.equal(ok, true);
   assert.match(html, /<time datetime="2026-11-13T10:02:02Z" title="2026-11-13T10:02:02Z">10:02:02<\/time>/);
-  assert.match(html, /title="Bounded: 2026-11-13T10:02:03Z to 2026-11-13T10:02:07Z">Bounded<\/time>/);
+  assert.match(html, /title="2026-11-13T10:02:03Z to 2026-11-13T10:02:07Z">10:02:03–10:02:07<\/time>/);
   assert.match(html, /<time title="Unknown">Unknown<\/time>/);
+  assert.doesNotMatch(html.match(/class="event-meta">[\s\S]*?<\/p>/g).join(''), /Bounded|Recorded|completed|Evidence has limitations/);
+});
+
+test('timeline and queue omit generic status labels while technical evidence stays intact', async () => {
+  const doc = await snapshot();
+  const original = structuredClone(doc);
+  const html = renderHtml(doc).html;
+  const queue = html.match(/<aside class="queue"[\s\S]*?<\/aside>/)[0];
+  assert.doesNotMatch(queue, /Recorded|completed|<p>/);
+  const metadata = [...html.matchAll(/<p class="event-meta">([^<]*)<time[^>]*>[^<]*<\/time>([^<]*)<\/p>/g)];
+  assert.equal(metadata.length, doc.timeline.length);
+  for (const meta of metadata) {
+    assert.match(meta[1], /^Step \d+ · $/);
+    assert.equal(meta[2], '');
+  }
+  assert.match(html, /<dt>Run status<\/dt><dd>completed<\/dd>/);
+  assert.deepEqual(doc, original);
 });
 
 test('external markers, confirmed terminal styling and visible conflict/failure distinctions', async () => {
@@ -82,7 +99,7 @@ test('feedback controls require allowed intents and never represent approval or 
   doc.review = await fakeChecker().check(doc);
   html = renderHtml(doc).html;
   assert.doesNotMatch(html, /data-add-correct="true" data-action=|data-comment="true" /);
-  assert.match(html, /id="review-prompt" disabled/);
+  assert.match(html, /id="review-prompt"[^>]*disabled/);
 });
 
 test('cart keeps provenance inside evidence disclosures, not extra audit UI', async () => {

@@ -23,7 +23,7 @@ test('focused packets retain complete copy coverage, semantic evidence, pinned r
     assert.equal(validateCandidate(candidate).ok, true);
     for (const kind of ['copy', 'fact']) {
       const output = join(dir, `${kind}.json`);
-      const result = await inspect(`packet-${kind}`, input, output);
+      const result = await inspect(`packet-${kind}-full`, input, output);
       assert.equal(result.ok, true);
       assert.equal((await stat(output)).mode & 0o777, 0o600);
       const packet = JSON.parse(await readFile(output, 'utf8'));
@@ -50,7 +50,7 @@ test('focused packets retain complete copy coverage, semantic evidence, pinned r
         assert.match(packet.response_requirements.observed_at, /Never add midnight/);
         assert.match(packet.response_requirements.clock_scope, /disclose/);
       }
-      assert.equal((await inspect(`packet-${kind}`, input, output)).ok, false, 'No overwrites');
+      assert.equal((await inspect(`packet-${kind}-full`, input, output)).ok, false, 'No overwrites');
     }
     assert.deepEqual(candidate, original);
     candidate.timeline[0].actor_id = 'missing';

@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: operation-timeline-replay
+expected_outcome: Generate the normal feedback UI for the completed mocked run, with distinct source selections and explicitly requested simplification steps, both document differences attached to their insertion actions, private validation mechanics, and working manual feedback controls. Do not restart or resend the application test.
+context:
+  history_file: history.jsonl
+  scaffold_script: scaffold.sh

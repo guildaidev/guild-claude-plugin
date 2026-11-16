@@ -1,5 +1,6 @@
 // Small inert Markdown subset for captured business text. Never executes HTML,
 // loads images, expands mentions, embeds services or fetches remote resources.
+import { externalLinkIconHtml } from '../ui/dist/server.mjs';
 const esc = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 function safeLink(value) {
@@ -28,7 +29,7 @@ function inline(text, depth = 0) {
       if (end >= 0) {
         const destination = text.slice(middle + 2, end);
         html += !image && safeLink(destination)
-          ? `<a href="${esc(destination)}" target="_blank" rel="noopener noreferrer">${inline(text.slice(labelStart, middle), depth + 1)}</a>`
+          ? `<a href="${esc(destination)}" target="_blank" rel="noopener noreferrer">${inline(text.slice(labelStart, middle), depth + 1)}${externalLinkIconHtml()}</a>`
           : esc(text.slice(i, end + 1));
         i = end + 1; continue;
       }

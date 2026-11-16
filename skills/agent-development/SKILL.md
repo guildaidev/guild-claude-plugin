@@ -78,7 +78,33 @@ Confirm appropriate test credentials and destinations before execution. Profile 
    Publishing to an agent with auto-updating installs can change production. Keep the original source references.
 2. For a new agent, use `guild_create_agent` with a lowercase hyphenated name, owner ID and description.
    Wait for `READY` with `guild_wait_for_agent`. Agents default to private.
-3. For prompt and tools, use `guild_configure_llm_agent`.
+3. Before configuring or submitting EACH iteration, include the build-time evidence
+   directive in `../visualize-scenario-run/references/artifact-capture.md`.
+   Record actual goal-relevant source selections/content, mutation requests, actual
+   acknowledgments and exact material versions in the Guild session. Use supported
+   awaited `task.console.info` with `consoleTools` for code; LLM applications need
+   an actually exposed supported console tool, not a promise that console.log runs
+   from prose. Inspect capability; if prompt configuration cannot expose that tool,
+   report the gap or use the supported code/llmAgent form within the approved scope.
+   Log EACH EDIT of an artifact, across all artifact types, not only its final state.
+   Await actual source readback and session emission of each resulting exact material
+   version (or verified accessible immutable revision) before the next
+   application-controlled edit. Record an empty creation baseline ONLY when actually
+   observed; never infer it from create success. Preserve per-operation target/time/
+   ordering and request/acknowledgment versus readback. Missing access, readback,
+   retention, redaction or races remain explicit gaps, never a final-state fallback
+   for earlier edits or permission for wider source access. Follow artifact-capture.md.
+   Also follow `../visualize-scenario-run/references/operation-timeline.md`: distinguish
+   goal-relevant actions, explicitly specified internal processes, and private
+   supporting mechanics by their purpose—not by service or tool name. Keep each
+   material action's request, receipt and observation under the same operation ID.
+   For a specified process, emit an actual sanitized `process_result` using record
+   1.1 and retain the original specification reference; never invent a result.
+   Prefer immutable revisions, never just a hash. Bound/redact before logging.
+   Do not log secrets, chain-of-thought or unnecessary private data. No observer,
+   polling, subscription or auth bridge is required. This is application evidence,
+   not a new transport or permission for extra business writes.
+   For prompt and tools, use `guild_configure_llm_agent` when it supports the needed tools.
    This tool validates and publishes the private candidate. Do not publish twice.
    Submit one complete configuration. Avoid scaffold builds and speculative rewrites.
 4. For code, get any unread project files with `guild_list_agent_versions` and `guild_get_agent_version_code`.
@@ -145,7 +171,13 @@ messages.
 1. Agree on test input. Default a digest's first run to a preview in chat.
    In preview mode, instruct the agent to return the result without calling delivery tools.
    Confirm before a test sends real email or messages. A profile does not prevent external writes.
-   Call `guild_start_profile_agent_test_session` with `workspace_id_or_name`, exact `agent_version_id` and profile UUID as `profile_id`.
+    Before sending input, verify the built iteration includes its session-evidence
+    directive and supported emission mechanism. Do not start an observer or wire
+    an authenticated bridge. The original Guild wait owns completion; collect the
+    structured console evidence after completion under artifact-capture.md.
+    A final read alone cannot prove an earlier state. Missing capture stays a gap;
+    do not broaden access or start another test solely for evidence.
+    Call `guild_start_profile_agent_test_session` with `workspace_id_or_name`, exact `agent_version_id` and profile UUID as `profile_id`.
    Check the returned `profile.id`, `profile.workspace.id`, session workspace and `agent_version_override.id` against the selected values.
    If values differ, stop before sending input.
 2. Send `content` with `guild_send_session_message`.
@@ -162,9 +194,52 @@ messages.
    If needed, read `guild_get_session_events` once for output or action details.
    Preserve structured output. Report missing output, partial effects and uncertain connection access.
 
+    Technical-error exception: inspect the actual current test-batch results first.
+    If ALL scenarios ended because of a technical failure/error and NONE completed
+    without an execution error, skip visualization: show errors/session links and
+    continue the authorized fix/test loop until at least one scenario completes
+    without an execution error. Do not display an older visualization instead.
+    A completed scenario with failed business assertions is eligible for review;
+    an unsuccessful business result alone is not a technical failure. Pending,
+    ACTION_REQUIRED, missing or unknown results do not establish this exception.
+    Keep normal retry bounds, approvals and external-write safeguards; stop for
+    credentials, access or other required user action rather than bypassing it.
+    Once ANY scenario completes without an execution error, the blocking gate
+    applies to that eligible run, even in a mixed batch with technical failures.
+
     After results arrive, including partial results or an error, automatically use
     the `visualize-scenario-run` skill; do not ask for a separate visualization
-    request or confirmation. Collect and sanitize the available actual evidence,
+    request or confirmation, except for the all-scenarios technical-error case
+    above. This is a packaged local workflow, not a Guild MCP review-page tool.
+    Use `guild:visualize-scenario-run` through Skill when that exact name is in
+    the current host listing. If Skill is absent, the listing omits this installed
+    skill, or invocation reports unknown skill, use Read on the sibling
+    `../visualize-scenario-run/SKILL.md`, resolved from this skill's host-provided
+    base directory. Follow its references/hosts.md capability recovery procedure.
+    A resumed/headless conversation can retain a different skill listing even
+    while plugin files and native tools remain available. An absent listing is
+    not proof that rendering is unavailable. Do not search Guild MCP for a review
+    tool, guess a plugin location, or invoke an unlisted Skill name.
+    Read/Bash access to the installed package can still support the normal
+    workflow; verify the actual required capabilities before declaring a blocker.
+    A real denial is not permission to bypass it, reload the CLI, switch models
+    or change configuration. Keep the concrete diagnostic private and preserve
+    the blocking gate; do not replace the page with a generic tool-unavailable
+    apology or proceed to the next application iteration.
+    Collect and sanitize the available actual evidence,
+    including explicitly marked structured console_log messages from the actual
+    session, using current postrun input 1.1 / source projection 2.1 (legacy 1.0/2.0
+    unchanged) in
+    artifact-capture.md. Ignore ordinary debug/model/provider logs. Preserve exact
+     source/event/emitter/version bindings; validate planned evidence coverage.
+     After actual native completion, follow
+     `../visualize-scenario-run/references/generation-performance.md` and
+     postrun-package.md: `inspect.mjs postrun-package INPUT NEW_BUNDLE NEW_PROJECTION`
+     uses actual sanitized app console events, the original metadata context seed,
+     exact stream/target pins and a complete per-executed-operation checklist.
+     Never invent context/checklists or use manual final-state fallback. No observer,
+     source polling, extra run or expanded access. Retain the original bundle and
+     projection independently for the existing author.
     retaining the exact tested version, workspace, profile and session. Include
     confirmed effects, failures and missing evidence; do not invent observations.
     Follow its parent, distinct narrative author, Read-only copy editor,
@@ -178,8 +253,64 @@ messages.
     This local review does not replace output, establish acceptance or authorize
     release; its renderer exception does not permit local Guild-agent builds.
     A send receipt does not prove consumption. Completion does not prove quality.
-    Ask for feedback; interpret it in the parent conversation.
+    Treat visualization as a BLOCKING dependency of the next iteration, not a
+    background task. Follow `visualize-scenario-run/references/completion.md`:
+    await the editor's final hand-back even when Agent/Task returns an async
+    launch receipt. Use native completion notifications or a supported blocking
+     wait; do not poll transcripts, grep for end_turn or run shell sleeps.
+     Keep the native owner alive until editor/checker completion. Do not exit a CLI
+     with pending children or SendMessage/resume asynchronously without explicitly
+     awaiting native final completion; never invent dispatch/background flags.
+     The performance guide wires source preflight before EACH current copy claim,
+     exact saved lossless packets, private fact-source navigation and completed
+     native hand-back capture. No extra author/model dispatch, automatic editing,
+     fabricated binding or new quality-admission/render gate. Unresolved source
+     report counts stay private quality feedback, not permission to weaken sources.
+    Read that skill's references/progress.md and references/delivery.md too.
+    Immediately show a truthful loading page with a progress bar and modest
+    animation when generation starts, after the technical-error exception check.
+    High-level activities (“Gathering evidence”, “Arranging the timeline”,
+    “Checking details”, “Polishing the text”) are the narrow public exception to
+    private generation internals, never fake percentages, ETAs or tool/role details.
+    Authorized browser-only loopback status polling is distinct from forbidden
+    assistant wait polling. Use the packaged `scripts/progress.mjs` commands in
+    that reference: when authorized, call finite foreground `progress.mjs start
+    OUTDIR TARGET`, then open its returned `live:true` loopback `url`, NOT the
+    static artifact_path. `begin` alone is static and cannot update an open tab.
+    Keep the server through final navigation/handoff, pass the same binding/sequence
+    and live-open status to the editor, and cease parent stage writes while it owns
+    them. Retire only that invocation after handoff. If live startup is unavailable,
+    retain static output and a brief truthful chat limitation. Do not poll background
+    logs or hand-build a broader server. Final delivery always uses the normal
+    source-bound 1.10 packaged renderer/full UI, never an alternate layout.
+    Require real safe final HTML for the current tested version/workspace/profile/session,
+    present it and give its direct artifact link in this conversation before
+    proposing or executing the next iteration. A launch receipt or candidate
+    file/loading page is not completion. Dispatch alone is not observed presentation.
+    Internal authoring/review failures require bounded quality work, then the
+    normal packaged HTML under delivery.md, with no limited-evidence mode,
+    not “skip review vs fix wording” or requests to debug/steer generation.
+    Keep TWO copy calls and THREE shared check/render attempts; no reset, retry
+    forever or fresh model dispatch to escape exhaustion. Invalid/stale optional
+    feedback stays private and invalid, never fabricated matching approval.
+    Source/content/safety validation and exact run binding remain mandatory. Preserve
+    real unknowns/conflicts in business language, with exact known target IDs.
+    Matching normal HTML presented/seen finishes generation, not acceptance
+    or application-write authorization. Only real authorization/access/local
+    capability/OS/browser impossibility may leave no page or unobserved delivery:
+    report the concrete blocker, any actual safe link and minimum real user
+    action, not reviewer choices. Do not silently continue with an older artifact.
+    Ask for run feedback only after presenting useful matching final HTML;
+    interpret it in the parent conversation. Keep credential/write safeguards.
 5. For behavior changes, create or configure a new version on the same private agent.
+    Enter this step only after the blocking review/presentation gate above is
+    satisfied, the all-scenarios technical-error exception applies, or the user
+    explicitly cancels/supersedes a genuinely blocked review. Do not offer a
+    review-skipping choice for an internal generation failure; finish safe HTML.
+   Until then, do not configure/submit a version, start another test or send
+   delivery input; do not publish or schedule. Earlier approval of a proposed
+   change does not waive an unreported review blocker. If the user cancels or
+   supersedes a pending review, keep late output historical, never current.
    Repeat sections 4 and 5 with a fresh session. Use a fresh session for new test input.
    Answer active questions in the existing session.
 

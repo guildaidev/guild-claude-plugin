@@ -6,32 +6,46 @@ This change is the first, narrow iteration of that larger direction. The broader
 
 ## What Changes
 
-- Add a run-review visualization workflow for one plain-English scenario: a parent supplies an evidence bundle identifying its trigger, initial conditions, intended world effect, relevant sandbox integrations, exact application version, and observed resulting state. A visualization subagent authors the story and coordinates distinct read-only copy-editor and fact-check agents. A deterministic local renderer validates and produces HTML.
-- Add content-routed copy review: use ASD-STE100 only for purely technical explanations of processes internal to the application, or Economist style for application effects on the world or human experience, never both for the same copy. Apply SDLC-specific directives afterward in every case. The copy editor returns revision-bound feedback with the selected route, not direct edits or factual confirmation. Meaning and evidence take priority over style: only state what actually happened, distinguish requests from results and preserve genuine uncertainty. Both reviewers must assess the same final candidate before the new workflow renders it.
-- Reduce generation overhead with a closed narrative draft and deterministic assembly, compact field-hash feedback, and Sonnet author/copy versus Opus factual review. Permit at most two copy iterations across resumes/corrections. After the first valid nonpass, explicitly revise and review again; after the second, display that exact text and unresolved findings rather than require a copy pass. Preserve factual, structural and stale-review gates, immutable dispatch claims and three render attempts. Model aliases and estimated speedups require separate native verification.
-- Automatically initiate that review after an agent-development test returns results, including partial results or failure, without a separate visualization request. Preserve the actual test output and report missing evidence or unavailable review capabilities honestly; do not rerun, resend, or perform external writes for visualization.
-- Make consequential before-and-after effects the main event: show what was created, modified, sent, or left unchanged through familiar artifacts such as messages, tickets, documents, and records. Select only top-level workspace session boundaries, real-world agent actions, and goal-relevant external effects for the main timeline; use progressive disclosure for technical details. Preserve source provenance, gaps, ambiguity, outcomes, and relevant artifacts.
-- Use the newer [Figma feedback-cart comp](https://www.figma.com/design/7yXu0y0ZfzZl7wfkXGP6oC/Untitled?node-id=0-1) as the current visual reference, superseding the earlier attached timeline comp: restrained dark layout, single supplied scenario in a review queue, step/comment rows, inline artifacts, fixed prompt cart and comment/review dialogs. Verify visual fidelity separately from evidence-workflow eval scores; adapt only supported interactions and supplied data.
-- Require human-facing SDLC v2 copy and header-plus-timeline render input: short lifecycle sentences, supported human outcomes rather than API narration, and only event-attached business artifacts. Attempt a human-recognizable representation of every third-party effect: a message, email, ticket, calendar event, document or spreadsheet change, based on supplied source content and supported renderer capabilities. Slack is one example, not the principle's scope. Use a faithful neutral fallback when a familiar layout is unavailable; do not invent metadata or adapters. Format captured Markdown safely without an “After” panel for sent artifacts or unexplained source-page cards.
-- Distinguish sandbox observations from production effects, and observed evidence from possible downstream consequences or user-supplied inferences. Make consequential risks visible without asserting them as observed facts.
-- Present successful output in a supported host or a browser, and return its reference and verification summary to the parent. Feedback is an intent for the parent to interpret, including whether it teaches the selected scenario or a general rule. Support explicit copy-to-chat feedback where a verified parent-bound transport is unavailable; do not claim host APIs exist.
-- Compose a deterministic final Claude prompt from explicitly included comments, correct-result items and optional source-grounded fixes in a memory-only cart. Allow edit/remove/review/copy, but require manual paste and submission in the original Claude chat. Snapshot 1.6 binds optional authored fix text and evidence/claim references to both genuine reviews and records one or two copy iterations; legacy inputs retain original contracts and approval limits. Do not invent remedies, infer comment meaning, persist approvals or execute feedback.
-- Establish fixture-driven evaluation for the 13 documented scenarios and separate real-host presentation/transport verification from simulated evidence.
-- Apply the user's iteration-page comments and refactor actual controls/cards/inputs to genuine locally owned shadcn/ui React components, bundled with compiled CSS for offline generation. Preserve hash-only CSP and native modal semantics. Clarify future plain-English header authoring, saved-feedback scope/origin and count-change animation without rewriting reviewed historical text or claiming fresh model approval. Preserve annotated references and reply only through a supported comment capability.
-- Package native editor/checker roles with an explicit read-only checker tool allowlist and a supported optional GitHub file reader for authorized commit-pinned business records. Exercise this boundary with independently readable synthetic history in native mocks, not an invented tracker endpoint.
-- Add authored header_copy in closed draft 1.1/snapshot 1.7, separate from intact full workflow/scenario specs: one/two-word application name, purpose <=120 Unicode code points AND 16 words, scenario <=6 words and explicit starting/result components with source-backed claim_refs. Enforce budgets before copy claim consumption, expose product policy 1.0 alongside unchanged SDLC v2, bind all header fields to both reviews and render their exact words consistently. Preserve historical 1.0–1.6 contracts, two-copy/factual gates and all source bytes; local tests alone do not establish fresh native approval.
-- Reconcile the working document's early renderer schema with its newer flow and safety decisions. Disclose the packaged local renderer as an exception to the existing skills' MCP-only description.
+- Review one supplied scenario run as a goal-relevant story, not an internal tool trace. Include known top-level session boundaries, external interactions integral to the goal, and internal processes explicitly required by the original specification and established by actual evidence. Keep distinct source interactions, specified processes and resulting changes separate by purpose, not service or tool name. Attach each artifact/diff to its business action; validation is neither a separate row nor a public explanation. Retain exact material versions, uncertainty and request/acknowledgment/state distinctions privately without final-state backfill or invented baselines.
+- Require application-owned evidence in every newly built iteration: bounded, sanitized structured Guild session records, with each edit's actual resulting material or verified accessible immutable revision emitted before the next application-controlled edit. Consume actual console envelopes after native completion. The observer runtime, authenticated bridge, polling and manual observer fallback are removed; historical captures remain immutable. Supported awaited console tooling is established, not a guarantee about platform retention or LLM compliance.
+- Use a closed authored draft and deterministic source-bound assembly. Attempt distinct sequential read-only copy and factual reviews, with Sonnet author/copy and restricted Opus facts. Route technical internal explanations to ASD-STE100 or world/human copy to Economist, then SDLC v2; human fix instructions use their explicit STE policy. Preserve meaning, exact source content and independent reads.
+- Keep two immutable copy claims across resumes and three frozen-content render attempts. The user's two-iteration correction and later rejection of an ad-hoc limited-evidence page mean bounded quality work ends in the SAME full offline renderer. Genuine optional review records stay private; missing, malformed or stale feedback is not approval and does not gate current HTML. Source/content/identity/privacy/escaping/CSP and permission validation remain strict.
+- Automatically review eligible development results, including partial effects and business failures, and block further iteration through final native completion, matching-target HTML and truthful presentation. Launch/resume receipts are not completion; no transcript polling or guessed flags. Skip visualization only while ALL current scenarios fail technically and NONE completes without an execution error, within existing authorized repair/test bounds. Recover omitted installed-skill discovery separately from actual execution or presentation denial.
+- Ship immediate truthful progress with the heading “Generating test run timeline”, real high-level activity updates and finite live startup returning a listening URL. Open that live URL rather than expecting a static file to update. Preserve exact-target final navigation and durable offline output. Remove the static-file offline notice, not genuine live-disconnection messages; invent no percentage, ETA or activity.
+- Adapt the supplied Figma feedback reference to one actual scenario: dark queue, step rows, inline artifacts and native comment/review dialogs using bundled genuine React/shadcn components. The latest request supersedes its fixed footer and earlier inner sticky panel: prompt count/review live upper-right, document scrolling works over ordinary page regions, and only safe compact desktop headers may stick. No shopping wording/icons or reserved footer space. Default row metadata is step/time/status icon, with real source qualifications retained in details.
+- Separate “Claude’s concern” (why behavior may conflict with the goal), a plain human suggested change and its exact technical Claude Code prompt. Queue only the technical prompt. Unsupported fixes stay disabled; Dismiss sits beside “Possibly incorrect behavior”, outside the summary, and changes local visibility only. Keep uniform narrative text and safe provider-specific source buttons.
+- Compose only explicitly included comments, correct-result items and supported fixes into a deterministic memory-only prompt. Preserve draft cancellation, edit/remove/deduplication, exact identities, clipboard fallback and reduced motion. Users copy, paste and submit in the ORIGINAL Claude conversation; no automatic delivery, execution, storage or approval is implemented. Keep generation machinery private across chat, UI, evidence panels, dialogs and prompts, while showing business-source uncertainty honestly.
+- Integrate five overhead reductions with artifact correctness: original-source-bound author-only preflight before each copy claim, deterministic postrun packaging, lossless review references, identity-correlated completed native handback capture and precise factual source navigation. Preserve complete text/judgments/read clocks and original full-format compatibility. The diff repair admits valid metadata-only receipts without treating them as material; exact source ordering and real missing-state gaps still govern comparisons.
 
 ## Capabilities
 
-Current correction: snapshot 1.8/draft 1.2 uses a brief general present-tense
-scenario description, not a run result. Description-only refresh authors that
-payload exactly once from the last completed evidence packet and byte-caches all
-other business/source text. Both real checks bind the new candidate. Generation
-internals are private, never UI/evidence/prompt content; this supersedes old
-nonapproval notices without weakening gates. The scenario header is sticky within
-its actual bounded scrolling panel. Fresh captures and a real local counter-motion
-recording demonstrate the corrected UI without another full eval or app write.
+Current authoring uses closed draft **1.4**, source-bound snapshot **1.10**, bundle
+**1.0**, current postrun input **1.1** / projection **2.1**, and header policy **1.1**.
+Original postrun input 1.0 / projection 2.0 and record 1.0 remain unchanged; optional
+record 1.1 adds actual `process_result` evidence. Required authored headers
+retain a one/two-word app name, purpose <=120 Unicode code points AND 16 words,
+scenario name <=6 words, and a general present-tense scenario description <=200
+code points AND 30 words. Full original specifications remain intact. Numeric
+budgets do not establish grounding or English tense.
+
+Evidence routes do not determine story eligibility. The implemented corrective
+guidance admits genuine native source responses/completed child results through the
+existing ordinary bundle 1.0 route, without fabricated console `process_result`
+records or a new API/version. Collection finishes that enrichment and pins the exact
+bundle/projection before author handoff. Marked-console input 1.1/projection 2.1 keeps
+its strict stage/specification/continuity guards. Comparing two captured same-target
+states describes their observed difference, not an immediate pre-write state or
+exclusive causation. Current 1.10 public projection keeps private proof-channel gap
+metadata and validation-procedure supporting paragraphs out of public copy without
+rewriting protected source/artifacts.
+
+Historical contracts/words/reviews remain read-only: draft 1.3/snapshot 1.9 keeps
+its original shape, and snapshots 1.0–1.8 keep original validation and review
+requirements. The authorized one-shot description-only refresh cached all other
+business/source text and obtained genuine new bindings; it is not permission to
+restamp old approval or repeatedly regenerate. Earlier one-copy stops, public
+copy notices, observer capture, bounded-panel scrolling and alternate HTML are
+not current policy. `design.md` records the conversation rationale and supersession.
 
 ### New Capabilities
 - `scenario-run-visualization`: Evidence handoff, narrative selection, independent copy review and factual verification, deterministic rendering, presentation and parent-directed feedback intents for one run.
@@ -42,4 +56,50 @@ None; no existing OpenSpec capabilities are present.
 
 ## Impact
 
-The Claude plugin will need visualization-specific skill/subagent instructions, a packaged local renderer and tests; `skills/agent-development/SKILL.md` and `README.md` need careful integration with concurrent changes. Behavioral evaluation uses Claude Code's native plugin evals, with official case files, MCP mocks, graders and reports; no custom SDK or terminal test harness is included. This proposal informs later scenario generation, comparisons, reruns, and promotion of user-approved sandbox examples into safely emulated regression evals, but does not implement them. No execution infrastructure, golden-set mutation, rerun handling, production transport, or an assertion that an emulated run proves a real integration works is added. Host support, source-system read permissions, and safe sandbox credentials/destinations must be verified rather than assumed.
+The plugin includes visualization-specific roles, skill/reference instructions,
+local evidence/review helpers, an offline renderer and tests, integrated with
+`skills/agent-development/SKILL.md` and `README.md`. This is an explicit local
+file/executable exception to the development skills' MCP-only description.
+Model-driven evaluations use native plugin cases/mocks/graders, not a custom SDK
+or terminal test harness. Thirteen synthetic cases and local/browser checks are
+not live integration proof, native workflow acceptance or user visual acceptance.
+
+Local packet byte reductions are 5.37% copy and 25.08% facts; the combined 4–6 minute
+estimate from one historical run is NOT measured native improvement. The separately
+authorized 189-file reload was deployment evidence only, with no test started at
+that checkpoint. Three later isolated review-only native forks used retained source
+evidence, not application reruns. The first two generated pages but failed feedback
+checks. The third completed in 18m50s at $10.8269197 incremental cost and passed the
+core source/actual-browser checks: distinct source queries and explicitly requested
+processes, material diffs on the changes, and no public validation mechanics.
+Exact initial, first and final artifact states were retained; the actual empty
+baseline uses the existing captured-field projection rather than widening bundle
+1.0 or inventing empty content. Optional unavailable/invalid private judgments were
+not converted into approvals. This functional result is not independent source
+verification, universal native compliance or explicit user acceptance.
+
+The four subsequent presentation changes are implemented: resource-specific link
+nouns and trailing Lucide icons; changed regions by default with complete unchanged
+content expandable through pinned `react-diff-view` 3.3.3 composed with owned shadcn
+components; inline link-style Dismiss; and the animated numeric prompt count plus
+Review prompt without the duplicate visible heading. Production rendering from the
+EXACT successful native snapshot regenerated the presentation without changing its
+source bytes, factual digest, authored copy or genuine judgments. These source
+changes have not been reloaded into the older installed CLI plugin.
+
+The new fictional, case-locally mocked `operation-timeline-replay` eval captures the
+regression in the plugin repository. Its fixtures, scaffold and verifier have local
+positive/negative tests; no paid native eval of that new case has run. Current local
+verification reports 523 cases (521 pass, zero fail, two opt-in skips), 13 expected
+fixture outcomes and 21 presentation browser checks. Tasks 8.1 (user acceptance),
+18.5 (unsupported Figma replies) and failed 27.3 (historical native capture-to-render)
+remain open. Requested **Add comment** wording remains unmet: the button says
+**Comment**, not an approved alternative. Historical failures and costs remain in
+the validation ledger. Known tracked inference is $66.2466479, excluding manual
+smokes and application charges. No further paid call accompanied the UX/eval work.
+
+Scenario management/comparison/reruns, golden-set mutation, production transport,
+publication and execution infrastructure remain outside this change. No review
+operation authorizes application reruns, source writes, access expansion, new
+spend or reloads. Host opening, source permissions and safe sandbox destinations
+must be established, not assumed.

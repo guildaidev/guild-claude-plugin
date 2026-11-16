@@ -53,7 +53,7 @@ test('closed draft 1.1 assembles a review-free 1.7 candidate with exact source c
   input.coverage.gaps.push({ id: 'history-gap', description: 'Earlier history is unavailable.', affected_refs: ['e-draft'], impact: 'No earlier-state assertion is supported.' });
   const authored = draft();
   const snapshot = assembled(input, authored);
-  assert.equal(draftContract.fields.schema_version.values[0], '1.2');
+  assert.equal(draftContract.fields.schema_version.values[0], '1.4');
   assert.equal(snapshot.schema_version, '1.7');
   assert.deepEqual(snapshot.header_copy, authored.header_copy);
   assert.equal(snapshot.review, undefined);

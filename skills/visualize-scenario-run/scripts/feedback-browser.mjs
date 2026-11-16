@@ -7,14 +7,20 @@ export function startFeedback(runtime, ui) {
   const field = document.getElementById('comment-text');
   const preview = document.getElementById('prompt-preview');
   const copy = document.getElementById('copy-prompt');
-  const panel = document.querySelector('.scenario');
-  // Keep keyboard targets below the measured sticky header without inline style
-  // injection or fixed-height guesses. Native dialogs retain their own focus.
-  panel.addEventListener('focusin', event => {
-    const heading = panel.querySelector('.scenario-intro');
-    if (event.target === panel || heading.contains(event.target)) return;
-    const target = event.target.getBoundingClientRect(), boundary = heading.getBoundingClientRect();
-    if (target.top < boundary.bottom && target.bottom > panel.getBoundingClientRect().top) panel.scrollTop -= boundary.bottom - target.top + 8;
+  const header = document.querySelector('.top');
+  // Keep a compact header available on roomy screens. Long copy, narrow screens
+  // and short windows use normal flow instead of hiding the timeline under it.
+  // Class changes only: hash-only CSP permits neither inline styles nor injection.
+  const measureHeader = () => header.classList.toggle('is-sticky', innerWidth > 600 && header.offsetHeight <= Math.min(160, innerHeight / 4));
+  new ResizeObserver(measureHeader).observe(header);
+  window.addEventListener('resize', measureHeader);
+  measureHeader();
+  // Native focus scrolls the document; correct only a sticky-header overlap.
+  // Dialogs retain their own native scrolling and focus management.
+  document.addEventListener('focusin', event => {
+    if (!header.classList.contains('is-sticky') || header.contains(event.target) || event.target.closest('dialog')) return;
+    const target = event.target.getBoundingClientRect(), boundary = header.getBoundingClientRect();
+    if (target.top < boundary.bottom && target.bottom > 0) window.scrollBy(0, target.top - boundary.bottom - 8);
   });
   let items = [];
   let target;
@@ -56,7 +62,7 @@ export function startFeedback(runtime, ui) {
     document.getElementById('cart-status').textContent = '';
     const count = items.length;
     document.getElementById('prompt-count').textContent = count;
-    document.getElementById('prompt-summary').textContent = `Claude Prompt · ${count} ${count === 1 ? 'item' : 'items'}`;
+    document.getElementById('prompt-count-description').textContent = `${count} ${count === 1 ? 'item' : 'items'} in prompt.`;
     document.getElementById('review-prompt').disabled = !count;
     document.getElementById('included-title').textContent = `Included items (${count})`;
     document.getElementById('included-summary').textContent = `${count} ${count === 1 ? 'item' : 'items'} · Edit or remove anything before you copy.`;
@@ -68,7 +74,7 @@ export function startFeedback(runtime, ui) {
     for (const control of document.querySelectorAll('[data-add-correct], [data-add-fix]')) {
       const kind = control.hasAttribute('data-add-correct') ? 'correct' : 'fix';
       const exists = items.some(value => value.item_id === runtime.key(context, kind, control.dataset.action, control.dataset.event));
-      control.textContent = exists ? (kind === 'correct' ? '✓ Correct result added' : '✓ Fix added') : (kind === 'correct' ? '✓ Add to prompt as correct' : '+ Add fix to prompt');
+      control.textContent = exists ? (kind === 'correct' ? '✓ Correct result added' : '✓ Fix added') : (kind === 'correct' ? '✓ Add to prompt as correct' : 'Add suggested fix to prompt');
       control.disabled = exists;
     }
     compose();
@@ -76,6 +82,19 @@ export function startFeedback(runtime, ui) {
   document.addEventListener('click', event => {
     const control = event.target.closest('button');
     if (!control) return;
+    if (control.hasAttribute('data-dismiss-concern')) {
+      const wrapper = control.closest('[data-concern-event]');
+      if (!wrapper || wrapper.dataset.concernEvent !== control.dataset.dismissConcern) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const article = wrapper.closest('article');
+      const next = article?.querySelector('.event-details > summary') ?? article?.querySelector('[data-comment]');
+      // Visibility only: preserve the event, evidence and any queued feedback.
+      // Removal is memory-only and the original concern returns on reload.
+      wrapper.remove();
+      next?.focus();
+      return;
+    }
     if (control.hasAttribute('data-comment')) {
       const existing = items.find(value => value.kind === 'comment' && value.event_id === control.dataset.event);
       if (existing) return edit(existing, control);

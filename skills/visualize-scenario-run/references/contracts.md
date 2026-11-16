@@ -1,8 +1,141 @@
-# Evidence bundle 1.0, author draft 1.2 and dual-reviewed snapshot 1.8 contracts
+# Evidence bundle 1.0, author draft 1.4 and source-bound snapshot 1.10 contracts
 
-## Current 1.8 contract (supersedes historical 1.7 guidance below)
+## Current 1.10 rendering contract
 
-`draftContract` is closed draft **1.2**; `snapshotContract` is snapshot **1.8**.
+`draftContract` is closed draft **1.4**; `snapshotContract` and `candidateContract`
+use **1.10**. Draft 1.3 continues to assemble its original 1.9 contract. Header policy
+1.1 and the normal full UI remain. Assembly copies
+the original sanitized bundle into required private `source_bundle`. Every render
+validates that bundle plus copied source identity, workflow/scenario specs, actors,
+sessions, evidence, run metadata, coverage, occurrence metadata/selection accounting
+and attached artifact bytes. Only authored prose/title/run prose fields may differ
+where assembly already allows them. Source binding is not semantic fact checking
+or cryptographic authentication of the collector's source data.
+
+Content/source/safety validation is separate from review quality. Optional `review`
+and `copy_review` are genuine private JSON diagnostics, not required approval tokens;
+optional `copy_review_iterations` is private orchestration only. `validateCopyReview`
+and `validateFactualReview` still reject malformed, incomplete, stale and non-independent
+records. `optionalReviewRecords` classifies them without editing them. Only matching
+valid records contribute source qualifications/status. Invalid or stale records
+remain private and never become confirmation. `factualDigest` includes the exact
+source bundle/content and excludes both records/count/display, never source identity.
+
+After bounded quality work, the content is good enough: the normal packaged
+renderer produces the full shadcn/cart/dialog/diff UI even if review feedback is
+revise, malformed, incomplete or absent. No alternate layout, limited-evidence mode,
+handcrafted fallback, fabricated pass or public generation caveat. Known factual
+uncertainties remain business-qualified; unsupported success is never authorized.
+See delivery.md for the two-copy and three-render bounds, sequential native waits
+and exact-target presentation.
+
+`inspect.mjs finalize CANDIDATE NEW_SNAPSHOT [COPY_RECORD_OR_-] [FACT_RECORD_OR_-]`
+creates a private exclusive new snapshot after content/source/safety validation.
+JSON records are preserved unchanged with private validity diagnostics. Unreadable/
+non-JSON files are left untouched and recorded as invalid diagnostics, never repaired
+into approvals. `render.mjs SNAPSHOT NEW_HTML` uses the same full UI. Progress `ready`
+validates the resulting normal HTML against exact snapshot/renderer bytes and run
+identity, independently of optional review approval.
+
+All 1.0–1.8 contracts retain their historical read-only behavior and original review
+requirements. Historical drafts 1.0/1.1/1.2 still assemble 1.6/1.7/1.8 explicitly.
+Never downgrade, relabel historical input or preserve a stale binding as valid.
+The description-refresh utility below remains an explicit historical 1.7→1.8
+one-shot operation; it is not the new-run path and cannot reset old budgets.
+
+### Authored concern and two-part suggested fix (1.10)
+
+Timeline `concern` is optional and closed: `{explanation, evidence_refs, claim_refs}`.
+Its plain-English explanation connects the supported event behavior to a possible
+conflict with the application's stated goal. It is not an enum, duplicate event
+description or private review diagnostic. References name existing evidence and
+claims. Source binding treats this field as authored prose, never a source edit.
+
+Optional `suggested_feedback` is closed: `{action_id, explanation, text, evidence_refs,
+claim_refs}`. It requires a concern and an allowed `flag_issue` action. `explanation`
+is the plain STE-style human fix; `text` is the separate technical implementation
+prompt, limited to 10,000 characters. All three authored strings enter the copy
+inventory and factual digest. The technical prompt alone enters the cart through
+“Add suggested fix to prompt”. This never executes, approves or persists a change.
+Unknown remedies are omitted, with a truthful disabled fix control. Dismiss affects
+only local visibility. Original 1.9 inputs retain their original closed shape;
+never relabel them or invent human explanations from old technical prompt text.
+
+### Source-backed artifact versions (1.9 and 1.10)
+
+`assembleCandidate(bundle, draft, { artifactVersionSource })` optionally accepts a
+private **collector** sidecar; it is not an author content override. The unchanged
+bundle remains embedded as `source_bundle`. The snapshot retains the exact sidecar
+as `artifact_version_source`. Both enter the existing factual digest. Drafts before
+1.3 do not accept this extension. Draft 1.4 uses the same source-bound projection
+in 1.10; original 1.9 behavior remains unchanged without this extension.
+
+The closed sidecar has `schema_version: "1.0"`, `bundle_digest` (from exported
+`artifactVersionBundleDigest(bundle)`), `records` (additional normal evidence
+records, with unique IDs that cannot replace original evidence), and nonempty
+`versions`. Each version has `id`, `artifact_id` (an original artifact),
+`occurrence_id` (the meaningful source world-action step), `operation`, and
+`value_ref`. References are closed `{evidence_id, pointer}` objects: RFC 6901
+pointers into original or additive evidence **content**, not code or filenames.
+Unknown properties, free authored content, nonexistent references, conflicting
+baselines, duplicate artifact/step slots, cycles/forward predecessors, reversed
+known event times, stale bundle bindings and out-of-bounds indices fail. Successive
+versions require strictly ordered, nonoverlapping known occurrence windows.
+An external capture must fall within its attached step's known time window;
+future, earlier or unknown-time readbacks cannot be retrofitted onto that step.
+
+Operations are closed and provider-independent:
+
+- `capture`: copy the referenced string or JSON state. No base/index is allowed.
+- `append`: append referenced text to the prior version or exact `base_ref` text.
+- `insert`: insert referenced text at exact numeric `index_ref`, with explicit
+  `index_base: 0` or `1`. Indices count UTF-16 units and cannot split a surrogate.
+- `replace`: replace the prior/base text with referenced text.
+
+The immediately preceding supplied version of the same artifact is selected
+automatically. Optional `previous_version_id` may assert that identity, never skip
+it or suppress its before-state. `base_ref` is only for a first mutation and must
+resolve to captured text; missing baselines never mean an invented empty string.
+Optional `readback_ref` must reference complete external-record content exactly
+equal to the projected result. No trimming, whitespace normalization, invented
+separator, prefix slicing or provider-specific interpretation is performed.
+
+Payload evidence must associate with the occurrence by evidence ID or the same
+captured source system/record ID. When request and receipt are separate records,
+optional closed `operation_binding: {request_ref, receipt_ref}` references their
+matching nonempty operation IDs. The request reference must come from the payload
+record, and the receipt must associate with the occurrence. This establishes
+record consistency, not authenticity. Available external target IDs and URLs
+must agree with the occurrence and original artifact. Baselines need an associated
+earlier same-target occurrence; an unrelated source cannot supply a before-state.
+
+Projection automatically attaches `version:<id>` at each selected meaningful step,
+replaces that step's original attachment for the same artifact, and retains every
+other attachment unchanged. Assembly maps derived artifacts to the step's existing
+claim references. A first material version shows its actual content without a
+manufactured empty diff; subsequent textual versions always carry the exact prior
+`before` and new `after`, even when the author did not request a diff. Structured
+JSON states remain structured. Kind/title/media/source URL come from the original
+artifact. Additional evidence is copied exactly and passes normal safety checks.
+`validateSourceBinding` independently reruns projection and compares every copied
+record, attachment and derived artifact byte. Derived fields are not editable.
+
+Every projected field remains an excerpt and preserves relevant source redactions,
+including predecessor and receipt qualifications. Selecting a title or arbitrary
+field from a complete source record does not establish complete artifact content.
+Reconstruction remains an excerpt with a human source limitation; accepted requests
+are not silently promoted to observed state. Exact agreement with a later readback
+does not establish mutation timing/causation or a contemporaneous earlier readback.
+A direct captured record without a matching known event window is rejected.
+Collectors/reviewers must establish that the operations belong to the same target
+and that no intervening mutation is missing; the projector cannot authenticate
+source captures or infer arbitrary provider semantics from JSON. Source content is
+never executed. Keep sidecars private, preserve originals, and use the unchanged
+normal renderer and bounded review flow—not an alternate rendering mode.
+
+## Historical 1.8 contract (supersedes historical 1.7 guidance below)
+
+Historical closed draft **1.2** assembles snapshot **1.8**.
 The bundle remains **1.0**. Current assembly preserves the original complete
 workflow/scenario specifications, source IDs/times, artifact payloads and selected
 event relationships. Draft context_copy permits only the existing run prose
@@ -65,18 +198,23 @@ Private genuine records and all stale/role/source/factual/two-copy gates remain.
 Human source conflicts/gaps stay visible; raw source/artifact bytes are not edited.
 This supersedes every historical public copy-notice/reviewer-dump instruction.
 
-The scenario is a real bounded scroll container; its opaque title/description/
-correct-feedback header is sticky within that container, not the viewport. Focus,
-disclosures, cart/dialog/footer reachability and containment require actual browser
-geometry at desktop/mobile/reduced height. Reduced-motion support remains separate
-from normal-motion count animation checks.
+The document viewport scrolls the timeline; the scenario is not a bounded scroll
+container. Prompt count and review controls occupy the application's upper-right
+header, without a fixed bottom bar, reserved footer space, shopping words or icons.
+Only compact desktop headers remain sticky; narrow or tall headers scroll normally
+so they do not obstruct content. Focus, disclosures and dialogs require actual
+desktop/mobile/reduced-height geometry checks. Reduced-motion support remains
+separate from normal-motion count animation checks. Genuine empty artifact text
+remains an internal baseline rather than an empty content card; additions and
+clearing edits still display source-backed green/red differences.
 
 ## Shared structures and retained 1.7 reference
 
 The source structures and review gates below remain applicable unless the current
 section explicitly supersedes their version/header/public-presentation semantics.
 References below to “new 1.7” or draft 1.1 describe that historical release only;
-current new-workflow admission uses 1.8/draft 1.2 and the policy above.
+current new-workflow admission uses 1.10/draft 1.4 and the policy above, while
+original 1.9/draft 1.3 inputs retain their closed contracts.
 
 `../scripts/contracts.mjs` is the executable contract, exported as
 `bundleContract`, `snapshotContract`, `copyReviewContract`, `copyFields`,
@@ -128,6 +266,42 @@ version: if no exact agent version is available, return incomplete handoff and
 ask the parent to resolve it. Execution infrastructure is opaque to this skill.
 
 ## Render snapshot
+
+### Current operation timeline projection 2.1; retained source projection 2.0
+
+See [operation-timeline.md](operation-timeline.md) and
+[artifact-capture.md](artifact-capture.md) for current postrun input 1.1, source
+projection 2.1, optional record 1.1 `process_result`, and their closed bindings.
+Original record 1.0, postrun input 1.0 and projection 2.0 keep their original
+contracts. The normal draft 1.4/snapshot 1.10 shape is unchanged.
+Group the request, receipt and material observation of one declared operation into
+one source-bound occurrence with an honest enclosing time window. Only its actual
+result owns the artifact/diff, never the request fragment or a separate validation
+event. Supporting operations are private and cannot be selected into the snapshot.
+An explicitly specified internal process requires original specification references
+and actual `process_result` evidence; a resolvable reference alone does not establish
+semantic relevance. Missing states and overlapping same-target operations remain
+gaps, not permission to infer content, timing or causation.
+
+The retained source protocol below supplies transport proof, privacy/size bounds
+and executable commands shared by the current operation projection.
+`session-evidence.mjs` exports validateSessionEvidence, encodeSessionEvidence,
+consoleEvidenceEnvelope, collectSessionEvidence, assessSessionEvidenceCoverage and
+projectSessionEvidence. Required nonempty projection requirements retain the
+build-time source/stage/minimum-count/material checklist; missing expected evidence
+becomes deterministic coverage gaps, never a reduced success checklist.
+`projectArtifactVersions` dispatches projection 2.0 or 2.1 only after exact bundle-digest
+binding; original projection 1.0 remains unchanged. Projection 2.x records is an
+empty array: actual console envelopes live in the immutable original bundle's
+session_event evidence, not model-authored replacements. Bindings require exact
+occurrence evidence, actor/emitter/version, service/target, session, sequence and
+time support. Incomplete material never supplies an inline version. Sequence and
+material gaps extend source-bound coverage deterministically. Captured text stays
+exact; structured JSON uses deterministic display serialization with an explicit
+qualification and unchanged original structure in evidence. Only matching complete
+stage/stream/target versions without sequence gaps supply a diff. Acknowledgments
+never become readback. This is source consistency validation, not authentication,
+independent factual verification or a guarantee of complete session retention.
 
 Use `schema_version: "1.7"` for new candidates/snapshots. The evidence bundle stays
 1.0. Retain common bundle context, evidence, actors,

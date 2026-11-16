@@ -79,7 +79,7 @@ test('suggested feedback is optional authored source/claim-bound copy included i
   assert.ok(copyFields(doc).some(field => field.path === '$.timeline[1].suggested_feedback.text' || field.field_path === '$.timeline[1].suggested_feedback.text'));
   await review(doc);
   assert.equal(validate(doc).ok, true);
-  assert.match(renderHtml(doc).html, /data-add-fix="true" data-action="issue" data-event="draft-1"/);
+  assert.doesNotMatch(renderHtml(doc).html, /data-add-fix="true" data-action="issue" data-event="draft-1"/);
   const context = feedbackContext(doc);
   const items = runtime.add(context, [], 'fix', 'issue', 'draft-1', doc.timeline[1].suggested_feedback.text);
   assert.equal(items[0].kind, 'fix');

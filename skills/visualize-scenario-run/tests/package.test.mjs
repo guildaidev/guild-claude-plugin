@@ -13,8 +13,11 @@ test('default plugin skill discovery includes instructions and required renderer
   assert.equal(manifest.skills, undefined, 'Use existing default skills/ discovery, not a conflicting custom path.');
   for (const file of ['SKILL.md', 'references/contracts.md', 'references/parent.md', 'references/editor.md', 'references/checker.md', 'references/copy-editor.md', 'references/style/routing-v1.md', 'references/style/asd-ste100-v1.md', 'references/style/economist-v1.md', 'references/style/economist-LICENSE.txt', 'references/style/sdlc-v1.md', 'references/hosts.md', 'references/sources.md', 'scripts/contracts.mjs', 'scripts/assemble.mjs', 'scripts/render.mjs', 'scripts/inspect.mjs', 'scripts/review-io.mjs', 'scripts/workflow.mjs']) assert.ok((await stat(join(root, file))).isFile(), file);
   const skill = await readFile(join(root, 'SKILL.md'), 'utf8');
-  for (const file of ['scripts/markdown.mjs', 'references/style/routing-v2.md', 'references/style/sdlc-v2.md']) assert.ok((await stat(join(root, file))).isFile(), file);
+  for (const file of ['references/completion.md', 'scripts/markdown.mjs', 'scripts/diff.mjs', 'scripts/progress.mjs', 'scripts/progress-page.mjs', 'references/style/routing-v2.md', 'references/style/sdlc-v2.md']) assert.ok((await stat(join(root, file))).isFile(), file);
   assert.match(skill, /name: visualize-scenario-run/);
+  for (const file of ['references/artifact-capture.md', 'references/operation-timeline.md', 'scripts/artifact-versions.mjs', 'scripts/artifact-link.mjs', 'scripts/concern-details.mjs', 'scripts/session-evidence.mjs']) assert.ok((await stat(join(root, file))).isFile(), file);
+  for (const file of ['references/source-grounding.md', 'references/postrun-package.md', 'references/review-codec.md', 'references/review-capture.md', 'references/source-navigation.md', 'scripts/source-grounding.mjs', 'scripts/postrun-package.mjs', 'scripts/review-codec.mjs', 'scripts/review-capture.mjs', 'scripts/source-navigation.mjs']) assert.ok((await stat(join(root, file))).isFile(), file);
+  for (const file of ['scripts/capture-live.mjs', 'scripts/capture-host.mjs', 'tests/capture-live.test.mjs']) await assert.rejects(stat(join(root, file)), { code: 'ENOENT' });
   assert.ok(skill.split('\n').length < 500);
   assert.match(skill, /invoke \*\*only\*\* `node --version` in one Bash call/);
   assert.match(skill, /Use Read\/Glob for plugin files/);
@@ -22,7 +25,7 @@ test('default plugin skill discovery includes instructions and required renderer
     if (/^https?:\/\//.test(link)) assert.equal(new URL(link).protocol, 'https:');
     else assert.ok((await stat(join(root, link))).isFile(), link);
   }
-  for (const file of ['contracts.mjs', 'assemble.mjs', 'markdown.mjs', 'render.mjs', 'inspect.mjs', 'review-io.mjs', 'workflow.mjs']) {
+  for (const file of ['contracts.mjs', 'assemble.mjs', 'markdown.mjs', 'diff.mjs', 'progress.mjs', 'progress-page.mjs', 'session-evidence.mjs', 'source-grounding.mjs', 'postrun-package.mjs', 'review-codec.mjs', 'review-capture.mjs', 'source-navigation.mjs', 'render.mjs', 'inspect.mjs', 'review-io.mjs', 'workflow.mjs']) {
     const source = await readFile(join(root, 'scripts', file), 'utf8');
     for (const [, target] of source.matchAll(/from '([^']+)'/g)) {
       assert.ok(target.startsWith('node:') || target.startsWith('./') || target === '../ui/dist/server.mjs', target);
@@ -152,4 +155,44 @@ test('agent-development instructions trigger safe review only after results', as
   assert.match(wait, /pending result without a required action, repeat the same wait/);
   assert.match(wait, /Do not resend the input or create another execution/);
   assert.ok(section.indexOf('For `ACTION_REQUIRED`') < section.indexOf('After results arrive'));
+});
+
+test('all orchestration entry points require final completion, matching HTML and presentation before iteration', async () => {
+  for (const path of ['SKILL.md', 'references/parent.md', 'references/editor.md', 'references/hosts.md']) {
+    assert.match(await readFile(join(root, path), 'utf8'), /completion\.md/, path);
+  }
+  const author = await readFile(join(plugin, 'agents/scenario-run-editor.md'), 'utf8');
+  const development = await readFile(join(plugin, 'skills/agent-development/SKILL.md'), 'utf8');
+  const policy = await readFile(join(root, 'references/completion.md'), 'utf8');
+  assert.match(author, /references\/completion\.md/);
+  assert.match(author, /Await the COMPLETE copy hand-back/);
+  assert.match(author, /Await the COMPLETE factual hand-back/);
+  assert.match(development, /BLOCKING dependency/);
+  assert.match(development, /before\s+proposing or executing the next iteration/);
+  for (const pattern of [/native completion notification/, /do not invent a synchronous-dispatch flag/,
+    /Do not poll files, task status or transcripts/, /editor's \*\*final\*\* hand-back/,
+    /current\s+requested target/, /real HTML file/, /direct, usable artifact reference\/link/,
+    /Do not advance until that real blocker clears/, /late result for a superseded run stays\s+historical/,
+    /triggers bounded recovery then normal rendering/, /Do not ask the user to steer generation/,
+    /Do not\s+run copy and fact checks concurrently/, /complete genuine JSON hand-back/,
+    /Local sequencing tests do not prove native agent compliance/]) assert.match(policy, pattern);
+});
+
+test('technical-error exception requires all current scenarios and preserves business-failure review and approvals', async () => {
+  const policy = await readFile(join(root, 'references/completion.md'), 'utf8');
+  const development = await readFile(join(plugin, 'skills/agent-development/SKILL.md'), 'utf8');
+  for (const text of [policy, development]) {
+    const source = text.replace(/\s+/g, ' ');
+    assert.match(source, /ALL scenarios/);
+    assert.match(source, /NONE completed\s+without an execution error/);
+    assert.match(source, /until at least one scenario completes\s+without an execution error/);
+    assert.match(source, /Once ANY scenario/);
+  }
+  assert.match(policy, /current test batch, not old runs or the pass\/fail score alone/);
+  assert.match(policy, /failed business assertions[\s\S]*NOT\s+automatically a technical failure/);
+  assert.match(policy, /unknown status are NOT proof/);
+  assert.match(policy, /do not dispatch a visualization editor, render or display/);
+  assert.match(policy, /not required approval for a\s+change, billing, a new test or an external write/);
+  assert.match(policy, /Do not bypass it or retry indefinitely/);
+  assert.match(development, /all-scenarios technical-error exception applies/);
 });

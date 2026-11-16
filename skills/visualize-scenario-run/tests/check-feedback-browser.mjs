@@ -6,7 +6,7 @@ import { createRequire } from 'node:module';
 import { resolve, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { snapshot, fakeCopyReview, fakeChecker } from './fixtures.mjs';
-import { scenario } from './scenarios.mjs';
+import { concernFixture, technicalFix } from './concern-fixture.mjs';
 import { assembleDescriptionRefresh } from '../scripts/description-refresh.mjs';
 import { renderHtml } from '../scripts/render.mjs';
 import { feedbackContext, feedbackRuntime } from '../scripts/feedback.mjs';
@@ -22,8 +22,7 @@ const source = await snapshot();
 const doc = assembleDescriptionRefresh(source, { schema_version: '1.0', scenario_description: 'A customer asks about opening hours, and the assistant prepares a reply draft for review.', claim_refs: ['context', 'claim-draft-1'] }).candidate;
 doc.copy_review = fakeCopyReview(doc); doc.review = await fakeChecker().check(doc); doc.copy_review_iterations = 1;
 const input = await save('synthetic-review.html', doc);
-const failure = scenario('partial-failure').doc;
-failure.timeline.find(event => event.id === 'failed-send').suggested_feedback = { action_id: 'issue', text: 'Investigate the recorded failure before proposing another attempt.', evidence_refs: ['e-draft'], claim_refs: ['claim-failed-send'] };
+const failure = concernFixture().doc;
 failure.copy_review = fakeCopyReview(failure); failure.review = await fakeChecker().check(failure);
 failure.copy_review_iterations = 1;
 const failedInput = await save('synthetic-failure.html', failure);
@@ -53,20 +52,22 @@ const publicClean = async () => {
   assert.ok(!prompt.includes(doc.review.factual_digest));
 };
 const scrollProof = [];
-async function stickyCheck(width, height) {
+async function documentScrollCheck(width, height) {
   await page.setViewportSize({width,height});await page.goto(pathToFileURL(input).href);
   await page.locator('.event-details summary').first().click();
-  const geometry = () => page.evaluate(() => { const p=document.querySelector('.scenario'),h=p.querySelector('.scenario-intro'),e=p.querySelector('.event'),r=n=>{const b=n.getBoundingClientRect();return {top:b.top,bottom:b.bottom,height:b.height};};return {panel:r(p),header:r(h),step:r(e),cart:r(document.querySelector('.prompt-bar')),scroll:p.scrollTop,scrollHeight:p.scrollHeight,clientHeight:p.clientHeight,bodyScroll:document.scrollingElement.scrollTop,background:getComputedStyle(h).backgroundColor,z:getComputedStyle(h).zIndex}; });
+  const geometry = () => page.evaluate(() => { const p=document.querySelector('.scenario'),h=document.querySelector('.top'),e=p.querySelector('.event'),r=n=>{const b=n.getBoundingClientRect();return {top:b.top,bottom:b.bottom,height:b.height};};return {scenario:r(p),header:r(h),step:r(e),prompt:r(document.querySelector('.prompt-state')),scroll:p.scrollTop,overflow:getComputedStyle(p).overflowY,bodyScroll:document.scrollingElement.scrollTop,scrollHeight:document.scrollingElement.scrollHeight,clientHeight:document.scrollingElement.clientHeight,sticky:h.classList.contains('is-sticky')}; });
   const before=await geometry();assert.ok(before.scrollHeight>before.clientHeight+200);
-  await page.locator('.scenario').evaluate(el=>{el.scrollTop=200;});
-  const after=await geometry();assert.ok(after.scroll>=190);assert.ok(Math.abs(after.header.top-before.header.top)<2);assert.ok(Math.abs(after.header.top-after.panel.top)<2);
-  assert.ok(after.step.top<before.step.top-180);assert.ok(after.panel.bottom<=after.cart.top+1);assert.equal(after.bodyScroll,0);assert.notEqual(after.background,'rgba(0, 0, 0, 0)');assert.ok(Number(after.z)>0);
-  await page.locator('.scenario').evaluate(el=>{el.scrollTop=el.scrollHeight;});
-  const bottom=await geometry();assert.ok(bottom.header.bottom<=bottom.panel.bottom);assert.ok(bottom.panel.bottom<=bottom.cart.top+1);
-  await publicClean();await noOverflow();await capture(`sticky-${width}-${height}.png`,false);
+  await page.mouse.move(width-8,Math.min(300,height-20));await page.mouse.wheel(0,200);
+  await page.waitForFunction(()=>document.scrollingElement.scrollTop>=190);
+  const after=await geometry();assert.equal(after.scroll,0);assert.equal(after.overflow,'visible');assert.ok(after.bodyScroll>=190);
+  assert.ok(after.step.top<before.step.top-180);
+  if(before.sticky)assert.ok(Math.abs(after.header.top-before.header.top)<2);
+  await page.evaluate(()=>scrollTo(0,document.scrollingElement.scrollHeight));
+  const bottom=await geometry();assert.equal(bottom.scroll,0);assert.ok(bottom.bodyScroll>0);
+  await publicClean();await noOverflow();await capture(`document-scroll-${width}-${height}.png`,false);
   const last=page.locator('[data-comment]').last();await last.focus();
-  const focusGeometry=await last.evaluate(el=>{const b=el.getBoundingClientRect(),p=el.closest('.scenario').getBoundingClientRect(),h=el.closest('.scenario').querySelector('.scenario-intro').getBoundingClientRect();return {top:b.top,bottom:b.bottom,headerBottom:h.bottom,panelBottom:p.bottom};});
-  assert.ok(focusGeometry.top>=focusGeometry.headerBottom-1);assert.ok(focusGeometry.bottom<=focusGeometry.panelBottom+1);
+  const focusGeometry=await last.evaluate(el=>{const b=el.getBoundingClientRect(),h=document.querySelector('.top');return {top:b.top,bottom:b.bottom,headerBottom:h.classList.contains('is-sticky')?h.getBoundingClientRect().bottom:0,viewportBottom:innerHeight};});
+  assert.ok(focusGeometry.top>=focusGeometry.headerBottom-1);assert.ok(focusGeometry.bottom<=focusGeometry.viewportBottom+1);
   assert.equal(await last.evaluate(el=>document.activeElement===el),true);await page.keyboard.press('Enter');
   assert.equal(await page.locator('#comment-composer').evaluate(el=>el.open),true);await page.keyboard.press('Escape');
   await click('[data-add-correct]');await click('#review-prompt');await page.locator('#copy-prompt').scrollIntoViewIfNeeded();assert.equal(await page.locator('#copy-prompt').isVisible(),true);
@@ -76,7 +77,7 @@ try {
   await page.goto(pathToFileURL(input).href);
   assert.equal(await page.title(), `${doc.header_copy.scenario_name} — ${doc.header_copy.application_name}`);
   assert.equal(await page.locator('.top h1').innerText(), doc.header_copy.application_name);
-  assert.equal(await page.locator('.top p').innerText(), doc.header_copy.workflow_purpose);
+  assert.equal(await page.locator('.application-copy p').innerText(), doc.header_copy.workflow_purpose);
   assert.equal(await page.locator('.queue h3').innerText(), doc.header_copy.scenario_name);
   assert.equal(await page.locator('.scenario-heading h2').innerText(), doc.header_copy.scenario_name);
   assert.equal(await page.locator('.description').innerText(), doc.header_copy.scenario_description);
@@ -156,15 +157,15 @@ try {
   assert.equal(await page.locator('#prompt-preview').inputValue(), '');
   await page.keyboard.press('Escape');
   await page.goto(pathToFileURL(failedInput).href);
-  assert.equal(await page.locator('.scenario-heading h2').innerText(), 'Draft saved but send failed');
-  assert.equal(await page.locator('.description').innerText(), `${failure.header_copy.starting_context} ${failure.header_copy.observed_result}`);
+  assert.equal(await page.locator('.scenario-heading h2').innerText(), failure.header_copy.scenario_name);
+  assert.equal(await page.locator('.description').innerText(), failure.header_copy.scenario_description);
   assert.equal(await page.locator('[data-add-fix]').isVisible(), false);
   await page.locator('.review-flag summary').click();
   await click('[data-add-fix]'); await count(1);
   assert.equal(await page.locator('[data-add-fix]').isDisabled(), true);
   await capture('desktop-synthetic-fix.png');
   await click('#review-prompt');
-  assert.match(await page.locator('#prompt-preview').inputValue(), /Investigate the recorded failure/);
+  assert.ok((await page.locator('#prompt-preview').inputValue()).includes(technicalFix));
   await page.locator('#prompt-items button').filter({ hasText: /^Remove$/ }).click();
   await page.keyboard.press('Escape'); assert.equal(await page.locator('[data-add-fix]').isDisabled(), false);
   await page.goto(pathToFileURL(input).href); await count(0); // No cart persistence.
@@ -200,12 +201,12 @@ try {
   await capture('prompt-second-copy-unresolved.png'); await page.keyboard.press('Escape');
   await page.setViewportSize({ width: 390, height: 844 }); await noOverflow();
   await capture('mobile-second-copy-unresolved.png', false);
-  await stickyCheck(1280,900);await stickyCheck(390,844);await stickyCheck(390,640);
+  await documentScrollCheck(1280,900);await documentScrollCheck(390,844);await documentScrollCheck(390,640);
   if (process.argv[4]) {
     await page.setViewportSize({ width: 1280, height: 1100 });
     await page.goto(pathToFileURL(resolve(process.argv[4])).href); await noOverflow(); await capture('historical-desktop.png');
     await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
-    assert.equal(await page.locator('.event').last().evaluate(el => el.getBoundingClientRect().bottom <= document.querySelector('.prompt-bar').getBoundingClientRect().top), true);
+    assert.equal(await page.locator('.event').last().evaluate(el => el.getBoundingClientRect().bottom <= innerHeight+1), true);
     await capture('historical-desktop-last-step.png', false);
     await page.locator('[data-comment]').first().click(); await page.locator('#comment-text').fill('Please clarify the retained version conflict before making changes.'); await click('#save-comment');
     await click('#review-prompt'); await capture('historical-prompt.png'); await page.keyboard.press('Escape');
@@ -215,7 +216,7 @@ try {
   // Playwright's screenshot caret suppression can leave empty style attributes
   // on textareas. No application-generated inline declaration is permitted.
   assert.deepEqual(await page.locator('[style]:not([style=""])').evaluateAll(elements => elements.map(el => ({ tag: el.tagName, id: el.id, style: el.getAttribute('style') }))), []);
-  const report = { ok: true, output_directory: out, header_schema: doc.schema_version, sticky_geometry:scrollProof, public_generation_details_absent:true, header_assertions: ['brief general present-tense scenario description', 'visible cached name/purpose/scenario', 'queue/document title', 'comment modal context', 'full original spec in evidence and composed prompt', 'truthful partial-failure header', 'responsive short headings'], console_errors: errors, external_requests: externalRequests, limits: 'Synthetic UI checks and historical presentation only; no model or user acceptance.' };
+  const report = { ok: true, output_directory: out, header_schema: doc.schema_version, document_scroll_geometry:scrollProof, public_generation_details_absent:true, header_assertions: ['brief general present-tense scenario description', 'visible cached name/purpose/scenario', 'queue/document title', 'comment modal context', 'full original spec in evidence and composed prompt', 'truthful partial-failure header', 'responsive short headings'], console_errors: errors, external_requests: externalRequests, limits: 'Synthetic UI checks and historical presentation only; no model or user acceptance.' };
   await writeFile(join(out, 'report.json'), JSON.stringify(report, null, 2) + '\n', { flag: 'wx', mode: 0o600 });
   console.log(JSON.stringify(report, null, 2));
 } finally { await browser.close(); }

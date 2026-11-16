@@ -2,6 +2,7 @@
 // remain external to this module; assembly does not verify claims or read sources.
 import * as contracts from './contracts.mjs';
 import { headerCopyContract, summaryHeaderCopyContract } from './header-copy.mjs';
+import { projectArtifactVersions } from './artifact-versions.mjs';
 
 const text = { type: 'string', min: 1 };
 const id = { type: 'string', pattern: /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,159}$/ };
@@ -35,8 +36,14 @@ export const legacyHeaderDraftContract = object({ ...legacyDraftContract.fields,
   schema_version: { type: 'enum', values: ['1.1'] }, header_copy: headerCopyContract,
   context_copy: optional(object({ run: prose(['execution_label', 'observed_resulting_state']) })),
 });
-export const draftContract = object({ ...legacyHeaderDraftContract.fields,
+export const legacySummaryDraftContract = object({ ...legacyHeaderDraftContract.fields,
   schema_version: { type: 'enum', values: ['1.2'] }, header_copy: summaryHeaderCopyContract,
+});
+export const sourceDraftContract = object({ ...legacySummaryDraftContract.fields, schema_version: { type: 'enum', values: ['1.3'] } });
+export const draftContract = object({ ...sourceDraftContract.fields, schema_version: { type: 'enum', values: ['1.4'] },
+  events: array(object({ ...sourceDraftContract.fields.events.items.fields,
+    concern: optional(contracts.concernContract), suggested_feedback: optional(contracts.suggestedFixContract),
+  })),
 });
 
 function fail(errors, path, code, message, repair) {
@@ -67,20 +74,27 @@ function shape(value, schema, path, errors) {
   }
 }
 
-export function assembleCandidate(bundle, draft) {
+export function assembleCandidate(bundle, draft, { artifactVersionSource } = {}) {
   const checked = contracts.validate(bundle, 'bundle');
   if (!checked.ok) return checked;
   const errors = [];
   try {
     const legacy = draft?.schema_version === '1.0';
-    shape(draft, legacy ? legacyDraftContract : draft?.schema_version === '1.1' ? legacyHeaderDraftContract : draftContract, '$', errors);
+    shape(draft, legacy ? legacyDraftContract : draft?.schema_version === '1.1' ? legacyHeaderDraftContract : draft?.schema_version === '1.2' ? legacySummaryDraftContract : draft?.schema_version === '1.3' ? sourceDraftContract : draftContract, '$', errors);
     if (errors.length) return { ok: false, errors };
 
-    const source = new Map(bundle.occurrences.map(item => [item.id, item]));
+    if (artifactVersionSource !== undefined && !['1.3', '1.4'].includes(draft.schema_version)) {
+      fail(errors, '$', 'artifact_version_source', 'Temporal projection is only supported by the current source-bound contract.', 'Keep historical inputs unchanged.');
+      return { ok: false, errors };
+    }
+    const projection = artifactVersionSource === undefined ? undefined : projectArtifactVersions(bundle, artifactVersionSource);
+    if (projection && !projection.ok) return projection;
+    const source = new Map((projection?.occurrences ?? bundle.occurrences).map(item => [item.id, item]));
     const selected = new Set();
     draft.events.forEach((event, i) => {
       const path = `$.events[${i}].occurrence_id`;
       if (!source.has(event.occurrence_id)) fail(errors, path, 'missing_reference', 'Selected occurrence is absent from the bundle.', 'Select only a supplied occurrence ID.');
+      if (projection?.hidden_occurrence_ids?.includes(event.occurrence_id)) fail(errors, path, 'private_occurrence', 'Implementation evidence is not a timeline event.', 'Keep validation mechanics private and select the goal-relevant operation instead.');
       if (selected.has(event.occurrence_id)) fail(errors, path, 'duplicate_id', 'Selected occurrence is repeated.', 'Select each occurrence at most once.');
       selected.add(event.occurrence_id);
     });
@@ -111,13 +125,20 @@ export function assembleCandidate(bundle, draft) {
     if (errors.length) return { ok: false, errors };
 
     const { occurrences, ...context } = structuredClone(bundle);
-    context.schema_version = legacy ? '1.6' : draft.schema_version === '1.1' ? '1.7' : '1.8';
+    context.schema_version = legacy ? '1.6' : draft.schema_version === '1.1' ? '1.7' : draft.schema_version === '1.2' ? '1.8' : draft.schema_version === '1.3' ? '1.9' : '1.10';
+    if (['1.9', '1.10'].includes(context.schema_version)) context.source_bundle = structuredClone(bundle);
+    if (projection) {
+      context.artifact_version_source = structuredClone(artifactVersionSource);
+      context.evidence.push(...projection.evidence);
+      context.artifacts.push(...projection.artifacts);
+    }
     context.artifacts = context.artifacts.filter(artifact => artifacts.has(artifact.id));
     delete context.coverage.data_origin;
     context.coverage.gaps.forEach(gap => { delete gap.impact; });
+    if (projection?.coverageGaps) context.coverage.gaps.push(...projection.coverageGaps);
     const authored = structuredClone(draft);
     for (const [section, fields] of Object.entries(authored.context_copy ?? {})) Object.assign(context[section], fields);
-    const occurrenceCopies = new Map(occurrences.map(item => [item.id, item]));
+    const occurrenceCopies = new Map((projection?.occurrences ?? occurrences).map(item => [item.id, item]));
     const titleCopies = new Map((authored.artifact_titles ?? []).map(item => [item.artifact_id, item.title]));
     for (const artifact of context.artifacts) if (titleCopies.has(artifact.id)) artifact.title = titleCopies.get(artifact.id);
     const snapshot = {
@@ -125,11 +146,16 @@ export function assembleCandidate(bundle, draft) {
       snapshot_id: authored.snapshot_id, editor_id: authored.editor_id, parent_agent_id: authored.parent_agent_id,
       summary: authored.summary, claims: authored.claims,
       ...(!legacy ? { header_copy: authored.header_copy } : {}),
-      timeline: authored.events.map(({ occurrence_id, description, claim_refs, supporting_detail, suggested_feedback }) => ({
+      timeline: authored.events.map(({ occurrence_id, description, claim_refs, supporting_detail, suggested_feedback, concern }) => ({
         ...occurrenceCopies.get(occurrence_id), description, claim_refs, supporting_detail,
         ...(suggested_feedback ? { suggested_feedback } : {}),
+        ...(concern ? { concern } : {}),
       })),
-      artifact_claims: authored.artifact_claims, omitted_occurrences: authored.omitted_occurrences,
+      artifact_claims: projection ? [
+        ...authored.artifact_claims.filter(item => artifacts.has(item.artifact_id)),
+        ...projection.artifacts.filter(item => artifacts.has(item.id)).map(item => ({ artifact_id: item.id,
+          claim_refs: authored.events.find(event => source.get(event.occurrence_id).artifact_refs.includes(item.id)).claim_refs })),
+      ] : authored.artifact_claims, omitted_occurrences: authored.omitted_occurrences,
       display: authored.display ?? { compact: false },
     };
     // Structural/reference/credential preflight is not factual or copy review.

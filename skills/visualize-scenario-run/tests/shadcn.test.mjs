@@ -65,9 +65,9 @@ test('header removes clutter without dropping exact technical metadata or invent
 test('new header authoring guidance is explicit without changing pinned rules or historical reviews', async () => {
   for (const path of ['references/editor.md', 'references/copy-editor.md']) {
     const text = await readFile(join(root, path), 'utf8');
-    for (const field of ['header_copy', 'application_name', 'workflow_purpose', 'scenario_name', 'starting_context', 'observed_result', 'claim_refs']) assert.ok(text.includes(field), `${path}: ${field}`);
+    for (const field of ['header_copy', 'application_name', 'workflow_purpose', 'scenario_name', 'scenario_description', 'description_claim_refs', 'claim_refs']) assert.ok(text.includes(field), `${path}: ${field}`);
     assert.match(text, /Economist/); assert.match(text, /SDLC v2/); assert.match(text, /historical|frozen/);
-    assert.match(text, /starting/); assert.match(text, /two\s+or/);
+    assert.match(text, /GENERAL PRESENT-TENSE/); assert.match(text, /1\.10/);
   }
 });
 

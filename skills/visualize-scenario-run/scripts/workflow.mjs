@@ -1,8 +1,95 @@
 // Fixture-safe orchestration helpers. Agent dispatch/source calls belong to the host,
 // not this module. Callbacks are supplied explicitly; no hidden model or network use.
 import { factualDigest, validate, validateCandidate, validateCopyReview, validateFactualReview } from './contracts.mjs';
+import { createSourceGroundingReport, sourceGroundingAuthorFeedback } from './source-grounding.mjs';
 
-export async function reviewLoop({ edit, copyCheck, check, render, revise = async ({ candidate }) => candidate, maxAttempts = 3 }) {
+export async function reviewLoop(options) {
+  let initial;
+  try { initial = await options.edit({ attempt: 1, previous: undefined, errors: [] }); }
+  catch { return { ok: false, errors: [{ code: 'author_failure' }] }; }
+  if (['1.9', '1.10'].includes(initial?.schema_version)) return contentReviewLoop({ ...options, initial });
+  return legacyReviewLoop({ ...options, edit: args => args.attempt === 1 ? initial : options.edit(args) });
+}
+
+// Bounded quality work, then the SAME renderer. Reviews are never approval tokens
+// for 1.9 content. Structural/source/security failures still stop output.
+async function contentReviewLoop({ initial, originalBundle = initial.source_bundle, onSourceGrounding, edit, copyCheck, check, render, revise = async ({ candidate }) => candidate, maxAttempts = 3 }) {
+  if (!Number.isInteger(maxAttempts) || maxAttempts < 1 || maxAttempts > 3) throw new Error('Use one to three attempts.');
+  const trace = [], diagnostics = [];
+  let candidate = structuredClone(initial), copyReviews = 0;
+  const content = value => {
+    const { review, copy_review, copy_review_iterations, ...rest } = value;
+    return rest;
+  };
+  candidate = content(candidate);
+  const preflight = () => validateCandidate(candidate);
+  if (!preflight().ok) return preflight();
+  const pending = value => ['running', 'pending'].includes(value?.status);
+  let copy, fact;
+  while (copyReviews < 2 && typeof copyCheck === 'function') {
+    const grounding = createSourceGroundingReport(candidate, originalBundle);
+    const authorFeedback = grounding.ok ? sourceGroundingAuthorFeedback(candidate, originalBundle, grounding.report) : grounding;
+    if (!grounding.ok || !authorFeedback.ok) {
+      // Assistance failure is private, not approval or a normal-render gate. No
+      // copy callback/claim is consumed without a current report.
+      diagnostics.push({ kind: 'source-grounding', validation: grounding.ok ? authorFeedback : grounding });
+      break;
+    }
+    trace.push({ operation: 'source_grounding_preflight', candidate_digest: factualDigest(candidate) });
+    // Optional local author-owner notification, not another author/model dispatch.
+    // Never forward this private assistance to the independent copy callback.
+    const privateContext = { source_grounding_report: structuredClone(grounding.report), author_feedback: structuredClone(authorFeedback.feedback) };
+    if (typeof onSourceGrounding === 'function') {
+      try { await onSourceGrounding(privateContext); }
+      catch { diagnostics.push({ kind: 'source-grounding-notification', validation: { ok: false, errors: [{ code: 'author_feedback_unavailable' }] } }); }
+    }
+    copyReviews++;
+    trace.push({ operation: 'copy_check', iteration: copyReviews });
+    try { copy = await copyCheck(structuredClone(candidate)); }
+    catch { copy = undefined; }
+    if (pending(copy)) return { ok: false, pending: true, copy_reviews: copyReviews, trace };
+    const result = validateCopyReview(candidate, copy, { requirePass: false });
+    diagnostics.push({ kind: 'copy', record: structuredClone(copy), validation: result });
+    if (result.ok && copy.verdict === 'pass' || copyReviews === 2) break;
+    candidate = content(structuredClone(await revise({ candidate: structuredClone(candidate), copy_review: structuredClone(copy), phase: 'copy', copy_reviews: copyReviews, diagnostics: structuredClone(diagnostics) })));
+    trace.push({ operation: 'editorial_revision', phase: 'copy' });
+    if (!preflight().ok) return preflight();
+  }
+  // Invalid copy feedback does not prevent the distinct factual stage.
+  if (typeof check === 'function') {
+    trace.push({ operation: 'independent_check' });
+    try { fact = await check(structuredClone(candidate)); }
+    catch { fact = undefined; }
+    if (pending(fact)) return { ok: false, pending: true, copy_reviews: copyReviews, trace };
+    const result = validateFactualReview(candidate, fact);
+    diagnostics.push({ kind: 'fact', record: structuredClone(fact), validation: result });
+    if (result.ok) {
+      // Known factual problems may be qualified in one bounded author correction.
+      // Any change invalidates old records; no third copy or restamped approval.
+      candidate = content(structuredClone(await revise({ candidate: structuredClone(candidate), review: structuredClone(fact), copy_review: structuredClone(copy), phase: 'fact', copy_reviews: copyReviews, diagnostics: structuredClone(diagnostics) })));
+      if (!preflight().ok) return preflight();
+    }
+  }
+  let errors = [];
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    if (attempt > 1) {
+      const repaired = content(structuredClone(await edit({ attempt, previous: structuredClone(candidate), errors })));
+      if (factualDigest(repaired) !== factualDigest(candidate)) return { ok: false, attempts: attempt, copy_reviews: copyReviews, trace, diagnostics,
+        errors: [{ path: '$', code: 'content_frozen', message: 'Render repair changed frozen content.', repair: 'Repair display only; do not start another copy or author loop.' }] };
+      candidate = repaired;
+    }
+    const snapshot = { ...candidate, ...(copy !== undefined ? { copy_review: copy } : {}), ...(fact !== undefined ? { review: fact } : {}), ...(copyReviews ? { copy_review_iterations: copyReviews } : {}) };
+    const validated = validate(snapshot);
+    if (!validated.ok) return { ...validated, copy_reviews: copyReviews, trace, diagnostics };
+    const result = await render(structuredClone(snapshot));
+    trace.push({ attempt, operation: 'render', ok: result.ok });
+    if (result.ok) return { ...result, attempts: attempt, copy_reviews: copyReviews, trace, diagnostics };
+    errors = result.errors;
+  }
+  return { ok: false, attempts: maxAttempts, copy_reviews: copyReviews, trace, diagnostics, errors, exhausted: true };
+}
+
+async function legacyReviewLoop({ edit, copyCheck, check, render, revise = async ({ candidate }) => candidate, maxAttempts = 3 }) {
   if (!Number.isInteger(maxAttempts) || maxAttempts < 1 || maxAttempts > 3) throw new Error('Use one to three attempts.');
   if (typeof copyCheck !== 'function' || typeof check !== 'function') return { ok: false, attempts: 0, trace: [], errors: [{ path: '$workflow', code: 'review_capability', message: 'Distinct copy and factual review callbacks are required.', repair: 'Establish both reviewers; never substitute a fabricated pass.' }] };
   let previous, review, copyReview, digest, errors = [], copyReviews = 0;

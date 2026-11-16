@@ -1,10 +1,384 @@
-Historical completed sections record their then-current contracts and retry
-policies. Section 17 supersedes the historical section 12 one-review budget with
-two copy iterations and display after the second, using new snapshot 1.6. Earlier
-native results are not current-package acceptance. Task 8.1 remains open for
-explicit user acceptance.
+Current checklist after sections 36–37 verification: **117/120 complete**. Only
+**8.1** (explicit user visual
+acceptance), **18.5** (unsupported Figma replies; zero posted) and failed **27.3**
+(historical native capture-to-render/presentation) remain open. Historical task
+wording and verification checkpoints remain preserved.
+
+### Current native replay, presentation and regression-case verification
+
+- Review-only native attempts 1 and 2 produced pages but failed the requested
+  story/privacy or first-diff checks. Attempt 3, session
+  `1166649c-028e-4922-83b0-6bf0b5b9f74d`, completed in 18m50s at $10.8269197
+  incremental cost. Its actual nine-event UI passed independent source-byte and
+  desktop/mobile/forced-colors checks: two source queries, two specified processes,
+  two diffs on their actions, private validation and manual prompt controls.
+  No application rerun, independent source confirmation or user acceptance is implied.
+- The later UX render uses that EXACT successful native snapshot. Its source hash,
+  factual digest, authored copy and genuine private records are unchanged. Resource
+  labels/icons, actual React changed-region folding, inline link-style Dismiss and
+  count-only prompt state pass 21 independent browser checks. This is a presentation
+  rerender, not a new native generation or review. The older installed CLI plugin
+  has not been refreshed or reloaded for these changes.
+- **523 local cases: 521 pass, zero fail, two opt-in checks skipped; 13/13 expected
+  synthetic fixture outcomes.** Strict plugin/change validation, reproducible UI
+  bundles and whitespace checks pass. The new `operation-timeline-replay` case has
+  fictional raw source mocks, a scoped scaffold, production verifier and positive/
+  negative local tests. It has NOT been run as a billed native eval.
+- Known tracked inference is $66.2466479; manual smokes/application charges remain
+  excluded. No further paid call was made for these UX or case-file changes.
+
+## 36. Resource links and focused artifact review
+
+- [x] 36.1 Use appropriate source/resource nouns and a trusted trailing external-link icon on every external anchor, without changing or widening destinations.
+- [x] 36.2 Compose a pinned compatible React diff component with the existing shadcn UI; show actual changes by default and reveal all unchanged content accessibly without inventing a baseline or changing source bytes.
+- [x] 36.3 Make Dismiss an inline link-style real button, remove the duplicate visible prompt heading while preserving count/animation/live status/manual workflow, and verify a production presentation-only rerender from the exact successful native input across desktop/mobile/accessibility/security cases.
+
+## 37. Passing operation-story replay as a plugin regression case
+
+- [x] 37.1 Add a separate fictional raw-source replay case with case-local service mocks and guards against restarting/resending the completed application run; preserve all existing cases, graders and fixtures.
+- [x] 37.2 Add and locally verify a production-renderer/source-pair/semantic-step/privacy verifier, isolated scaffold and positive/negative regression tests, with explicit command/file grading and no automatic paid native execution or acceptance claim.
+
+Completed sections record their then-current contracts, retry policies and
+verification checkpoints, not instructions to resurrect retired features. Section
+17 replaced section 12's one-review stop with two iterations; section 24 subsequently
+separated optional genuine private quality feedback from normal source-bound render
+admission. Section 28 supplies current draft 1.4/snapshot 1.10 concern fields, section
+29 removes section 27's observer/runtime/bridge/tests/manual path, sections 30/31
+repair live progress and make per-edit evidence explicit, and sections 32–34 integrate
+artifact correctness, all five helpers and header/document scrolling. Section 34
+supersedes section 20.4's bounded sticky scenario panel and section 16's fixed footer.
+Section 35 adds purpose-based operation stories: input 1.1 / projection 2.1 groups
+private validation with its action and supports evidenced, explicitly specified
+internal processes. Original input 1.0 / projection 2.0 remains unchanged.
+Old evidence/reviews/failed runs/costs remain immutable; earlier native passes and
+current local tests do not establish current-package acceptance.
+
+The user's requested **Add comment** wording remains an implementation/acceptance
+gap: current visible **Comment**, accessible **Comment on step N**. This is not an
+accepted alternative, completed refinement or new task checkbox. Supported console
+emission/retained envelopes do not prove new application/LLM instrumentation compliance
+or platform retention/truncation guarantees. See design.md's conversation chronology
+for the explicit rationale, rejected alternatives and supersession.
+
+### Historical first replay checkpoint: failed feedback acceptance and then-pending follow-up
+
+The following dated checkpoint is preserved as history. Its statements that the
+next replay or presentation work had not run were true then; the current result
+and completed sections 36–37 above supersede that status without changing the
+historical evidence, costs, judgments or three open tasks.
+
+The user subsequently authorized a genuine CLI generation replay from the latest
+retained conversation's evidence-handoff boundary, not an application rerun. It used
+the byte-identical JSONL prefix through line 547 / tool-result UUID
+`52c0721f-602e-4359-87ce-2653f17a75e0` in session
+`9cfdeeb0-abda-4fd5-8904-d94d5eb82d6f`, before the original editor at line 555.
+A fresh isolated **193-file** plugin/workspace left the existing installed
+**189-file** plugin unchanged. The source checkout was frozen for that replay.
+Twenty-four exact retained source-event copies include genuine input/query and
+child-process results; they are not an authored narrative, new process-result logs,
+independent reviewer findings or permission to repair invalid historical records.
+New invocation claims do not reset the original invocation's consumed claims.
+
+The earlier **2026-11-16T02:33:31Z** running/checker checkpoint is superseded by the
+automatic completion supplied by the parent, not a status poll from this docs task:
+replay **8cd7222b-0f91-407f-afab-acfcd5f9c77c**, **827,721 ms / 13m47s**,
+**$7.4912581 incremental cost**. One editor, two copy agents and one checker all
+completed under the foreground owner, with no async child killed. Actual assembly,
+preflight, two copy stages, facts, finalization, render and progress-ready sequence
+5 produced normal 1.10 HTML at
+`.../opencode/claude-plugin-smoke-gu87lbe_/workspace/operation-ui-replay-7edxifpg/run-progress-1JOZk3/completed-review.html`.
+All 193 private plugin/source-checkout/retained-input/prefix/checkpoint preservation
+checks were reported true. No application call/rerun or MCP write occurred. Four
+shell ls/grep/cp permission denials remained actual denials; supported documented
+Node alternatives were used. No opener or observed user presentation was claimed.
+
+**Feedback acceptance FAILED:** the four rows were first query/create/first
+insertion/second insertion. Two genuinely evidenced specified-processing steps and
+the independent second query were missing, although native fetch/child results
+existed. Public supporting detail discussed rejected structured records and missing
+process-result emission, violating validation privacy. This failure was an erroneous
+structured-logs-only source assumption, not absent real evidence. The first paired
+version (one-character baseline → 897-character result) had its diff; the later
+5,565-character state correctly retained NO before because the invalid historical
+query-bearing URL left the sequence gap. Do not fabricate a second baseline to fix
+story selection. The final native handoff was also verbose rather than requested
+concise delivery.
+
+Genuine copy 2 `revise` matched digest
+`f5ce857c0c0e24803aca7dfe9eafacfb4408ccb191ea208c13f5a49799f43afb`.
+The distinct factual response genuinely reported unavailable reads/tools/clocks,
+omitted required `observed_at` and failed expansion (`review_codec_keys`); it was
+NOT attached and no approval/timestamp was invented. Normal rendering without that
+invalid optional review is not factual confirmation or accepted UI.
+
+After that failure, the parent implemented generic collection/story guidance and
+public projection corrections, with **6/6 focused operation tests** reported passing.
+The sixth test is actual-shaped SCRIPTED native result evidence without a console
+process log, using the explicit original specification and ordinary source-bound
+assembly/immutable source. This is local regression proof, not a new native attempt
+or a freshly rerun full suite. The existing 509-case checkpoint below stays historical.
+
+The current guidance finishes ordinary native-source/child-result enrichment before
+author handoff and pins the exact final bundle/projection hashes. The existing bundle
+1.0 route is not a new API/version; missing console `process_result` does not rule out
+an evidenced step. The marked-console input 1.1/projection 2.1 route retains all strict
+stage/specification/continuity requirements. An ordinary same-target two-observation
+comparison preserves exact sources/uncertainty, not immediate pre-write or exclusive
+causation proof, and never repairs an invalid log or bypasses 2.1 gaps/overlaps.
+Current 1.10 public projection maps private proof-channel coverage-gap metadata to
+human uncertainty and omits whole authored validation-procedure supporting paragraphs,
+without changing protected source/artifact strings. Another replay is pending; no
+next native attempt has run yet. No tests or native work were run by this docs update.
+The session-only documented foreground
+wait-ceiling setting is configuration, not closure of failed historical 27.3. Known
+tracked inference is now **$48.1104556** ($40.6191975 + $7.4912581), excluding manual
+smokes/application charges. This loop's $7.5930136 earlier spend plus the new cost
+is **$15.0842717** against the $100 user authorization. The attempt's $50 estimated
+CLI cap was not a guaranteed billing ceiling. No new cost/run is claimed here.
+
+**Queued after a corrective replay passes feedback checks; not implemented, installed or verified:**
+
+- Resource-specific source CTA nouns (“Open page” for generic web content and
+  appropriate provider/resource labels) plus a trailing external-link icon on ALL
+  external anchors. Current generic fallback/anchors do not fulfill this request.
+- Changed regions only by default for genuine paired versions, with unchanged
+  content expandable through a genuine compatible React diff component. Current
+  diff still shows all context; single captured content must never gain a fake before.
+- Link-style Dismiss inline outside the summary, retaining the existing memory-only
+  visibility/focus/cart/evidence/reload behavior.
+- Remove duplicate visible `Claude Prompt · 0 items` heading only; retain numeric
+  count, count-change animation, live accessibility and Review prompt control.
+
+Library/component research is not adoption or a new installed dependency. The
+requested follow-up uses the generation script to rerender the EXACT last successful
+genuine CLI input after implementation, presentation-only: no source reauthoring,
+review restamping or application rerun. No feedback-accepted replay input is yet claimed.
+These requests and the existing Add comment wording gap remain explicit notes,
+not new feature checkboxes or completed work. **112/115** and open **8.1/18.5/27.3**
+remain unchanged; a future verified replay result is separate from user acceptance.
+
+### Prior section 35 verification
+
+- **509 cases: 507 passed, zero failed, two opt-in retained-candidate checks skipped**;
+  three genuine historical handbacks were supplied explicitly and all four source
+  transcript hashes remained unchanged. Five new operation-level tests cover exact
+  source bindings, private/unselectable supporting work, explicit specification
+  references and process evidence, successive action diffs, missing states,
+  overlapping writes and unchanged legacy contracts.
+- Real Chromium checks pass at desktop, mobile, reduced height and forced colors:
+  four business steps include an explicitly specified internal process and two
+  action-attached diffs. Even opened evidence disclosures and the copied prompt
+  omit implementation-only validation. Source bytes remain unchanged; no horizontal
+  overflow, console errors or external requests occurred. This is scripted local
+  proof, not new native generation, application instrumentation or user acceptance.
+- **13/13** expected synthetic fixture outcomes, 12 HTML outputs, strict local
+  directory-plugin/OpenSpec checks, whitespace checks and reproducible UI pass.
+- Exact retained 9cfdeeb0 session logs also repackage offline without source edits:
+  three mutation records become one action with its actual result. The first
+  insertion retains its real empty predecessor. A historical invalid source URL
+  still leaves a gap and no later baseline; no missing source/process event or
+  comparison was invented. Reports: `.../opencode/operation-timeline-browser-v2/`,
+  `operation-retained-proof-YFfDK2/report.json`, and
+  `operation-story-final-eccrljgn/fixtures/report.json` under the approved temp base.
+  The retained proof packages four existing operations; the first insertion has
+  its actual one-character empty baseline and 897-character result. The later
+  5,565-character result has NO before because actual sequence 8's query-bearing
+  source URL fails strict source shape, leaving a 7→9 gap. That invalid event is not
+  sanitized/re-admitted, and no missing specified-process record, HTML generation
+  or second diff is claimed by this packaging-only proof.
+- Unit log/audit: `.../opencode/operation-complete-verified-o0zufkfw.log` and
+  `.log.audit.json`. Without explicit retained paths, the default is 509 cases /
+  504 pass / five opt-in skips, not missing genuine reviews silently marked passed.
+
+At the section 35 implementation checkpoint, no native/model/application run,
+source call, CLI refresh/reload or acceptance occurred. The separately authorized
+later generation replay above completed generation but failed feedback acceptance;
+the next corrective loop outcome remains pending, not an implementation-test pass.
+The prior 189-file installed snapshot remains unchanged.
+
+### Prior integrated evidence and later authorized reload
+
+These are existing verification records, not tests run by this docs-only update:
+
+- **504 cases: 502 passed, zero failed, two opt-in retained-candidate checks skipped**,
+  with explicit read-only paths for three genuine historical copy/fact handbacks.
+  Original JSON, including the actual factual clock diagnostic, remains unchanged;
+  successful parsing does not turn that diagnostic into valid factual approval.
+- **13/13 expected synthetic fixture outcomes**, 12 HTML outputs and one expected
+  exhaustion; reproducible offline UI, strict local directory-plugin/OpenSpec and
+  whitespace checks passed. Directory validation is not a portal/policy safety scan.
+- Combined artifact proof: `.../opencode/integrated-artifact-diff-v2/report.json`.
+  All seven original files remain byte-identical. NEW offline reassembly retains
+  all 11 records and the actual newline baseline internally, omits the empty public
+  card and shows step 4's 1,389 green additions plus one context newline, then step
+  6's 4,151 SEC additions plus 1,390 context characters. No new native generation,
+  source read, reviewer approval or replacement of the original artifact occurred.
+- Header/scroll proof: `.../opencode/integrated-header-prompt-v1/report.json`:
+  ten synthetic/exact-retained-source Chromium cases at 1728/1280/390/320 widths
+  and short heights. Actual wheel/focus/dialog/Dismiss/manual-prompt behavior,
+  reduced motion/forced colors, immutable source, strict CSP, no overflow, zero
+  external requests and zero console errors passed, not user visual acceptance.
+- Exact lossless packet sample: copy **118,321 → 111,969 bytes (5.37%)**; facts
+  **210,574 → 157,755 bytes (25.08%)**. Approximate 13.77/18.80 ms local pack medians
+  are serialization costs, not measured native savings. Small packets may grow;
+  the combined 4–6 minute historical estimate remains unmeasured. Measurement:
+  `.../opencode/generation-packet-final-measurement-v1.json`.
+
+All abbreviated paths use the approved temp base
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/`.
+Detailed source/test anchors remain in `docs/visualization-validation.md`, final
+“Concurrent generation improvements, artifact diffs and header layout” record.
+
+**Subsequent separate authorization:** the existing isolated root
+`.../opencode/claude-plugin-smoke-gu87lbe_/` was refreshed with **189** current
+packaged files, **61** changed, none deleted, and all packaged bytes matched the
+working tree at refresh. Manifest:
+`reload-backup-generation-govyfk5u/refresh-manifest.json`. That pre-dispatch manifest
+records refresh, not successful reload by itself. The conversation separately
+records observed `/reload-plugins` in Terminal **47698**, `ttys001`: **one plugin,
+three skills, nine agents, two MCP servers**, conversation preserved and **NO test
+started**. This later reload supersedes earlier frozen-install status only; those
+earlier no-reload statements remain true for their checkpoints. It does not complete
+27.3 or prove native workflow/application evidence compliance. No reload was performed
+by this documentation update. Known tracked historical inference remains
+**$40.6191975**, excluding manual smokes/application charges. All three open tasks
+and source/permission/privacy/manual-feedback boundaries remain unchanged.
+
+## 35. General operation-level story and private validation
+
+- [x] 35.1 Add opt-in postrun input 1.1 / projection 2.1 that groups actual operation evidence, binds each supported material version/diff to its business action, keeps supporting operations unselectable, and preserves original source bytes and legacy contracts.
+- [x] 35.2 Select external interactions by goal relevance and internal processes only when explicitly specified and evidenced; keep distinct input/process/change purposes separate, validation mechanics private across all public surfaces, and missing/overlapping states honest.
+- [x] 35.3 Verify normal source-bound assembly/rendering, exact source/identity/time and private evidence, multiple artifact/services, successive diffs, explicitly specified processes, concurrent/missing states, desktop/mobile/document scrolling/dialogs/CSP, full local tests/fixtures/strict checks; do not claim native compliance, reload or close 8.1/18.5/27.3.
+
+## 34. Header prompt controls and document scrolling
+
+- [x] 34.1 Move the prompt count and review control into the upper-right application header, remove the fixed footer and its reserved space, and preserve exact memory-only inclusion/edit/remove/review/copy semantics and reduced-motion count animation without ecommerce wording or iconography.
+- [x] 34.2 Replace the bounded scenario/timeline scrolling panel with normal document viewport scrolling, including wheel input over header, queue and surrounding content. Keep responsive headers, source artifacts, disclosures, dialogs and keyboard focus usable without hidden controls or horizontal overflow.
+- [x] 34.3 Verify real desktop/mobile/short/narrow viewport scrolling, header state, dialog/focus/Dismiss, exact prompt content, source immutability, strict CSP, reproducible assets and integration with section 33 and the artifact repair. Do not reload, run a native/application test or close 8.1/18.5/27.3.
+
+## 33. Concurrent latency improvements with integrated artifact correctness
+
+All five improvements and section 32's artifact repair run in the same implementation
+wave with disjoint file ownership. Integration and independent local review follow.
+Historical time savings are estimates, not native performance measurements.
+
+- [x] 33.1 Add candidate-bound private source-grounding preflight for authored implementation details before copy consumption; report exact source support and uncertainty without inventing judgments, changing copy automatically or replacing independent review.
+- [x] 33.2 Package actual post-run structured session evidence and explicit target/spec metadata deterministically through the existing bundle/projection pipeline; preserve every marked record, material version, source identity, timestamp, redaction, gap and request/acknowledgment/readback distinction without an observer or new source calls.
+- [x] 33.3 Add lossless compact packet/response references with strict candidate-bound manifests and deterministic expansion before existing review validation; retain all passages, rules, context and genuine judgments without defaults or fabricated approval.
+- [x] 33.4 Capture the actual completed native hand-back format using exact dispatch/agent/parent correlation, preserving original reviewer output and rejecting incomplete, mixed, stale or tool/source data without transcript polling or re-review for formatting.
+- [x] 33.5 Provide a private source/event/claim index and supported targeted-read guidance that retains the checker's independent reads, real read timestamps, read-only allowlist and unavailable-evidence findings without invented pagination or capabilities.
+- [x] 33.6 Integrate all five runtime paths and native role instructions with section 32's artifact fix; verify production CLI/assembly/review round trips, source immutability, coverage and security failures, normal browser UI, 13 fixtures, reproducible assets and strict plugin/spec/diff checks. Keep 8.1, 18.5 and failed 27.3 open; do not run a paid/native/application test, reload, publish or claim measured latency improvement.
+
+Integrated verification: 504 local tests, 502 passed and two opt-in retained-file
+checks skipped; this includes explicit read-only checks of three genuine historical
+copy/fact hand-backs. Thirteen synthetic fixture outcomes pass. Retained-source
+diff checks and ten actual/synthetic document-scroll/header viewport checks pass,
+with strict CSP, unchanged sources and no external requests or console errors.
+See the final concurrent-wave record in docs/visualization-validation.md. No new
+native latency, independent source verification, approval or acceptance is claimed.
+
+## 32. Repair acknowledgment-induced diff gaps in the linked run
+
+- [x] 32.1 Trace the supplied retired loopback URL through its matching manifest, exact final bytes, source logs and session evidence. Identify why correct versions have no before side. Preserve every retained input and the isolated plugin.
+- [x] 32.2 Treat a content-free metadata acknowledgment as a receipt, not missing artifact material. Preserve all other gap, stage, operation, stream, source and ordering safeguards. Require collection of all marked records, including creation requests and acknowledgments. Retain a placeholder-target request only through an explicit non-material unresolved-target gap that breaks continuity. Never repair retained messages or infer an empty baseline.
+- [x] 32.3 Verify collection through normal assembly/finalization/render, actual retained-source local proof, byte preservation, browser accessibility/cart/privacy and the full local suite. Record limits without a reload, application/model run, new approval or closure of 8.1/18.5/27.3.
+
+Artifact-specific results and the optional original-mobile browser limitation are
+in `docs/visualization-artifact-diff-rca.md`. Exact retained-source proof:
+`.../opencode/artifact-diff-final-QLOzYC/proof/report.json`. At that artifact-only
+checkpoint, the then-current renderer reproduced the original no-diff HTML
+byte-for-byte. The later header/layout follow-up changes presentation, not those
+preserved historical bytes. NEW offline
+assembly preserves all 11 raw messages, the unresolved creation target and exact
+readbacks. It shows 1,389 added characters at step 4, then 1,390 context characters
+and 4,151 additions at step 6. This is not a new native run or reviewed replacement.
+
+## 30. Repair static-only progress delivery from the retained native run
+
+- [x] 30.1 Diagnose exact loading opener, server startup, ownership, actual stage/ready writes and final delivery from session 7e163dd8-e5f2-46d6-aba6-6ded349906fc; distinguish missing wiring from CSP, state or renderer failure without touching retained logs or the installed snapshot.
+- [x] 30.2 Add finite foreground live startup with bounded Node IPC listening receipt and owned server lifetime; wire active parent/development/editor/host entrypoints to open the returned loopback URL, retain one stage writer and parent cleanup through exact normal-ready navigation, with honest static-only limits and unchanged strict endpoint/source/byte safeguards.
+- [x] 30.3 Verify all local unit/HTTP/security/CLI/fixtures, actual browser stage transitions/final navigation/offline result, reproducible UI and strict plugin/spec/diff checks. Record local proof and native limits without reload, model/application run, source writes, commit or archive; keep 8.1/18.5/27.3 open.
+
+## 31. Explicit per-edit application evidence instructions
+
+- [x] 31.1 Require each artifact edit across all types in build/main entrypoints and artifact-capture.md: actual readback/exact material or verified immutable revision and awaited session emission before the next application-controlled edit, only observed empty creation, request/ack/readback distinctions and explicit gaps without final-state substitution or wider access. Verify policy locally; this instruction-only follow-up changes no parser/assembly/artifact runtime and authorizes no live run/reload.
+
+Verified: 262/262 unit tests (including three parent-owned per-edit policy tests),
+13/13 fixtures, actual local finite-start/live-stage/normal-1.10-ready navigation,
+static-file stale-tab regression, offline final after retirement, normal UI and
+concern desktop/mobile checks, reproducible UI and strict plugin/spec/diff checks.
+Evidence: `.../opencode/progress-live-fix-kq3u7wpm/`, recorded fully in
+docs/visualization-validation.md. At that checkpoint the isolated CLI remained frozen;
+refresh/reload and a new native run were not performed or authorized. The separately
+authorized later refresh/reload is recorded above, without a new test. Per-edit follow-up
+is instructions only; no artifact/parser/assembly/runtime bug is claimed fixed.
+Tasks 8.1, 18.5 and failed 27.3 remain open.
+
+## 26. Recover stale review discovery without inventing missing capability
+
+- [x] 26.1 Locate the exact smoke-session failure and distinguish stale model-visible discovery from installed files, native dispatch/tool schemas, execution permissions, validation and browser presentation. Preserve retained logs as read-only evidence.
+- [x] 26.2 Update active entrypoints to read known installed skill instructions when discovery omits them, use actual announced dispatch schemas and normal source-bound rendering, and diagnose only demonstrated capability failures. Preserve distinct author, restricted reviewers, budgets, source/privacy and permission boundaries.
+- [x] 26.3 Verify focused policy and actual offline CLI regressions, full local tests and strict validations; record the exact evidence and limitations without reload, paid/model replay, application writes or native-compliance claims.
+
+## 25. Temporal artifacts and actionable concern presentation
+
+- [x] 25.1 Preserve and validate generic step-specific artifact versions from captured evidence; wire read-only collection planning before test input using existing host capabilities, display the first material content at its actual step and compare later captured changes with the preceding supported version, without inventing a baseline or readback or claiming a new live watcher.
+- [x] 25.2 Implement prototype-aligned meaningful concern contents and local-only Dismiss, consistent narrative text colour, and safe artifact/provider-specific source buttons. Preserve full packaged UI, source records, optional private review diagnostics and feedback intent boundaries.
+- [x] 25.3 Integrate concurrent implementation waves, review source/safety/privacy and verify unit/fixture/browser/accessibility/strict validations against retained real evidence without paid replay, live writes, reload, Figma edits or acceptance claims.
+
+## 24. Normal full UI after bounded quality work
+
+- [x] 24.1 Add source-bound draft 1.3/snapshot 1.9, split content/source/safety validation from optional genuine private review diagnostics, and retain strict historical read-only contracts. No fake approval, source mutation, schema downgrade or alternate UI.
+- [x] 24.2 Update every active delivery/completion/parent/editor/host entrypoint and OpenSpec artifacts: bounded two-copy quality work is good enough, completed invalid copy feedback does not block facts, missing factual response does not block normal packaged HTML, and progress ready verifies actual exact bytes/identity.
+- [x] 24.3 Verify malformed/protected/out-of-inventory/incomplete second-copy and missing-facts regression, source/privacy/cart/dialog/CSP and stale optional record behavior, all unit tests, 13 fixtures, browser and strict plugin/spec/diff checks. Record actual local evidence and replay handoff without reload/replay, paid/native eval, live writes, commits or archive. Keep 8.1/18.5 open.
+
+Verified: 170/170 Node tests, 13/13 synthetic fixture outcomes (12 HTML files),
+actual-source deterministic 1.9 normal HTML with unchanged originals and no fabricated
+reviews, six desktop/mobile/short-height Chromium checks, unchanged reproducible UI,
+strict plugin/OpenSpec and whitespace checks. Evidence and parent-owned pre-handoff
+reload/replay instructions are appended in docs/visualization-validation.md. This
+is local verification, not native compliance or user acceptance. No CLI reload,
+model/native eval, live write, reply, commit or archive occurred.
+
+## 23. Packaged loading page and source-backed diff UI
+
+- [x] 23.1 Implement a private, exact-target loading runtime with immediate static HTML, narrowly scoped loopback/browser updates, truthful activity states, terminal/supersession guards and checked-file final navigation; wire actual commands into generation instructions without assistant polling or new model dispatch.
+- [x] 23.2 Render supplied before/after content as an accessible inert green/red diff across artifact types, preserving original bytes, context, missing-side behavior, review bindings and final offline CSP.
+- [x] 23.3 Verify HTTP/security/state/CLI and diff regressions, browser desktop/mobile/reduced-motion/loading-to-final behavior and strict package/spec checks; record actual local results without paid eval, reload, Figma mutation or user-acceptance claims.
+
+Verified: 159/159 unit tests, 13/13 synthetic fixture cases (12 HTML files), real
+local browser loading-to-final/disconnect/reduced-motion and desktop/mobile diff
+checks, reproducible offline UI assets, strict directory-plugin/OpenSpec checks
+and clean whitespace. These are local runtime checks, not native-host compliance
+or user acceptance. No paid eval, reload or Figma mutation occurred.
+
+## 22. Grouped smoke feedback in skill definitions
+
+- [x] 22.1 Read and group all current Notion feedback and eight Figma threads; use original smoke logs as needed, record source-to-policy coverage and apply general rules rather than domain-specific patches.
+- [x] 22.2 Delegate non-overlapping delivery/progress, plain-conversation and timeline/artifact skill-definition updates; integrate current policies without changing renderer/schema, source evidence, genuine reviews or authorization boundaries.
+- [x] 22.3 Verify instruction coverage and consistency, local tests/fixtures and strict packaging/spec checks; distinguish definitions from unimplemented runtime capabilities and preserve user acceptance/comment-reply limits. No paid eval, live application writes, screenshot replacement or terminal reload.
+
+Verified: 138/138 local tests, 13/13 synthetic fixture outcomes (12 HTML files),
+strict directory-plugin/OpenSpec validation and clean whitespace checks. Progress,
+limited-evidence delivery and accessible diff requirements are definitions, not
+new packaged runtime features or native compliance evidence. Tasks 8.1 and 18.5
+remain open.
+
+## 21. Blocking review completion and technical-error exception
+
+- [x] 21.1 Add a shared completion protocol and update parent/development/editor/host instructions: native final completion, sequential copy/fact checks, exact target/file verification and one actual presentation attempt with a direct artifact link; report blockers and pause instead of advancing or substituting stale HTML.
+- [x] 21.2 Skip automatic visualization only when all current scenarios failed technically and none completed without an execution error; continue the authorized bounded repair/test loop until one is eligible, retaining approval/access/write safeguards and normal business-failure review.
+- [x] 21.3 Verify packaged instructions, asynchronous stage ordering, rejected launch receipts, local fixtures and strict checks. Record instruction-only/native-compliance limits; do not run a paid eval, alter the running isolated snapshot or close 8.1/18.5.
+
+Verified: 114/114 unit tests, 13/13 synthetic fixture cases, strict plugin/spec and
+diff checks. Instructions and local deferred callbacks are not native-compliance
+proof. No paid eval or isolated-terminal snapshot update; 8.1/18.5 stay open.
 
 ## 20. General scenario summary, private generation internals and contained sticky header
+
+Historical layout checkpoint: the bounded scenario panel in 20.4 was subsequently
+replaced by section 34's document scrolling. Its recording/checks remain original
+evidence, not a current requirement to restore that panel.
 
 - [x] 20.1 Add draft 1.2/snapshot 1.8 general present-tense brief scenario_description and product policy 1.1; retain original 1.7 contracts and results in run/timeline.
 - [x] 20.2 Implement one-shot closed description-only generation from exact last reviewed evidence packet with immutable claim, strict all-other-copy/source cache proof and genuine matching reviews; no full eval, broad authoring or retry.
@@ -295,3 +669,42 @@ the workflow before factual review or rendering. No new review HTML/screenshot,
 second run or historical-artifact substitution was made. Cumulative paid-loop
 spend is $12.3402534. This records the authorized attempt, not native cart
 integration or acceptance; task 8.1 remains open.
+## 27. Live read-only artifact capture
+
+Historical, removed by section 29. These implementation checkboxes and the failed
+native test remain a record, not current observer features or permission to retry.
+The later refresh/reload alone does not fulfill 27.3's missing successful native
+capture-to-render and observed presentation.
+
+- [x] 27.1 Implement a bounded source-event observer with a capability-scoped local bridge to authenticated host read tools, immutable timestamped/revisioned snapshots, and explicit race/gap records; preserve native completion waiting and application behavior.
+- [x] 27.2 Integrate source-bound observed versions with the existing renderer and test transport security, ordering, deduplication, interruption and non-fabrication locally.
+- [ ] 27.3 Refresh the isolated plugin, fork before the second test starts, execute that version once with capture armed before input, and verify the resulting artifact and actual observation chronology without claiming missed states.
+
+## 28. Plain concerns, separate technical fixes and inline Dismiss
+
+- [x] 28.1 Add versioned draft 1.4/snapshot 1.10 authored concern and human fix fields, preserve the separate technical prompt, source bindings and original 1.9 contract, and keep optional review diagnostics nonblocking and private.
+- [x] 28.2 Render the prototype's three content roles without repeated source paragraphs or outcome enums, queue only the technical prompt, disable unsupported remedies, and place Dismiss inline outside the summary without changing its local-only semantics.
+- [x] 28.3 Update authoring/review guidance and verify schema, review routing, cart inclusion, desktop/mobile geometry, keyboard behavior, legacy safety and strict validations without reloading the frozen native test plugin.
+
+## 29. Build evidence into the application, consume the Guild session afterward
+
+This user-approved replacement removes the observer feature in section 27 entirely,
+including its runtime/bridge/dedicated tests, not the retained evidence/history.
+There is no manual observer fallback. Task 27.3 remains failed/incomplete:
+the live capture obtained first-only and later-both revisions, but native review
+failed at async resumption/parent exit; automatic artifact opening did not succeed.
+This task does not authorize a retry, reload or unrelated orchestration repair.
+
+- [x] 29.1 Verify the supported console mechanism and persisted session envelope from retained SDK documentation/events; specify bounded, sanitized, goal-relevant build-time evidence with exact material versions before destructive subsequent mutations, distinct requests/acknowledgments/readback, correlation and explicit gaps.
+- [x] 29.2 Implement closed session-log parsing, coverage diagnostics and source-bound temporal projection through the existing normal renderer; reject unrelated/spoofed bindings and unsupported ordering, preserve historical inputs and keep optional reviews nonblocking.
+- [x] 29.3 Remove observer-only runtime/bridge/tests and active configuration/commands/package requirements from the shipped feature; update development/visualization guidance and OpenSpec, preserve historical evidence plus temporal source/progress/diff features, and verify all local tests, 13 deterministic fixtures and strict plugin/spec/diff checks without live runs, reloads, commits or archive.
+- [x] 29.4 Reproduce the independently identified bound cross-stage material gap with a valid fixture; invalidate every same-artifact/stream/source stage baseline when material is missing or redacted, suppress the stale attachment, and verify unrelated-source/stream isolation, immutable sources and legacy projection compatibility. Final follow-up: 254/254 unit tests, 13/13 fixtures and strict plugin/spec/UI/diff checks; no native/application run or reload.
+
+Verified locally: 251/251 unit tests (the seven removed observer tests are not
+counted), 13/13 deterministic fixture outcomes with 12 HTML outputs, strict
+directory-plugin/OpenSpec checks, reproducible current UI assets and whitespace.
+Logs and fixture report: `.../opencode/session-evidence-final-KLPUmG/`. The retained
+console tool envelope is real evidence; new marked application logging, SDK/LLM
+runtime behavior and Guild retention/truncation limits were not live tested.
+No paid/model/application run, reload, source mutation, commit or archive occurred.
+Tasks 8.1, 18.5 and failed 27.3 remain open; no historical proof was restamped.

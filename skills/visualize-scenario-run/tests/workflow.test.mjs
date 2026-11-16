@@ -109,7 +109,7 @@ test('eval 4: display-only renderer repair reuses both reviews; content repair s
   }
 });
 
-test('invalid candidate preflight does not spend the sole copy review or factual reads', async () => {
+test('invalid candidate preflight does not spend a copy review or factual reads', async () => {
   const doc = candidate(); doc.timeline[0].actor_id = 'missing-actor';
   let copies = 0, facts = 0, renders = 0;
   const result = await reviewLoop({ edit: async () => doc,
@@ -130,6 +130,49 @@ test('combined reviewer identity is validated before even a permissive render ca
   assert.ok(result.errors.some(e => e.code === 'independence'));
 });
 
+test('deferred reviewer and opener callbacks block dependent stages until their final results', async () => {
+  const deferred = () => { let resolve; const promise = new Promise(r => { resolve = r; }); return { promise, resolve }; };
+  const copyStarted = deferred(), copyDone = deferred(), factStarted = deferred(), factDone = deferred();
+  const renderStarted = deferred(), renderDone = deferred(), openStarted = deferred(), openDone = deferred();
+  const order = [];
+  const running = reviewLoop({
+    edit: async () => candidate(),
+    copyCheck: async doc => { order.push('copy'); copyStarted.resolve(); await copyDone.promise; return fakeCopyReview(doc); },
+    check: async doc => { order.push('fact'); factStarted.resolve(); await factDone.promise; return fakeChecker().check(doc); },
+    render: async () => { order.push('render'); renderStarted.resolve(); await renderDone.promise; return { ok: true, artifact_path: '/synthetic/current.html' }; },
+  });
+  await copyStarted.promise;
+  assert.deepEqual(order, ['copy']);
+  copyDone.resolve(); await factStarted.promise;
+  assert.deepEqual(order, ['copy', 'fact']);
+  factDone.resolve(); await renderStarted.promise;
+  assert.deepEqual(order, ['copy', 'fact', 'render']);
+  renderDone.resolve(); const result = await running;
+  assert.equal(result.ok, true);
+  let settled = false;
+  const presentation = presentArtifact(result, { host: 'terminal', openBrowser: async path => {
+    assert.equal(path, '/synthetic/current.html'); openStarted.resolve();
+    return openDone.promise;
+  } }).then(value => { settled = true; return value; });
+  await openStarted.promise;
+  assert.equal(settled, false);
+  openDone.resolve({ observed: true });
+  assert.equal((await presentation).presented, true);
+  // Injected callbacks prove local awaits, not native host/LLM compliance.
+});
+
+test('an asynchronous reviewer launch receipt is not final review and cannot trigger fact checking or rendering', async () => {
+  let facts = 0, renders = 0;
+  const result = await reviewLoop({ edit: async () => candidate(),
+    copyCheck: async () => ({ status: 'running', agent_id: 'synthetic-task' }),
+    check: async doc => { facts++; return fakeChecker().check(doc); },
+    render: async () => { renders++; return { ok: true }; },
+  });
+  assert.equal(result.ok, false);
+  assert.ok(result.errors.length);
+  assert.equal(facts, 0); assert.equal(renders, 0);
+});
+
 async function copyFromArtifact(html, clipboardAvailable) {
   // Controller-only DOM/clipboard unit stub. The compiled React artifact is
   // exercised in check-feedback-browser.mjs, not approximated by this DOM stub.
@@ -140,12 +183,16 @@ async function copyFromArtifact(html, clipboardAvailable) {
     .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
   let listener, copied, selected = false;
   const elements = new Map();
-  const node = () => ({ value: '', textContent: '', listeners: {}, classList: { remove() {}, add() {} }, setAttribute() {}, append() {}, replaceChildren() {}, focus() {}, select() { selected = true; }, addEventListener(name, fn) { this.listeners[name] = fn; } });
+  const node = () => ({ value: '', textContent: '', offsetHeight: 80, listeners: {}, classList: { remove() {}, add() {}, toggle() {} }, setAttribute() {}, append() {}, replaceChildren() {}, focus() {}, select() { selected = true; }, addEventListener(name, fn) { this.listeners[name] = fn; } });
   const get = id => { if (!elements.has(id)) elements.set(id, node()); return elements.get(id); };
   get('feedback-context').value = context;
   runInNewContext(script, {
     document: { addEventListener: (_, fn) => { listener = fn; }, getElementById: get, createElement: node, querySelectorAll: () => [], querySelector: () => node() },
     navigator: clipboardAvailable ? { clipboard: { writeText: async text => { copied = text; } } } : {},
+    // Controller-only subscription/viewport stubs, not evidence of sticky layout.
+    // check-header-prompt-browser.mjs verifies real ResizeObserver and scrolling.
+    ResizeObserver: class { constructor(callback) { this.callback = callback; } observe(target) { this.callback([{ target }]); } },
+    innerWidth: 1280, innerHeight: 900, window: { addEventListener() {}, scrollBy() {} },
   });
   listener({ target: { closest: () => ({ hasAttribute: name => name === 'data-add-correct', dataset: { action: 'correct' } }) } });
   await get('copy-prompt').listeners.click();

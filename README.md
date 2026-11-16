@@ -48,7 +48,9 @@ A local plugin does not deploy changes to the connected Guild backend.
 Ask to visualize or review an existing run. The parent collects sanitized evidence;
 a distinct narrative author selects the story, a Read-only copy editor returns
 editorial feedback, and a separate fact checker makes authorized source reads.
-The author renders the exact final candidate with both matching reviews. This
+After bounded quality work, the author renders the exact source-bound final candidate
+with the normal full UI. Genuine reviews remain private diagnostics, not fabricated
+render approvals; malformed or missing feedback never authorizes another layout. This
 does not run a workflow, execute feedback, write golden examples or approve release.
 
 This skill is an explicit **local-file/executable exception**, not a change to
@@ -68,8 +70,11 @@ The optional GitHub connector is the official read-only endpoint restricted to
 file reads. It requires separately authorized access and suitable source handles;
 commit-pinned record history is not available for every tracker. See
 [source limits](skills/visualize-scenario-run/references/sources.md).
-New snapshots use 1.8, SDLC directives v2 and header product policy 1.1: the author supplies explicit short header copy plus selection/prose in closed draft 1.2, and
-`inspect.mjs assemble` copies unchanged source metadata from the evidence bundle.
+New snapshots use 1.10, SDLC directives v2 and header product policy 1.1: the author supplies explicit short header copy plus selection/prose in closed draft 1.4, and
+`inspect.mjs assemble` copies unchanged source metadata and retains the original
+sanitized bundle privately for executable source binding. `inspect.mjs finalize`
+saves the normal snapshot with optional actual records; no limited-evidence mode
+or handcrafted HTML exists. Historical 1.0–1.8 contracts keep original strict reviews.
 The brief scenario description summarizes general setup/task/intended behavior
 in present tense, preferably one sentence, not this run's observed results.
 It is capped at 200 Unicode code points AND 30 words. Actual outcomes stay in the
@@ -82,23 +87,32 @@ model selection and speed require a native check, not just these declarations.
 There are **at most two copy iterations** per visualization, using one stable
 private base claim and an append-only `.iteration-2` companion before dispatch.
 After first-review issues the author explicitly revises and reviews again. After
-the second valid review, display its exact business text and retain real unresolved
+the second response, display its exact business text and retain real unresolved
 findings privately rather than fail on copy issues or fabricate a pass. No generation
 review records, roles/models, rules, counts/verdicts, schema/digests or nonapproval
 notices appear in UI, source disclosures, dialogs, cart or copied prompt. Business
-source uncertainty remains visible. No third copy call. Malformed/stale
-records and factual checks still block; content corrections need fresh matching
-reviews within that budget. Display-only repairs may reuse reviews for up to
+source uncertainty remains visible. No third copy call. Malformed/stale optional
+records stay invalid private diagnostics, not HTML gates. Content corrections
+invalidate old review authority without fabricated new passes. Source/content/safety
+validation remains mandatory. Display-only repairs may reuse reviews for up to
 three render attempts. Claims are local guards, not a file-write sandbox.
 Historical 1.0/1.1 input renders read-only without a copy pass; 1.2 retains its
 original full-text dual reviews, 1.3 retains SDLC v1 hash reviews, and 1.4/1.5
 retain original SDLC v2 contracts and pass-only gates.
 Historical 1.6 retains its two-copy contract; 1.7 retains its original two-component
-header and policy 1.0 without migration or review restamping. The scenario header
-stays inside a bounded scrolling panel, with accessible cart and dialogs.
+header and policy 1.0 without migration or review restamping. The current timeline
+uses normal document scrolling. Prompt count and review controls sit in the upper-right
+application header, without a fixed footer or shopping terminology/icons. Dialogs
+keep their own accessible scrolling and keyboard focus.
 Neither acquires current editorial approval. New HTML input rejects detached
 artifacts: only attachments referenced by timeline events are allowed. Source
 pages remain collection evidence, not unexplained cards below the timeline.
+Generation helpers package actual post-run application logs, preflight authored
+implementation details against their sources, compact review packets/responses
+losslessly, capture supported genuine native hand-backs and index factual sources.
+Independent review and source reads remain required by their existing policies;
+these helpers neither invent judgments nor expose generation internals. See
+`docs/visualization-generation-performance.md` for commands and measurement limits.
 Third-party effects should be recognizable to a human: messages, emails, tickets,
 calendar events, documents and spreadsheet changes are examples, not a list of
 implemented adapters. Use supplied content/metadata and supported layouts, with a
@@ -107,6 +121,41 @@ the specialized layout. Captured Markdown is formatted inertly, without invented
 senders, avatars or an “After” panel for a sent artifact.
 Human-facing events describe starting, ending and supported effects, not API
 return codes, session levels or transport identifiers.
+Select steps by their purpose: show goal-relevant actions and internal processes
+explicitly required by the original specification, when actual evidence supports
+them. Keep meaningful input selection, specified processing and resulting changes
+distinct. Implementation-only validation stays private, not a separate event or a
+public explanation. Attach the supported content change to the business action.
+See the general [operation-story rules](skills/visualize-scenario-run/references/operation-timeline.md).
+
+The packaged loading helper creates a private static page before long work and
+can serve narrowly scoped progress updates on an ephemeral `127.0.0.1` port.
+When authorized, run finite foreground `progress.mjs start OUTDIR TARGET` and
+open its returned `live:true` loopback URL, not the static file. Startup uses a
+bounded Node IPC receipt, not background-log polling; `begin` alone is static.
+Keep one stage writer and the parent-owned server through final navigation and
+durable handoff, then retire only that invocation. Unsupported live delivery is
+reported honestly without blocking safe normal final HTML.
+Activity changes come from actual generation stages, not fabricated percentages.
+Its browser can navigate to the exact checked final HTML; native agent completion
+still has to be awaited separately. See the [loading commands and security limits](skills/visualize-scenario-run/references/progress.md).
+The final artifact remains offline. Supplied text `before`/`after` versions render
+as escaped green additions and red removals with explicit labels and semantic
+markers; absent versions never produce an invented comparison.
+
+Every new application iteration includes the [session-evidence directive](skills/visualize-scenario-run/references/artifact-capture.md):
+use supported awaited Guild console tools to retain goal-relevant selections,
+requests, actual acknowledgments and exact material versions before later
+application-controlled mutations. After native completion, parse marked console
+records and validate coverage. Current postrun input 1.1 uses projection 2.1 to
+group each operation's private evidence into one business step. Record 1.1 adds
+an actual `process_result` for explicitly specified internal work. Original input
+1.0/projection 2.0 and record 1.0 retain their contracts. The normal source-bound
+snapshot 1.10 renderer/diff is unchanged. Requests are not observed stored state; missing/redacted content
+and external-writer races remain gaps. No default observer, source polling,
+subscription or auth bridge: the observer feature is removed, not a manual fallback.
+Retained source captures/history remain data under their original contracts. This
+does not establish ordinary console.log persistence or authorize a live run.
 
 For an already sanitized, checked snapshot:
 
@@ -243,7 +292,10 @@ connectors; confirm their access and read-only scope in the host. Local snapshot
 artifacts and copied feedback may contain personal data and remain until you
 delete them. Sanitize and minimize them before sharing. The renderer and HTML
 send no network requests or analytics; clicking a source link opens that service
-in your browser. There is no hooks module or automatic feedback transport.
+in your browser. The optional loading helper accepts only narrowly scoped local
+read requests on `127.0.0.1`; its browser checks local status until completion or
+bounded connection failure. It exposes neither source files nor write endpoints.
+There is no hooks module or automatic feedback transport.
 Claude makes Guild tool calls through the declared connector.
 Claude Code applies its normal permission prompts.
 The packaged renderer sends no data to other services and collects no analytics.

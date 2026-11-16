@@ -1,6 +1,6 @@
 # Header product policy 1.1 — general scenario description
 
-Current snapshot 1.8 / closed draft 1.2 replaces the two run-description components
+Snapshot 1.8/draft 1.2 and source-bound 1.9/draft 1.3 or current 1.10/draft 1.4 replace the two run-description components
 with `header_copy.scenario_description` and nonempty `description_claim_refs`.
 Legacy 1.7 remains its original contract; never relabel its two components.
 
@@ -36,5 +36,6 @@ ABSOLUTE PUBLIC RULE: generation machinery is private. Never show editorial/fact
 review records, reviewer identities/models, iterations/verdicts, rule versions,
 pipeline findings or candidate/schema/digest metadata in UI, evidence panels,
 dialogs, cart or copied prompts. No nonapproval/iteration notice. Preserve genuine
-internal records and every stale/role/source/factual gate; no fake pass. Display
+internal records and source/safety boundaries; no fake pass. Under 1.9/1.10 optional
+invalid/stale records remain invalid private diagnostics, not render gates. Display
 business outcomes and source uncertainty in human terms, not reviewer prose.

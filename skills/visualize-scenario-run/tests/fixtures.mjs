@@ -1,4 +1,19 @@
 import { factualDigest, copyFields, COPY_RULE_VERSIONS, HEADER_COPY_RULE_VERSIONS, SUMMARY_HEADER_COPY_RULE_VERSIONS } from '../scripts/contracts.mjs';
+import { assembleCandidate } from '../scripts/assemble.mjs';
+
+export function sourceBoundCandidate(input = bundle()) {
+  const old = candidate(input);
+  const { starting_context, observed_result, ...header } = old.header_copy;
+  const draft = { schema_version: '1.3', snapshot_id: old.snapshot_id,
+    editor_id: old.editor_id, parent_agent_id: old.parent_agent_id, summary: old.summary,
+    header_copy: { ...header, scenario_description: 'A customer asks about opening hours, and the assistant prepares a reply draft.', description_claim_refs: header.claim_refs },
+    claims: old.claims, events: old.timeline.map(event => ({ occurrence_id: event.id,
+      description: event.description, claim_refs: event.claim_refs, supporting_detail: event.supporting_detail })),
+    artifact_claims: old.artifact_claims, omitted_occurrences: old.omitted_occurrences };
+  const result = assembleCandidate(input, draft);
+  if (!result.ok) throw new Error(JSON.stringify(result.errors));
+  return result.snapshot;
+}
 
 export const observedAt = '2026-01-01T12:00:00Z';
 export function bundle() {
@@ -103,9 +118,9 @@ export async function snapshot() {
 export function fakeCopyReview(doc) {
   const fields = copyFields(doc);
   return { reviewer_id: 'copy-editor-1', candidate_digest: factualDigest(doc),
-    rule_versions: { ...(doc.schema_version === '1.8' ? SUMMARY_HEADER_COPY_RULE_VERSIONS : doc.schema_version === '1.7' ? HEADER_COPY_RULE_VERSIONS : COPY_RULE_VERSIONS) }, verdict: 'pass',
+    rule_versions: { ...(['1.8', '1.9', '1.10'].includes(doc.schema_version) ? SUMMARY_HEADER_COPY_RULE_VERSIONS : doc.schema_version === '1.7' ? HEADER_COPY_RULE_VERSIONS : COPY_RULE_VERSIONS) }, verdict: 'pass',
     passages: fields.filter(f => !f.protected_source).map(f => ({ field_path: f.field_path,
-      field_digest: f.field_digest, guide: 'economist', routing_reason: 'Scripted world-facing prose fixture, not an actual editorial decision.',
+      field_digest: f.field_digest, guide: doc.schema_version === '1.10' && /\.suggested_feedback\.explanation$/.test(f.field_path) ? 'asd-ste100' : 'economist', routing_reason: 'Scripted routing fixture, not an actual editorial decision.',
       sdlc_review: 'pass', exceptions: [] })),
     exemptions: fields.filter(f => f.protected_source).map(f => ({ field_path: f.field_path, reason: 'Preserve supplied source name or verbatim artifact text.' })), findings: [] };
 }

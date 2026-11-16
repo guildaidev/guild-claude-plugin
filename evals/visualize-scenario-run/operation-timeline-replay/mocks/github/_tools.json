@@ -1,0 +1,1 @@
+{"tools":[{"name":"get_file_contents","description":"Read the pinned synthetic capture archive. This is not a live document read.","inputSchema":{"type":"object","properties":{"owner":{"type":"string"},"repo":{"type":"string"},"path":{"type":"string"},"ref":{"type":"string"},"sha":{"type":"string"}},"required":["owner","repo","path","sha"]}}]}

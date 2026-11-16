@@ -10,7 +10,7 @@ const temporary = await mkdtemp(join(tmpdir(), 'scenario-ui-build-'));
 try {
   const common = { absWorkingDir: cwd, bundle: true, minify: true, legalComments: 'eof', write: false, define: { 'process.env.NODE_ENV': '"production"' }, jsx: 'automatic', charset: 'ascii' };
   let licenses = await readFile(join(cwd, 'THIRD-PARTY.md'), 'utf8');
-  for (const name of ['react', 'react-dom', 'scheduler', '@radix-ui/react-slot', '@radix-ui/react-compose-refs', 'class-variance-authority', 'clsx', 'tailwind-merge', 'tailwindcss']) {
+  for (const name of ['react', 'react-dom', 'scheduler', '@radix-ui/react-slot', '@radix-ui/react-compose-refs', 'class-variance-authority', 'clsx', 'tailwind-merge', 'tailwindcss', 'lucide-react', 'react-diff-view', 'classnames', 'lodash', 'shallow-equal', 'warning', 'loose-envify', 'js-tokens', 'gitdiff-parser', 'diff-match-patch']) {
     const base = join(cwd, 'node_modules', name);
     const pkg = JSON.parse(await readFile(join(base, 'package.json'), 'utf8'));
     let license;
@@ -27,7 +27,11 @@ try {
   const server = await build({ ...common, entryPoints: ['src/server.jsx'], platform: 'node', format: 'esm', target: 'node22', banner: { js: "import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" } });
   execFileSync(join(cwd, 'node_modules/.bin/tailwindcss'), ['-i', 'src/styles.css', '-o', join(temporary, 'ui.css'), '--minify'], { cwd, stdio: 'pipe' });
   const notice = `\n/*\n${licenses.replaceAll('*/', '* /')}\n*/\n`;
-  const files = { 'browser.js': browser.outputFiles[0].text + notice, 'server.mjs': server.outputFiles[0].text + notice, 'ui.css': await readFile(join(temporary, 'ui.css'), 'utf8'), 'THIRD-PARTY-LICENSES.txt': licenses };
+  // esbuild indents an upstream classnames legal comment with spaces + tabs.
+  // Normalize that generated indentation only; retain every notice's words and
+  // append the complete original installed license texts unchanged below.
+  const generated = text => text.replace(/^( +)(\t+)/gm, (_, spaces, tabs) => spaces + '  '.repeat(tabs.length));
+  const files = { 'browser.js': generated(browser.outputFiles[0].text) + notice, 'server.mjs': generated(server.outputFiles[0].text) + notice, 'ui.css': await readFile(join(temporary, 'ui.css'), 'utf8'), 'THIRD-PARTY-LICENSES.txt': licenses };
   await mkdir(join(cwd, 'dist'), { recursive: true });
   for (const [name, content] of Object.entries(files)) {
     if (name !== 'server.mjs' && /<\/(?:script|style)/i.test(content)) throw new Error(`Unsafe inline asset: ${name}`);

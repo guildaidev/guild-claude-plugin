@@ -35,8 +35,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Other bundled libraries retain their own licenses (class-variance-authority is
-Apache-2.0; the other listed runtime libraries are MIT). The compose-refs npm
+## Diff and external-link icon
+
+`artifact-diff.jsx` composes the actual `Diff`, `Hunk` and `Decoration` exports of
+**react-diff-view 3.3.3** (MIT, Copyright 2017 Gray Zhang), not a local imitation or
+an official shadcn Diff component. Its static stylesheet is compiled into ui.css.
+The existing exact bounded comparison supplies rows directly: no patch-parser
+roundtrip, syntax highlighting, workers, virtualization or optimized selection.
+Unchanged material is retained inside native disclosures. The custom text-token
+adapter preserves line endings/blank lines without upstream's empty-cell padding.
+
+- https://github.com/otakustay/react-diff-view/tree/776e11d00cad4b611600b9a93e783b15d4f0b5a4
+- https://github.com/otakustay/react-diff-view/blob/776e11d00cad4b611600b9a93e783b15d4f0b5a4/LICENSE
+
+The external-link icon is the actual **lucide-react 1.73.0** `external-link`
+component (ISC), bundled as trusted static SVG after link copy; no external image,
+font, sprite or runtime icon loader is used.
+
+- https://lucide.dev/guide/react/getting-started
+- https://lucide.dev/icons/external-link
+
+`react-diff-viewer-continued` was considered but not adopted because its Emotion
+runtime styling does not fit this renderer's unchanged hash-only CSP.
+
+Other bundled libraries retain their own licenses (class-variance-authority and
+diff-match-patch are Apache-2.0; Lucide is ISC; the other listed runtime libraries
+are MIT). The compose-refs npm
 tarball omits its license file, so its shared radix-ui/primitives WorkOS MIT
 license is collected from react-slot. `build.mjs` collects
 their complete installed license notices into `dist/THIRD-PARTY-LICENSES.txt`

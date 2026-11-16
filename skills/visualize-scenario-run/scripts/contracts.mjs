@@ -1,6 +1,7 @@
 // Evidence bundle 1.0 / authored-header snapshot 1.7. No agent calls.
 import { createHash } from 'node:crypto';
 import { headerCopyContract, headerTextFieldsFor, headerPolicyFor, HEADER_COPY_POLICY, SCENARIO_SUMMARY_POLICY, summaryHeaderCopyContract } from './header-copy.mjs';
+import { projectArtifactVersions } from './artifact-versions.mjs';
 
 const text = { type: 'string', min: 1 };
 const id = { type: 'string', pattern: /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,159}$/ };
@@ -102,7 +103,7 @@ const copyReviewSchema = (binding, versions = COPY_RULE_VERSIONS) => object({
 const v2CopyReviewContract = copyReviewSchema({ field_digest: fieldDigest });
 export const copyReviewContract = copyReviewSchema({ field_digest: fieldDigest }, HEADER_COPY_RULE_VERSIONS);
 export const summaryCopyReviewContract = copyReviewSchema({ field_digest: fieldDigest }, SUMMARY_HEADER_COPY_RULE_VERSIONS);
-export const copyReviewContractFor = doc => doc.schema_version === '1.8' ? summaryCopyReviewContract : doc.schema_version === '1.7' ? copyReviewContract : v2CopyReviewContract;
+export const copyReviewContractFor = doc => ['1.8', '1.9', '1.10'].includes(doc.schema_version) ? summaryCopyReviewContract : doc.schema_version === '1.7' ? copyReviewContract : v2CopyReviewContract;
 // Historical 1.2 reviews repeat exact text. Read-only compatibility, never a
 // fallback for a new compact review or a reason to restamp an existing digest.
 const legacyCopyReviewContract = copyReviewSchema({ original_text: text }, LEGACY_COPY_RULE_VERSIONS);
@@ -125,8 +126,29 @@ const legacyBoundedSnapshotContract = object({ ...legacyFeedbackSnapshotContract
 const legacyHeaderSnapshotContract = object({ ...legacyBoundedSnapshotContract.fields,
   schema_version: en('1.7'), header_copy: headerCopyContract, copy_review: copyReviewContract,
 });
-export const snapshotContract = object({ ...legacyBoundedSnapshotContract.fields,
+export const legacySummarySnapshotContract = object({ ...legacyBoundedSnapshotContract.fields,
   schema_version: en('1.8'), header_copy: summaryHeaderCopyContract, copy_review: summaryCopyReviewContract,
+});
+// Current rendering validates content and its immutable source binding, not an
+// editorial approval. Optional genuine records are classified privately below;
+// invalid/stale records never acquire authority by being attached.
+export const sourceSnapshotContract = object({ ...legacySummarySnapshotContract.fields,
+  schema_version: en('1.9'), source_bundle: bundleContract,
+  // Empty (or whitespace-only) captured text is a real state, unlike missing
+  // content. Only current protected artifact fields admit it; historical source
+  // bundle/snapshot contracts and every authored prose/label remain unchanged.
+  artifacts: array(object({ ...artifact.fields,
+    content: optional({ type: 'string' }), before: optional({ type: 'string' }), after: optional({ type: 'string' }),
+  })),
+  artifact_version_source: optional(json),
+  review: optional(json), copy_review: optional(json), copy_review_iterations: optional(en(1, 2)),
+});
+export const concernContract = object({ explanation: text, evidence_refs: array(id, 1), claim_refs: array(id, 1) });
+export const suggestedFixContract = object({ ...suggestedFeedback.fields, explanation: text });
+export const snapshotContract = object({ ...sourceSnapshotContract.fields,
+  schema_version: en('1.10'), timeline: array(object({ ...sourceSnapshotContract.fields.timeline.items.fields,
+    concern: optional(concernContract), suggested_feedback: optional(suggestedFixContract),
+  })),
 });
 const legacyCompactSnapshotContract = object({ ...legacyAttachedSnapshotContract.fields, schema_version: en('1.3'), copy_review: legacyCompactCopyReviewContract });
 export const factualReviewContract = factualSnapshotContract.fields.review;
@@ -164,7 +186,7 @@ export function copyFields(doc) {
     if (typeof value === 'string') fields.push({ field_path: path, text: value,
       field_digest: copyFieldDigest(value), protected_source: protectedSource });
   };
-  if (['1.7', '1.8'].includes(doc.schema_version)) for (const key of headerTextFieldsFor(doc)) add(`$.header_copy.${key}`, doc.header_copy?.[key]);
+  if (['1.7', '1.8', '1.9', '1.10'].includes(doc.schema_version)) for (const key of headerTextFieldsFor(doc)) add(`$.header_copy.${key}`, doc.header_copy?.[key]);
   for (const [name, keys] of Object.entries({ workflow: ['title', 'intended_world_effect'], scenario: ['title', 'trigger', 'initial_conditions', 'expected_outcome'], run: ['execution_label', 'observed_resulting_state'] })) {
     for (const key of keys) add(`$.${name}.${key}`, doc[name]?.[key]);
   }
@@ -172,7 +194,11 @@ export function copyFields(doc) {
   add('$.summary', doc.summary);
   for (const [i, event] of (doc.timeline ?? []).entries()) {
     for (const key of ['description', 'supporting_detail']) add(`$.timeline[${i}].${key}`, event[key]);
-    if (event.suggested_feedback) add(`$.timeline[${i}].suggested_feedback.text`, event.suggested_feedback.text);
+    if (event.concern) add(`$.timeline[${i}].concern.explanation`, event.concern.explanation);
+    if (event.suggested_feedback) {
+      add(`$.timeline[${i}].suggested_feedback.explanation`, event.suggested_feedback.explanation);
+      add(`$.timeline[${i}].suggested_feedback.text`, event.suggested_feedback.text);
+    }
     if (event.world_effect) {
       add(`$.timeline[${i}].world_effect.system`, event.world_effect.system, true);
       add(`$.timeline[${i}].world_effect.change`, event.world_effect.change);
@@ -199,7 +225,9 @@ function checkCopyReview(doc, review, { requirePass = true, legacy = false, hist
   shape(review, legacy ? legacyCopyReviewContract : historical ? legacyCompactCopyReviewContract : copyReviewContractFor(doc), '$.copy_review', errors);
   scan(review, '$.copy_review', errors);
   if (errors.length) return { ok: false, errors };
-  const fail = (path, code, message) => error(errors, path, code, message, 'Obtain copy feedback for this exact candidate; the author must resolve required issues and obtain both reviews again.');
+  const fail = (path, code, message) => error(errors, path, code, message, ['1.9', '1.10'].includes(doc.schema_version)
+    ? 'Retain the genuine invalid record privately; follow bounded quality work and normal source-bound rendering. Never repair approval metadata.'
+    : 'Obtain copy feedback for this exact candidate; the author must resolve required issues and obtain both reviews again.');
   if ([doc.editor_id, doc.parent_agent_id, doc.review?.checker_id].includes(review.reviewer_id)) fail('$.copy_review.reviewer_id', 'independence', 'Copy editor must be distinct from author, parent and fact checker.');
   if (review.candidate_digest !== factualDigest(doc)) fail('$.copy_review.candidate_digest', 'stale_review', 'Copy review does not match candidate content.');
   const fields = new Map(copyFields(doc).map(field => [field.field_path, field]));
@@ -212,7 +240,8 @@ function checkCopyReview(doc, review, { requirePass = true, legacy = false, hist
     if (seen.has(passage.field_path)) fail(path, 'duplicate_copy_field', 'A field cannot receive two style routes or an exemption and a route.');
     seen.add(passage.field_path); passages.set(passage.field_path, passage);
     if (passage.guide === 'unresolved' && review.verdict !== 'blocked') fail(path, 'routing', 'Unresolved routing requires a blocked review, not both guides or a pass.');
-    if (['1.7', '1.8'].includes(doc.schema_version) && passage.field_path.startsWith('$.header_copy.') && !['economist', 'unresolved'].includes(passage.guide)) fail(path, 'routing', 'Human-experience header copy requires Economist, not an internal-process ASD route.');
+    if (['1.7', '1.8', '1.9', '1.10'].includes(doc.schema_version) && passage.field_path.startsWith('$.header_copy.') && !['economist', 'unresolved'].includes(passage.guide)) fail(path, 'routing', 'Human-experience header copy requires Economist, not an internal-process ASD route.');
+    if (doc.schema_version === '1.10' && /^\$\.timeline\[\d+\]\.suggested_feedback\.explanation$/.test(passage.field_path) && !['asd-ste100', 'unresolved'].includes(passage.guide)) fail(path, 'routing', 'The human fix explanation requires the requested ASD-STE100 instruction route.');
     if (review.verdict === 'pass' && passage.sdlc_review !== 'pass') fail(path, 'sdlc_review', 'Every passage needs a final SDLC pass after its selected guide.');
   }
   for (const [i, exemption] of review.exemptions.entries()) {
@@ -344,13 +373,18 @@ function references(doc, snapshot, errors, reviews = 'both', historicalCopy = fa
     list(event.evidence_refs, 'evidence', `${path}.evidence_refs`);
     list(event.artifact_refs, 'artifacts', `${path}.artifact_refs`);
     if (snapshot) list(event.claim_refs, 'claims', `${path}.claim_refs`);
+    if (snapshot && event.concern) {
+      list(event.concern.evidence_refs, 'evidence', `${path}.concern.evidence_refs`);
+      list(event.concern.claim_refs, 'claims', `${path}.concern.claim_refs`);
+    }
     if (snapshot && event.suggested_feedback) {
       const suggestion = event.suggested_feedback;
       list(suggestion.evidence_refs, 'evidence', `${path}.suggested_feedback.evidence_refs`);
       list(suggestion.claim_refs, 'claims', `${path}.suggested_feedback.claim_refs`);
       if (suggestion.text.length > 10000) error(errors, `${path}.suggested_feedback.text`, 'feedback_length', 'Suggested feedback exceeds the cart limit.', 'Keep the reviewed suggestion within 10,000 characters.');
       if (!doc.presentation.allowed_actions.some(action => action.id === suggestion.action_id && action.kind === 'flag_issue')) error(errors, `${path}.suggested_feedback.action_id`, 'feedback_action', 'Suggested feedback requires an allowed issue intent.', 'Use a supplied flag_issue action, or omit the suggestion.');
-      if (!['failed', 'partial'].includes(event.outcome)) error(errors, `${path}.suggested_feedback`, 'feedback_concern', 'A suggested fix requires a recorded failed or partial outcome.', 'Do not invent fixes for a successful or merely unverified event.');
+      if (!['failed', 'partial'].includes(event.outcome) && !(doc.schema_version === '1.10' && event.concern)) error(errors, `${path}.suggested_feedback`, 'feedback_concern', 'A suggested fix requires a recorded concern.', 'Do not invent fixes for a successful or merely unverified event.');
+      if (doc.schema_version === '1.10' && !event.concern) error(errors, `${path}.suggested_feedback`, 'feedback_concern', 'A suggested fix needs its plain-language concern.', 'Explain the supported conflict with the application goal.');
     }
     if (snapshot && ['session_started', 'session_terminated'].includes(event.kind)) {
       const session = doc.sessions.find(s => s.id === event.session_id);
@@ -371,10 +405,15 @@ function references(doc, snapshot, errors, reviews = 'both', historicalCopy = fa
   });
   doc.artifacts.forEach((a, i) => list(a.evidence_refs, 'evidence', `$.artifacts[${i}].evidence_refs`));
   const allRefs = new Set(Object.values(sets).flatMap(s => [...s]));
+  if (snapshot && ['1.9', '1.10'].includes(doc.schema_version) && doc.artifact_version_source) {
+    // A source coverage gap may still name the final-only artifact replaced by a
+    // temporal projection. This extends gap targets, not attachment references.
+    for (const artifact of doc.source_bundle.artifacts) allRefs.add(artifact.id);
+  }
   // In 1.3 a preserved coverage gap may concern an occurrence deliberately
   // omitted from the timeline. This extends coverage targets only, never event
   // relationships or historical snapshot validation.
-  if (snapshot && ['1.3', '1.4', '1.5', '1.6', '1.7', '1.8'].includes(doc.schema_version)) {
+  if (snapshot && ['1.3', '1.4', '1.5', '1.6', '1.7', '1.8', '1.9', '1.10'].includes(doc.schema_version)) {
     const omitted = new Set();
     doc.omitted_occurrences.forEach((item, i) => {
       const path = `$.omitted_occurrences[${i}].id`;
@@ -391,8 +430,8 @@ function references(doc, snapshot, errors, reviews = 'both', historicalCopy = fa
   }));
   if (doc.sessions.some(s => s.level === 'unknown') && !doc.coverage.gaps.length) error(errors, '$.coverage.gaps', 'coverage', 'Unknown session level needs a coverage gap.', 'Describe the uncertainty and its impact.');
   if (!snapshot) return;
-  if (['1.7', '1.8'].includes(doc.schema_version)) list(doc.header_copy.claim_refs, 'claims', '$.header_copy.claim_refs');
-  if (doc.schema_version === '1.8') list(doc.header_copy.description_claim_refs, 'claims', '$.header_copy.description_claim_refs');
+  if (['1.7', '1.8', '1.9', '1.10'].includes(doc.schema_version)) list(doc.header_copy.claim_refs, 'claims', '$.header_copy.claim_refs');
+  if (['1.8', '1.9', '1.10'].includes(doc.schema_version)) list(doc.header_copy.description_claim_refs, 'claims', '$.header_copy.description_claim_refs');
   doc.claims.forEach((c, i) => list(c.evidence_refs, 'evidence', `$.claims[${i}].evidence_refs`));
   if (doc.editor_id === doc.parent_agent_id) error(errors, '$.editor_id', 'independence', 'Parent and author must be distinct.', 'Delegate authorship to a distinct agent.');
   if (reviews !== 'none') {
@@ -421,7 +460,7 @@ function references(doc, snapshot, errors, reviews = 'both', historicalCopy = fa
     doc.claims.forEach((c, i) => { if (!checkedClaims.has(c.id)) error(errors, `$.claims[${i}]`, 'unchecked_claim', 'Claim lacks a final finding.', 'Ask the distinct checker to review every claim.'); });
   }
   const artifactIds = new Set();
-  if (['1.4', '1.5', '1.6', '1.7', '1.8'].includes(doc.schema_version)) {
+  if (['1.4', '1.5', '1.6', '1.7', '1.8', '1.9', '1.10'].includes(doc.schema_version)) {
     const attached = new Set(doc.timeline.flatMap(event => event.artifact_refs));
     doc.artifacts.forEach((artifact, i) => {
       if (!attached.has(artifact.id)) error(errors, `$.artifacts[${i}]`, 'detached_artifact', 'Render artifacts must belong to a timeline event.', 'Keep source material in the collection bundle/evidence; only include event-attached business artifacts.');
@@ -451,25 +490,99 @@ function validateContract(doc, contract, snapshot, reviews = 'both', historicalC
 }
 
 export function validate(doc, kind = 'snapshot') {
-  return validateContract(doc, kind === 'bundle' ? bundleContract : doc?.schema_version === '1.7' ? legacyHeaderSnapshotContract : snapshotContract, kind !== 'bundle');
+  if (kind !== 'bundle' && ['1.9', '1.10'].includes(doc?.schema_version)) return validateContentSnapshot(doc);
+  return validateContract(doc, kind === 'bundle' ? bundleContract : doc?.schema_version === '1.7' ? legacyHeaderSnapshotContract : legacySummarySnapshotContract, kind !== 'bundle');
 }
 
 // Preflight only: these never substitute for the final dual-review validation.
 export function validateCandidate(doc, { legacy = false } = {}) {
   const contract = legacy && doc?.schema_version === '1.6'
     ? object(Object.fromEntries(Object.entries(legacyBoundedSnapshotContract.fields).filter(([key]) => !['review', 'copy_review', 'copy_review_iterations'].includes(key))))
-    : doc?.schema_version === '1.7' ? object(Object.fromEntries(Object.entries(legacyHeaderSnapshotContract.fields).filter(([key]) => !['review', 'copy_review', 'copy_review_iterations'].includes(key)))) : candidateContract;
-  return validateContract(doc, contract, true, 'none');
+    : ['1.7', '1.8', '1.9'].includes(doc?.schema_version) ? object(Object.fromEntries(Object.entries(doc.schema_version === '1.7' ? legacyHeaderSnapshotContract.fields : doc.schema_version === '1.9' ? sourceSnapshotContract.fields : legacySummarySnapshotContract.fields).filter(([key]) => !['review', 'copy_review', 'copy_review_iterations'].includes(key)))) : candidateContract;
+  const checked = validateContract(doc, contract, true, 'none');
+  return checked.ok && ['1.9', '1.10'].includes(doc.schema_version) ? validateSourceBinding(doc) : checked;
 }
 export function validateFactualReview(candidate, review) {
-  const fields = candidate.schema_version === '1.7' ? Object.fromEntries(Object.entries(legacyHeaderSnapshotContract.fields).filter(([key]) => !['review', 'copy_review', 'copy_review_iterations'].includes(key))) : candidateContract.fields;
+  const fields = ['1.7', '1.8', '1.9'].includes(candidate.schema_version) ? Object.fromEntries(Object.entries(candidate.schema_version === '1.7' ? legacyHeaderSnapshotContract.fields : candidate.schema_version === '1.9' ? sourceSnapshotContract.fields : legacySummarySnapshotContract.fields).filter(([key]) => !['review', 'copy_review', 'copy_review_iterations'].includes(key))) : candidateContract.fields;
   return validateContract({ ...candidate, review }, object({ ...fields, review: factualReviewContract }), true, 'fact');
 }
 
+// Compare copied fields, not prose quality. Embedding the sanitized original
+// makes source binding independently executable at render/progress-ready time.
+export function validateSourceBinding(doc) {
+  const source = doc.source_bundle, errors = [];
+  const checked = validate(source, 'bundle');
+  if (!checked.ok) return checked;
+  const same = (left, right, path) => {
+    if (canonical(left) !== canonical(right)) error(errors, path, 'source_binding', 'Copied source records differ from the original bundle.', 'Reassemble from the exact sanitized bundle; never rewrite source fields.');
+  };
+  let projection;
+  if (doc.artifact_version_source !== undefined) {
+    // Additional collector evidence is checked with the original closed evidence
+    // contract; it must not replace even one original source record.
+    const records = doc.artifact_version_source?.records;
+    shape(records, array(common.evidence.items), '$.artifact_version_source.records', errors);
+    scan(doc.artifact_version_source, '$.artifact_version_source', errors);
+    if (errors.length) return { ok: false, errors };
+    projection = projectArtifactVersions(source, doc.artifact_version_source);
+    if (!projection.ok) return projection;
+  }
+  for (const key of ['bundle_id', 'workflow', 'scenario', 'actors', 'sessions', 'presentation']) same(doc[key], source[key], `$.${key}`);
+  same(doc.evidence, [...source.evidence, ...(projection?.evidence ?? [])], '$.evidence');
+  const { execution_label, observed_resulting_state, ...sourceRun } = source.run;
+  const { execution_label: ignoredLabel, observed_resulting_state: ignoredState, ...run } = doc.run;
+  same(run, sourceRun, '$.run');
+  const coverage = structuredClone(source.coverage);
+    delete coverage.data_origin; coverage.gaps.forEach(gap => { delete gap.impact; });
+    if (projection?.coverageGaps) coverage.gaps.push(...projection.coverageGaps);
+  same(doc.coverage, coverage, '$.coverage');
+  const selected = new Set(doc.timeline.map(event => event.id));
+  same([...doc.omitted_occurrences.map(item => item.id)].sort(), source.occurrences.filter(item => !selected.has(item.id)).map(item => item.id).sort(), '$.omitted_occurrences');
+  const copiedEvent = ({ description, claim_refs, supporting_detail, suggested_feedback, concern, ...fields }) => fields;
+  const projectedOccurrences = projection?.occurrences ?? source.occurrences;
+  if (doc.timeline.some(event => projection?.hidden_occurrence_ids?.includes(event.id))) error(errors, '$.timeline', 'private_occurrence', 'Implementation evidence is not a timeline event.', 'Select the goal-relevant operation and retain validation mechanics privately.');
+  doc.timeline.forEach((event, i) => same(copiedEvent(event), copiedEvent(projectedOccurrences.find(item => item.id === event.id) ?? {}), `$.timeline[${i}]`));
+  const attached = new Set(doc.timeline.flatMap(event => event.artifact_refs));
+  const copiedArtifact = ({ title, ...fields }) => fields;
+  same(doc.artifacts.map(copiedArtifact), [...source.artifacts, ...(projection?.artifacts ?? [])].filter(item => attached.has(item.id)).map(copiedArtifact), '$.artifacts');
+  return { ok: !errors.length, errors };
+}
+
+export function validateContentSnapshot(doc) {
+  const checked = validateContract(doc, doc?.schema_version === '1.9' ? sourceSnapshotContract : snapshotContract, true, 'none');
+  return checked.ok ? validateSourceBinding(doc) : checked;
+}
+
+export function optionalReviewRecords(doc) {
+  const { review, copy_review, copy_review_iterations, ...candidate } = doc;
+  const diagnostics = {};
+  const records = {};
+  if (review !== undefined) {
+    diagnostics.fact = validateFactualReview(candidate, review);
+    if (diagnostics.fact.ok) records.review = review;
+  }
+  if (copy_review !== undefined) {
+    diagnostics.copy = validateCopyReview({ ...candidate, ...records }, copy_review, { requirePass: false });
+    if (diagnostics.copy.ok) records.copy_review = copy_review;
+  }
+  if (review?.checker_id && review.checker_id === copy_review?.reviewer_id) {
+    delete records.review; delete records.copy_review;
+    for (const kind of ['fact', 'copy']) diagnostics[kind] = { ok: false, errors: [{ path: '$', code: 'independence', message: 'Review roles must be distinct.', repair: 'Retain actual records privately; never fabricate approval.' }] };
+  }
+  return { records, diagnostics };
+}
+
 export function prepareRenderSnapshot(doc) {
+  if (['1.9', '1.10'].includes(doc?.schema_version)) {
+    const checked = validateContentSnapshot(doc);
+    if (!checked.ok) return checked;
+    const { review, copy_review, ...content } = doc;
+    const { records, diagnostics } = optionalReviewRecords(doc);
+    return { ok: true, snapshot: { ...content, ...records }, review_diagnostics: diagnostics };
+  }
   const legacy = ['1.0', '1.1'].includes(doc?.schema_version);
   const historicalCopy = doc?.schema_version === '1.3' && doc.copy_review?.rule_versions?.sdlc === 'scenario-run-v1';
-  const contract = doc?.schema_version === '1.0' ? legacySnapshotContract : doc?.schema_version === '1.1' ? factualSnapshotContract : doc?.schema_version === '1.2' ? legacyDualSnapshotContract : historicalCopy ? legacyCompactSnapshotContract : doc?.schema_version === '1.4' ? legacyAttachedSnapshotContract : doc?.schema_version === '1.5' ? legacyFeedbackSnapshotContract : doc?.schema_version === '1.6' ? legacyBoundedSnapshotContract : doc?.schema_version === '1.7' ? legacyHeaderSnapshotContract : snapshotContract;
+  const contract = doc?.schema_version === '1.0' ? legacySnapshotContract : doc?.schema_version === '1.1' ? factualSnapshotContract : doc?.schema_version === '1.2' ? legacyDualSnapshotContract : historicalCopy ? legacyCompactSnapshotContract : doc?.schema_version === '1.4' ? legacyAttachedSnapshotContract : doc?.schema_version === '1.5' ? legacyFeedbackSnapshotContract : doc?.schema_version === '1.6' ? legacyBoundedSnapshotContract : doc?.schema_version === '1.7' ? legacyHeaderSnapshotContract : legacySummarySnapshotContract;
   const checked = validateContract(doc, contract, true, 'both', historicalCopy);
   if (!checked.ok) return checked;
   if (!legacy) return { ok: true, snapshot: doc, review_mode: ['1.2', '1.4', '1.5', '1.6'].includes(doc.schema_version) || historicalCopy ? 'legacy-dual-review' : 'dual-review' };

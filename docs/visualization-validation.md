@@ -138,7 +138,7 @@ every forbidden tool. No further paid run was made after the inspected pass.
 
 | Check | Result |
 | --- | --- |
-| `node --test skills/visualize-scenario-run/tests/*.test.mjs` | Current: 84/84 pass, including snapshot 1.6, two-copy claims/process resume, unresolved second-copy display without false approval, unchanged factual/stale-review gates, original legacy contracts, Figma cart/prompt inclusion, editing/removal, stable identities/limits, optional reviewed-fix assembly, recognizable-third-party guidance, human-facing SDLC v2, inert Markdown/source-backed Slack, competitor raw evidence, closed assembly, compact digests, combined reviewer identity, omitted-source gaps, UTC/packet/capture/CLI/escaping/private-output checks. Previous suites: 80/80, 74/74, 73/73, 67/67, 66/66, 46/46, 45/45, 42/42 and 34/34; initial: 24/24. |
+| `node --test skills/visualize-scenario-run/tests/*.test.mjs` | Current: 523 cases, zero failures; 521 passed / two optional retained-candidate checks skipped, with three explicitly supplied genuine historical reviewer paths. Without explicit paths all five retained-file checks are opt-in skips. Includes operation-level input 1.1 / projection 2.1, ordinary native process evidence, private validation, action-attached diffs, changed-only React presentation, resource icons, inline link-style Dismiss, the new mocked replay-case verifier, all five generation helpers and prior source, privacy, loading and safety boundaries. The observer is removed. Local checks do not establish native compliance or latency. Prior suites include 509 cases / 507 passed / two skipped, 504 cases / 502 passed / two skipped, 262/262, 255/255, 254/254, 251/251, 245/245, 238/238, 231/231, 217/217, 207/207, 170/170, 159/159, 138/138, 114/114, 110/110, 91/91, 84/84, 80/80, 74/74, 73/73, 67/67, 66/66, 46/46, 45/45, 42/42 and 34/34; initial: 24/24. |
 | `node skills/visualize-scenario-run/tests/run-fixtures.mjs NEW_DIRECTORY` | Current: 13/13 expected outcomes, 12 HTML artifacts and one expected renderer exhaustion. The historical one-copy policy produced 11 HTML files, including a required-correction stop; those historical results are retained below. |
 | `claude plugin validate . --profile directory --strict` | Pass; local directory subset only, not the portal's safety scan or policy review. |
 | `openspec validate visualize-scenario-run --strict` | Pass. |
@@ -1671,3 +1671,1273 @@ call, AI image/video generation or Figma video import occurred.
 by missing supported comment-post/reply capability. **Zero replies posted.** Current
 replacement drafts are in `docs/visualization-comment-replies.md`; historical drafts
 and ledgers remain retained. All repository changes remain uncommitted.
+
+## Blocking completion and technical-error exception (2026-11-14)
+
+The isolated smoke-test logs showed the parent continuing to a newer version and
+test while an older run's visual review was asynchronous. At inspection, that
+review had candidates/packets but no rendered HTML or presentation attempt. This
+establishes concurrency and missing presentation, not that stale HTML was opened.
+
+Updated the development skill, visualization skill, parent/editor/host references
+and native editor instructions around shared `references/completion.md`:
+
+- Await native FINAL completion even when Agent/Task returns an asynchronous
+  receipt. Do not invent synchronous flags or wait by polling task files,
+  transcripts, end_turn markers or shell sleeps. Copy completion/validation
+  precedes factual dispatch; factual completion precedes attachment/rendering.
+- Verify the actual final reviewed snapshot and real rendered file against the
+  pinned AND current tested workspace/profile/scenario/versions/run/session.
+  Coordinate one capable opener attempt and give a direct usable artifact link
+  in the original conversation. A launch receipt/candidate is not HTML, and an
+  opener dispatch is not observed presentation. Report a precise blocker, say
+  no HTML exists when none rendered, and pause for the user's next decision.
+  Keep late superseded output historical; preserve claims and private gates.
+- Apply the user's exception BEFORE automatic dispatch: if all current scenarios
+  ended in technical failures/errors and none completed without an execution
+  error, skip visualization and continue authorized bounded repair/testing until
+  at least one completes without an execution error. Completed business assertion
+  failures remain eligible. Mixed batches review an eligible current run; pending,
+  action-required, missing or unknown status does not establish the exception.
+  No access, approval, billing, partial-effect or external-write safeguard is waived.
+- Keep generation machinery private. Completed-response capture is not a polling
+  mechanism; unsupported capture format uses the complete genuine JSON hand-back
+  and validation, not repeated capture or a reviewer call just for serialization.
+
+Verification: **114/114 unit tests**, including packaged instruction checks for
+both gate and exception, deferred callback tests proving local copy→fact→render
+and opener waits, and rejection of an asynchronous receipt as final feedback.
+**13/13 synthetic fixture cases** passed at
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/blocking-review-f7yDqs/fixtures/report.json`.
+Strict local directory-plugin and OpenSpec validation and `git diff --check`
+passed. No runtime renderer/schema/bundle changes were needed; no new screenshot
+or UI acceptance is claimed. Static instruction checks and injected local
+callbacks do not prove native agent compliance or successful browser presentation.
+
+No paid/native eval, live execution, source-system write, fixture/grader/threshold
+change, restart or synchronization of the frozen isolated CLI plugin occurred.
+That running terminal still has its original snapshot, not these source edits.
+Recorded paid spend remains **$17.2754554**. Tasks **8.1** (user acceptance) and
+**18.5** (unsupported Figma reply capability) remain open; no replies were posted.
+
+## Grouped smoke feedback: instruction definitions
+
+Read the complete linked Notion smoke notes and all eight current Figma comments
+on page `115:2440`, including their screenshot anchors. Related feedback is mapped
+in `docs/visualization-smoke-feedback.md`. The user explicitly requested delegation;
+three non-overlapping groups own delivery/progress, conversation and narrative/
+evidence definitions. Original isolated smoke logs are read as data where needed,
+not executed or used to authorize new source-system actions.
+
+The updated instruction policy requires immediate truthful progress, private
+bounded recovery and a useful conservative feedback page rather than generation-
+debugging questions. It retains logical blocking and the all-technical-error
+exception. The normal checked renderer's structural, stale/independent review,
+source and two-copy gates remain unchanged; fallback instructions are a separate
+sanitized evidence-based path, not fabricated approval or invalid renderer input.
+Native dispatch still waits through supported completion, not transcript polling.
+
+Conversation becomes brief, plain and focused, with no generation mechanics or
+unrelated cleanup questions. A real access, authorization or host blocker remains
+honest, and “opened” requires presentation evidence. General timeline rules cover
+goal-relevant external source interactions across domains, not a special article
+selection case. Artifact placement applies across messages, records, documents and
+other artifact types: avoid repeated identical payloads, preserve meaningful
+versions and original source records. When actual before/after content exists,
+define green additions/red removals with non-color markers; never invent a missing
+comparison. Minimal row metadata, explicit **Add comment** controls and safe
+service-named source links are instructions, not newly implemented renderer labels.
+
+This round does not implement a packaged progress server, fallback renderer or
+diff widget, change the snapshot schema/UI bundle, rewrite checked source copy,
+refresh screenshots, post replies or reload the terminal. Static instruction
+checks and existing synthetic runtime regressions do not prove native compliance,
+live progress operation or visual acceptance. No paid/model/native eval or live
+application write is authorized; recorded spend remains **$17.2754554**. Existing
+annotated frames and historical ledgers remain intact. Tasks 8.1 and 18.5 remain
+open, with zero replies posted.
+
+Integrated verification: **138/138 unit tests** passed, including **24 new static
+policy tests** across the three delegated groups. Existing deterministic runtime
+regressions remain passing. Synthetic fixture output is
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/grouped-smoke-fixtures-v1/report.json`:
+**13/13 expected outcomes**, **12 HTML files**, and the existing expected renderer
+exhaustion. Strict directory-plugin validation, strict OpenSpec validation and
+`git diff --check` passed. Directory validation is not the portal's safety/policy
+review. No browser/live runtime claim is inferred from instruction tests.
+
+Read-only smoke context corroborates the changes: session
+`0406e87d-bf88-42ac-a87f-bae8c736e28c` main transcript line 823 asks the user to
+choose an internal wording repair versus skipping review and mixes cleanup;
+line 865 has an actual HTML path but unobserved opener dispatch. Its editor
+`a1cee65fbb1960462` records an omitted-relationship assembly error at line 60 and
+an inconsistent passing copy response at line 110; editor `a20f6f20ab590c4f3`
+ends without HTML after unsupported factual fields at line 137. Existing evidence
+also includes `occ-fetch`, omitted solely as an internal read, while the later
+`c-fetch` finding qualifies the source-selection linkage. These records explain
+the general policies; they do not justify inventing an event, timestamp, source
+readback or successful delivery. No retained trace/configuration was executed.
+
+## Loading page and content diff implementation (2026-11-14)
+
+The subsequent request explicitly authorizes implementing the loading page and
+diff UI. This section records runtime evidence separately from the preceding
+instruction-only round. Snapshot/review contracts, source bytes, model budgets,
+private generation records and final-artifact CSP remain unchanged.
+
+The renderer now compares explicitly supplied artifact `before` and `after`
+strings. Added content is green with `+`/“Added”; removed content is red with
+`−`/“Removed”, semantic insertion/deletion elements and accessible labels. This
+works for every artifact kind, preserves whitespace and final-newline differences,
+and never invents a missing baseline. Equal versions appear once. Large captures
+use complete replacement blocks rather than unbounded alignment/DOM expansion;
+neither source version is truncated or rewritten.
+
+Five new diff unit tests cover exact reconstruction, repeated lines, CRLF,
+Unicode, escaping, bounded work, every artifact kind, missing/equal versions and
+unchanged review bindings. A clean local browser checked desktop/mobile rendering,
+forced colors, reduced motion and the existing comment/prompt flow with no console
+errors or external requests. Synthetic captures and report are in
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/content-diff-browser-v1/`.
+These are scripted source versions, not new native observations or approvals.
+
+Existing cart/sticky-panel browser regressions also passed at desktop and narrow
+sizes, including short mobile height and keyboard focus containment. The report is
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/loading-diff-cart-browser-v1/report.json`;
+console errors and external requests are empty. Existing synthetic fixture cases
+passed **13/13**, producing **12 HTML files**, in
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/loading-diff-fixtures-v1/`.
+The unchanged offline shadcn bundle remains reproducible under `npm run check`.
+
+The packaged progress runtime writes a private offline loading file immediately,
+then optionally serves three read-only routes on an ephemeral `127.0.0.1` port.
+The CLI explicitly publishes actual high-level stage transitions; the page has
+an indeterminate bar, animated dots, an accessible live status and reduced-motion
+support. Only browser status polling is used. No automatic plugin hook, extra
+model, assistant task polling or wider file server was introduced.
+
+Private target/writer records, strict Host/Origin/path/method validation, bounded
+single-link/no-symlink reads and monotonic/terminal invocation state guard live
+updates. Ready requires successful existing snapshot validation, matching target
+and exact current renderer bytes. The final snapshot and HTML are captured
+exclusively; HTTP then serves immutable final bytes with the original final CSP.
+Profile identity is pinned from the parent, not independently verified by the
+snapshot schema. These checks do not authenticate reviewer identities or establish
+source truth. Separate limited-evidence delivery remains an authoring protocol,
+not a new fallback renderer or an alternative input to checked-ready validation.
+
+All **159/159 tests** passed: **16 new progress runtime tests** and **5 new diff
+tests**, in addition to the previous 138. Coverage includes hostile HTTP/CLI
+inputs, private-file isolation, stale writers/sequences, terminal revival,
+supersession, captured-byte immutability and bounded browser-controller behavior.
+Strict directory-plugin validation, strict OpenSpec validation and whitespace
+checks passed. A final fixture run again passed **13/13** with **12 HTML files**:
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/loading-diff-fixtures-v2/report.json`.
+
+Clean real Chromium checks exercised static-first display, every activity,
+automatic same-invocation navigation to exact final HTML, desktop/mobile layout,
+reduced motion, blocked state, connection loss and durable offline final use after
+server shutdown. The successful report and captures are in
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/loading-runtime-browser-v2/`.
+No unexpected console/page errors or external requests occurred. Three deliberate
+connection-refused errors are recorded separately for the shutdown/disconnect
+test; the page stops polling and does not claim failure or completion. The first
+checker run exposed an expected connection-reset variant in that deliberately
+disconnected phase; its classification was corrected without changing runtime
+behavior, and the new-directory rerun passed. Captures were visually inspected.
+Every test server was closed; no long-lived preview process remains.
+
+The skill and native editor instructions now reference the real commands. This
+does not prove that a native Claude session follows them: no paid/native eval or
+model call was run. Recorded spend remains **$17.2754554**. No terminal reload,
+source/review rewrite, Figma upload/reply, publication, commit or acceptance was
+performed. The existing isolated terminal still has its prior frozen snapshot.
+Tasks **8.1** and **18.5** remain open.
+
+## Normal full HTML after bounded quality work (2026-11-14)
+
+The user rejected both handcrafted fallback HTML and a packaged limited-evidence
+mode. Current closed draft **1.3** assembles source-bound candidate/snapshot **1.9**.
+The original sanitized bundle 1.0 is embedded privately as `source_bundle`; render
+admission validates closed content/source/safety independently of optional genuine
+review JSON. Invalid/stale/non-independent records remain invalid private diagnostics,
+not matching approval, confirmation or authority for stale limitations. Historical
+1.0–1.8 inputs retain their original strict read-only contracts. No downgrade,
+restamping, fabricated passes or new public pipeline caveat was introduced.
+
+After bounded quality work, the content is good enough and uses the SAME full
+offline React/shadcn/cart/dialog/diff/sticky-header renderer. Completed malformed
+second-copy feedback cannot block factual dispatch or normal HTML; missing factual
+response cannot block normal HTML either. Two-copy immutable claims remain; at
+most one necessary source-grounded factual qualification follows, and render repair
+cannot reopen frozen copy editing. Three shared render attempts, source escaping,
+strict hash CSP, exact target and genuine authorization/write boundaries remain.
+Known business uncertainty stays source-qualified; no unsupported success is allowed.
+
+New finalization API:
+
+```sh
+node /absolute/skill/scripts/inspect.mjs finalize CANDIDATE NEW_SNAPSHOT COPY_RECORD_OR_- FACT_RECORD_OR_-
+node /absolute/skill/scripts/render.mjs NEW_SNAPSHOT NEW_HTML
+```
+
+Optional records are retained unchanged; unreadable/non-JSON files stay in their
+original private files and produce private diagnostics. `copy`/`fact` validators
+still reject invalid records. Progress `ready` verifies exact snapshot/renderer
+bytes, source/content/safety and run identity without requiring a fictitious pass.
+`feedback-context.mjs` derives current cart binding from the actual content digest,
+not a missing or fake factual record; browser-shared feedback code remains pure.
+
+### Actual failing-source regression, without model replay
+
+Read only the supplied isolated smoke data under
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/claude-plugin-smoke-gu87lbe_/workspace/run-review/`.
+The original second candidate digest is exactly
+`a98ef45de67d675f3e46e1143845acdc9f2f45219725fe6d8f012919e3d3722f`.
+Its genuine second copy response is revise; original validation rejects findings[7]
+at protected `$.artifacts[0].after` with `copy_field`. No reviewer judgment was edited.
+
+A NEW local deterministic assembly reused the actual bundle/draft-2 business copy,
+with explicit new draft version 1.3, and produced source-bound 1.9. It retained the
+original genuine copy response unchanged as optional diagnostics and no factual
+response. The old digest is correctly rejected as stale for the new contract; the
+protected-field finding remains invalid. No fabricated matching review was added.
+The normal full HTML renders successfully with existing source qualifications.
+
+Evidence directory:
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/normal-render-real-ZiFIc2/`
+
+- `draft.json`, `candidate.json`, `final.json`: new private assembly/finalization.
+- `normal-review.html`: normal packaged UI, not model replay or fresh approval.
+- `verification.private.json`: original hashes, validation failures and actual output.
+- New candidate digest: `20799a663f4ea2d87c058f2eb870ff54fb99b7ba188d0efd9ea56f4a363cfe02`.
+- HTML SHA-256: `edf2dc7cc1f4f131a94de87b57abd1b37364fdbc963434eed7839d215f7fef66`;
+  exact equality to the final current renderer was independently rechecked.
+
+All four original files remained byte-identical before/after:
+
+| Original file | SHA-256 |
+| --- | --- |
+| bundle.json | `8fb3094915ac10e961c71720ea8a99aeb74581c56f3018a4e8b8e4b6e7a32827` |
+| draft-2.json | `18afc2054cb08f701a974b58e751ec5a860881d4b669f63d14376812c8106169` |
+| candidate-2.json | `253feb07afcbb20900172f9459848bbda671494e1c71d0d9d870207580da4f68` |
+| copy-review-2.json | `cc641f8a26c4c1c4ae60f2120516a8d7fe31fe41833aef22822879ca23076e32` |
+
+### Local verification and handoff
+
+- **170/170 Node tests** pass, including 11 new normal-render regressions for
+  protected/out-of-inventory/incomplete/malformed second feedback, missing facts,
+  stale/non-independent optional records, genuine source conflicts, immutable source
+  bytes, full UI/privacy/CSP, exclusive finalization, exact progress ready, pending
+  receipts and frozen render retries. Final suite ran with TMPDIR set to the approved
+  opencode temp base. Existing historical contract tests remain passing.
+- **13/13 synthetic fixture outcomes**, 12 HTML files:
+  `normal-render-fixtures-20261114a/report.json` under that temp base. Native eval
+  fixtures, history, mocks, graders and thresholds were untouched.
+- Real local Chromium checked both synthetic current input and the actual-source
+  HTML at **1280×900, 390×700 and 390×560**: working full cart/comment/review dialogs,
+  sticky geometry, prompt/source privacy, Escape, reduced motion and no horizontal
+  overflow. Zero page/console errors or external requests. Captures/report:
+  `normal-render-browser-20261114a/verification.json`. Actual-source desktop evidence
+  screenshot was also visually inspected. This is not native compliance or acceptance.
+- Offline UI assets remain reproducible and unchanged (`ui/build.mjs --check`).
+  Strict directory-plugin/OpenSpec validation and `git diff --check` pass.
+
+Remaining limits: source binding proves consistency with the supplied sanitized
+collector bundle, not source authenticity or semantic truth of authored English.
+Reviewer identities are not cryptographic signatures. Embedded source increases
+private snapshot size; existing 10 MiB renderer/8 MiB progress limits remain. Profile
+identity remains parent-pinned, not independently established by snapshot schema.
+Actual native completion/model behavior and host opening still need the parent-run
+replay. Tasks 8.1/18.5 remain open; zero comment replies or acceptance claims.
+
+Parent owns reload/replay AFTER verifying these local fixes. Supplied checkpoint:
+isolated session `e7a28d94-5862-4b4c-a1db-40026f902ea5`, bundle validation at main
+transcript line 622, before editor dispatch 626. Reload the corrected plugin in the
+isolated Claude Code CLI, then replay from that evidence-ready/pre-handoff point,
+not from failed editor output or the handcrafted limited page. Reuse only authorized
+sanitized evidence and exact run identity; do not rerun the application or writes.
+Use a NEW approved private replay output directory and a correctly identified new
+pre-handoff invocation; never delete/reset/reuse consumed original claims or silently
+resume an exhausted invocation with a fresh budget. New draft 1.3 must assemble
+1.9 from the original bundle, not relabel an old candidate or restamp its reviews.
+Verify actual final normal-renderer bytes and native final completion/presentation.
+
+This implementation session did NOT reload/replay the CLI, call a model/paid/native
+eval, write to a live service, upload to Figma/Notion, post replies, commit or archive.
+Existing dirty/untracked work and all original smoke artifacts were preserved.
+
+## Authorized evidence-ready CLI replay (2026-11-15)
+
+After the implementation above, the parent verified the local tests and refreshed
+the isolated CLI's plugin snapshot. All 141 packaged files matched the working
+tree; 38 changed/new files were backed up without deletions. The existing Terminal
+confirmed `/reload-plugins` completed. No restart, global configuration change or
+credential copy was used.
+
+Exactly one bounded native replay resumed the byte-identical transcript prefix
+through line 622, after bundle validation and before the original editor dispatch.
+`--fork-session` preserved the original conversation. The original 3,105,440 bytes
+remain an exact prefix of its transcript; subsequent reload metadata was appended.
+Original evidence, old candidates/review records and the copied replay inputs
+remained unchanged. The fork is `b6290c45-5f20-45a4-8662-558940a23551` and has also
+been resumed in the same isolated Terminal, with an empty input prompt.
+
+The replay completed successfully in **539.675 seconds**, costing **$4.1980402**
+under its $5 ceiling. Recorded authorized evaluation/replay spend is now
+**$21.4734956**; this is not a total for manually operated interactive sessions.
+There was one editor, two copy reviewers and one factual checker, all foreground
+and completed. No application run or live MCP tool call occurred. Two unrelated
+shell commands were denied; the packaged Node path still completed normally.
+
+The result is the full normal UI, not a limited-evidence mode or handcrafted page:
+
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/claude-plugin-smoke-gu87lbe_/workspace/run-review-replay-bgsa5lw0/run-progress-wjzBGs/completed-review.html`
+
+- Source-bound snapshot **1.9** validates and its embedded bundle equals the
+  original evidence. Workspace, scenario and run match the pinned target.
+- Actual HTML is byte-identical to `renderHtml(snapshot).html`; SHA-256 is
+  `25b36aa289e99ef58800748400a488f1c26b4fec95bc02d6342f0f63c8b093f4`.
+- Snapshot SHA-256 is
+  `429519f20c12a688bee40bebd7833b71e11597ae88d47b168beb3ddfd3ba6465`;
+  content digest is
+  `bdb0121f8b118bd3efa66add4a116a04f76fd5aed59e9be9b2d7b68265c9d5cc`.
+- Genuine copy feedback remained `revise`. The factual checker lacked its source
+  tools and a trustworthy clock, and returned an incomplete diagnostic rather than
+  inventing reads/timestamps. Both remained private native handbacks. Finalization
+  used `- -`, not fabricated approval, and still rendered the normal UI.
+- The progress record reached `ready` at sequence 3. This headless fork did not
+  serve/open its progress page; it therefore does not prove live loading-page
+  presentation. No replacement HTML generator or renderer-source modification ran.
+
+Parent verification used actual output at 1280×900, 390×700 and 390×560: cart,
+comment/review dialogs, sticky header, keyboard Escape, private-generation-data
+exclusion, reduced motion and overflow checks passed. Zero console/page errors or
+external requests were observed. Clean desktop/mobile captures were read visually.
+The integrated browser opener timed out once; local headless Chromium verification
+is not proof that the user saw an opened browser tab. A direct artifact link is
+provided instead.
+
+Replay receipts, original native stream, immutable private reviewer handbacks,
+corrected renderer verification, transcript-preservation proof and browser output
+are under
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/evidence-ready-replay-vpfw3zd_/`.
+The preliminary renderer check incorrectly compared the return object to a string;
+`replay-render-verification-corrected.json` fixes that check without changing output.
+
+Residual native behavior: the final CLI chat still added unsolicited source-check
+caveats and a summary, contrary to the concise conversation policy. This is not
+claimed as full instruction compliance, independent factual verification or user
+acceptance. No second paid attempt was made. Tasks 8.1 and 18.5 remain open.
+
+## Temporal artifact and prototype concern feedback (2026-11-15)
+
+The six comments on Figma node `126:2446` were grouped into concurrent artifact
+provenance, presentation and authoring-policy implementations, followed by
+independent provenance review and real browser integration. The concern pattern
+comes from the supplied Notion prototype, not invented demo business facts.
+Coverage and source links are in `docs/visualization-temporal-feedback.md`.
+
+The collector sidecar supplies exact source references and captured operation
+semantics, not authored replacement payloads. Current 1.9 assembly and source
+validation reproduce the projections without changing the original bundle.
+Future/unknown-time external captures, unrelated targets and unordered versions
+are rejected; field projections remain excerpts and preserve source qualifications.
+Matching request/receipt operation IDs establish consistency, not authenticity.
+Before-input capture planning now uses supported native events or test callbacks
+and authorized read-only snapshots where available. This does **not** install a
+live observer, grant access or claim the original test was observed in real time.
+
+Retained-source verification reconstructed the first requested document state
+from **3,983 UTF-16 units** and the final state from **10,097**, including the
+captured terminal newline. The first contains only the first paper; the later
+state has a source-backed comparison against it and exactly matches the retained
+final readback. These are request reconstructions, **not contemporaneous earlier
+readbacks or proof of mutation timing/causation**. Original bundle, draft,
+snapshot, HTML and captured event bytes are unchanged. The report and normal
+packaged HTML are in
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/temporal-retained-T3I39W/`.
+
+Concern disclosures now explain the recorded problem and consequence without
+requiring private review records, distinguish external failures from agent
+misbehavior, and offer only supported fixes. The prototype-aligned **Dismiss**
+button hides that concern for the page lifetime, moves keyboard focus safely and
+does not remove evidence, alter outcomes, approve anything or remove prompt items.
+Description colors are uniform; service-specific source links are safe accessible
+buttons, including **Open Google Doc** for the actual Google Docs URL.
+
+The rebuilt offline UI bundle is reproducible. Browser checks at 1280×900,
+390×700, 390×560, reduced motion and forced colors passed, including pointer and
+keyboard Dismiss, cart persistence, reload reset, exact CSP hashes, source escaping,
+privacy, safe links and no overflow. The retained nine-event HTML also passed two
+desktop/mobile checks. Console errors and external requests are empty. Reports
+and captures are in
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/temporal-retained-browser-v2/`.
+Synthetic fixtures passed **13/13**, producing 12 expected HTML files in
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/temporal-fixtures-v1/`.
+
+No paid/native replay, application rerun, source write, plugin reload, Figma edit
+or comment reply occurred. Known tracked authorized spend remains **$21.4734956**;
+manual smoke-session costs are not included. Tasks 8.1 and 18.5 remain open.
+
+Independent provenance review also caught and corrected wrong-target insertion
+indexes, lost explicit initial baselines and rejection of genuinely empty source
+content. The current source-bound projection distinguishes absent content from
+captured empty content, including clear-to-empty and empty-to-new diffs, without
+loosening historical contracts or nonempty authored prose. Baselines, receipts and
+predecessor records retain their source qualifications. Known capture windows and
+version order are checked before attaching content to an earlier step.
+
+Final retained HTML SHA-256 is
+`717b4187099ba7fa1294dfc63511f680534ebac8985347b10b744630a9d25de2`.
+Focused first-version/later-addition desktop and mobile captures, with unchanged
+input hashes and no console errors or external requests, are in
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/temporal-retained-captures-BwEn4b/`.
+
+## Missing review capability diagnosis and recovery (2026-11-15)
+
+The user reported: “I couldn't produce the usual review page this time because
+that tool isn't available in this session.” A separate delegated investigation
+located the exact response in session
+`b6290c45-5f20-45a4-8662-558940a23551`, main transcript line **484**, UUID
+`f93c075d-6b93-414d-bbb6-a7a6a9aef733`. The completed-run notification is line 476;
+no visualization invocation, dispatch, Node probe, preflight or render attempt
+lies between it and that claim.
+
+The model-visible skill listing at line **281** had been replaced by just two
+built-ins during the headless fork; no Guild skill listing restored it before the
+interactive response. The active schema at line **376** still included Skill,
+Agent, Read, Write and Bash, and startup debug lines **18344–18345** still reported
+three loaded plugin skills. Thus stale discovery context and an unsupported
+capability diagnosis are established; a renderer failure, dispatch rejection or
+review permission denial is not. The parent independently checked those retained
+anchors. Upstream cache implementation and the model's internal reason for its
+wording remain unverified.
+
+Active skill/development/parent/completion/host definitions now recover installed
+instructions from the known host-provided base path when the current skill listing
+omits them. They distinguish skill discovery, native dispatch types, deferred MCP
+tools, local execution, validation and opening. Recovery uses the normal 1.9
+pipeline and does not invent tool flags, skip available authorized reviews, forge
+approval, bypass a denial, expand permissions or authorize reload/rerun/service
+writes. A failed opener does not erase an existing HTML artifact.
+
+Five new static policy checks and four actual local CLI cases verify the recovery
+contract. The latter run bundle/assemble/finalize/render from an unrelated private
+cwd without Skill or an MCP review-page tool, retain malformed optional diagnostics
+privately, and distinguish source validation and file collisions from missing
+capability. All **231/231 unit tests** pass. The preceding **13/13 fixture cases**,
+six temporal browser checks, strict directory-plugin/OpenSpec validation,
+reproducible offline bundle and `git diff --check` also pass. This is local proof,
+not an evaluation of model compliance in the resumed CLI.
+
+The final integrated fixture run again passed **13/13**, with 12 expected HTML
+files, at
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/temporal-capability-fixtures-v1/report.json`.
+
+Full investigation and unchanged hashes of all 25 retained log files:
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/review-capability-1305l0cj/findings.md`.
+The running isolated CLI snapshot was not refreshed or reloaded. No new model,
+paid replay/eval, application run, live write, Figma mutation, comment reply,
+commit or archive occurred. Known tracked authorized spend remains
+**$21.4734956**; manual smoke-session costs are separate. Tasks 8.1 and 18.5 remain
+open; no user acceptance or native capability recovery is claimed.
+
+## Second-iteration checkpoint replay and artifact validation (2026-11-15)
+
+The user authorized reloading the plugin, forking before the second iteration's
+review handoff and validating the resulting artifact/logs. That iteration had
+never constructed an evidence package: it jumped from the completed-run
+notification to the unsupported missing-tool claim. The replay therefore forks
+the exact transcript prefix through line **476**, UUID
+`a5436780-24ea-40d8-8678-08b3c1500d0e`, before collecting the completed run's evidence.
+No original message was rewritten and no application was rerun.
+
+All **153** packaged files matched the current source after an isolated snapshot
+refresh with backups and no deletions. The existing Terminal conversation received
+`/reload-plugins`; its actual completion reported one plugin, three skills, nine
+agents and two plugin MCP servers. A single native read-only review fork then
+completed as session `c091da55-4ff4-4704-ab4c-851d9cb2f11b` in **344.174 seconds**.
+The original conversation, checkpoint prefix and retained input files are preserved.
+
+The missing-tool fix was exercised: native stream line **7** reads the installed
+skill directly, line **34** dispatches its editor, and lines **156–163** finalize,
+render and mark ready through the packaged Node pipeline. The result is the normal
+full shadcn/cart/dialog UI, not an alternate page or evidence mode:
+
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/claude-plugin-smoke-gu87lbe_/workspace/second-review-replay-h2t34tch/run-progress-IGf6WB/completed-review.html`
+
+- Source-bound snapshot **1.9** validates, embeds the exact newly assembled bundle,
+  matches the pinned second-run workspace/scenario/session/version and retains the
+  original parent conversation binding. The progress record reaches ready at
+  sequence 3.
+- Actual final HTML is byte-identical to the current `renderHtml(snapshot).html`
+  and its captured checked HTML. HTML SHA-256 is
+  `81c420f07c3d5c47e1a2635ffd38b824067a4e77514a80a7bc395afe057fad49`;
+  snapshot SHA-256 is
+  `8ced2fce5180c098c8beab3a8799ba98209a888cc189a218bfc1843b8e1bedff`.
+- One genuine Sonnet author and one genuine Sonnet copy reviewer completed in
+  foreground order. The copy verdict was `revise`; the author changed its wording
+  without a second review, and did not run a factual checker. The original editor
+  did not save the review response, but the genuine response survives in the native
+  stream and was captured privately during postflight inspection. Finalization
+  used `- -`, not fabricated passing records.
+
+**This is only a partial end-to-end validation of the temporal fixes.** The replay
+allowlist admitted the plugin-prefixed read tools, but deferred discovery returned
+`mcp__claude_ai_Guild_ai__guild_get_session_events`. Its call at native line **27**
+was denied in don't-ask mode. This is a replay-harness namespace mismatch, not an
+absence of the renderer. No permission bypass or second billed attempt followed.
+The page consequently has five events and one excerpt from the agent's final
+reply, without intermediate document captures or a before/after pair. It does not
+exercise a real temporal diff, document readback or independent factual check.
+The earlier retained-source temporal regression remains separate evidence; no
+missing state was invented to make this replay appear complete.
+
+Two browser suites passed **12 checks** in total: four synthetic and two actual
+temporal-presentation cases, plus three synthetic and three actual normal-render
+cases. On the actual page they exercise meaningful concern text, local Dismiss and
+focus/reload behavior, uniform description colors, the safe **Open Google Doc**
+button, cart/dialogs, sticky containment, reduced motion, strict CSP/privacy and
+desktop/mobile overflow. Console errors and external requests are empty. Synthetic
+cases additionally exercise source-backed diff colors and forced colors; those
+checks are not attributed to the native artifact. Desktop/mobile and expanded
+document-concern captures were read visually. The integrated opener timed out
+once; clean headless Chromium and a direct artifact link are not proof that the
+user saw an opened tab.
+
+Receipts, original native stream, private handbacks, exact-render/source audit,
+browser reports and captures are under
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/second-review-replay-hq57hogt/`.
+The native incremental `model_usage_since_last_result` costs sum to **$3.7046211**.
+The CLI's **$7.9026613** total includes the inherited **$4.1980402** from the previous
+fork, so it is not a second $7.90 charge for this replay. Known tracked authorized
+spend becomes **$25.1781167**, excluding manual smoke-session costs. The new work
+is within the supplied $5 inference limit; that CLI option is not an external
+billing guarantee.
+
+Residual native compliance: the final chat again disclosed private review/budget
+and collection details, contrary to the concise handoff policy. The renderer's
+public UI/prompt privacy checks pass, but the overall native conversation is not
+claimed fully compliant. Static-only progress was created; no live loading server
+was opened. No application run, source write, Figma edit, reply, commit or archive
+occurred. Tasks 8.1 and 18.5 remain open.
+
+## Live capture implementation and preflight (2026-11-15)
+
+The user authorized implementing capture before one fresh test of the second
+application version. The packaged `capture-live.mjs` observer and `capture-host.mjs`
+adapter now collect source events and read Google Docs after material operations.
+The local process contains no remote client or credentials. Its private loopback
+bridge accepts only four fixed read operations supplied by the authenticated host;
+it cannot dispatch arbitrary tools or application writes. Native Guild waiting
+remains the sole test-completion owner. Bounded event-feed observation is distinct
+from polling task status, transcripts or artifact files.
+
+Immutable captures record document identity, revision, exact extracted text,
+read start/end and triggering source operation. `captured-versions.json` excludes
+reads that finish after the next same-document mutation starts. A comparison uses
+an actual preceding captured state, including genuinely empty text, or records a
+missing baseline; it never retrofits a final state or invents a blank document.
+Durable document-read receipts are saved before waiting. An uncertain dispatch is
+not repeated; only a known durable wait can be recovered automatically.
+
+Local verification passed **238/238 unit tests**, including seven observer/host
+tests, and **13/13 synthetic fixture outcomes** (12 HTML files) under
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/live-capture-fixtures-v1/`.
+Strict directory-plugin/OpenSpec validation, whitespace checks and reproducible
+offline UI assets passed. These tests use scripted sources, not live capture.
+
+A real host-transport preflight used the existing authenticated read-only session
+connector to validate one already-completed session, then cancelled before any
+event-feed or document read. The private preflight was
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/capture-host-preflight-tjonjunp/`;
+its owned server was stopped. This proves the authenticated bridge path, not that
+an intermediate document revision was observed during a new test. The separately
+authorized single test and its actual chronology are recorded below when complete.
+
+## Actual during-run capture and incomplete native review (2026-11-15)
+
+One fresh profile test ran the unchanged second application version, with the
+read-only observer armed before its single `run` input. Workspace, profile and
+version remained pinned; no application configuration, extra test input or write
+delay was introduced. The application created one new Google Doc and completed
+with two papers. The CLI connector lost its wait connection; the calling host
+recovered only the same native read-only wait receipt, observed `DONE`, and then
+finished and drained the observer. No application message was resent.
+
+The actual captured chronology establishes the missing intermediate state:
+
+- First insertion completed at **19:01:47.435486 UTC**. The document read ran from
+  **19:01:48.351–19:01:49.286**, while the application was active and before the
+  next same-document mutation. Its **4,029 UTF-16 units** contain only the first
+  paper. Text SHA-256:
+  `7b30fc6b1fa05bbe0c4e458072b26b4d8ee68245f06b22977ca1f659ddec8592`.
+- The later insertion completed at **19:03:21.946385 UTC**. The final read ran from
+  **19:04:12.461–19:04:13.368**, after application completion. Its **7,480 units**
+  contain both papers, and its recorded `before` is the exact first capture.
+  Text SHA-256:
+  `b8f407363d6eb0428d594865363a3d0f36f4da1001aa49a7edae018a89200445`.
+- The earlier creation snapshot raced the first insertion. It was excluded as
+  `missed_intermediate_state`, not presented as an empty document. Both eligible
+  versions retain actual document revisions, read windows and triggering events.
+  The observer sealed 226 events after 155 source-feed reads and 162 host jobs;
+  only its owned server was stopped.
+
+Source captures, host adapter, native receipts and original streams are under
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/live-capture-fork-yiyfruu3/`.
+The 334 sealed source JSON files and 156 installed plugin files remained unchanged.
+The native application session is `01a1e093-a7d7-f268-0000-49d8ad00f24a`; the CLI
+fork is `17d22d90-b15f-4a92-b6b7-ea10251800c0`.
+
+**The accurate native end-to-end test did not produce review HTML.** The first
+CLI call cost **$3.0750552** in new inference. Its post-run continuation hit the
+CLI budget check while restoring a large context and cost **$4.773012**, exceeding
+the intended remaining $1.80 limit. The combined **$7.8480672** exceeded the stated
+$5 estimate; that CLI flag did not prevent a single oversized request. No local
+hand-authored artifact is counted as native success.
+
+The user then explicitly supplied a new **$100** budget for a genuine continuation.
+That continuation cost **$7.5930136** in new inference, excluding inherited session
+totals. It authored its own bundle and draft from the sealed real sources, without
+using the host-authored local proof files. An initial evidence validation failure
+returned the editor to the parent. The parent corrected source relevance and
+resumed the editor using asynchronous `SendMessage`. Two copy reviews completed,
+but the CLI parent exited before the final editor/checker handback; stream lines
+552–556 record the stopped editor and interrupted checker. No final snapshot or
+HTML exists in `workspace/live-capture-fork-3s0ljex3/native-review-dlxhyb_9/`.
+An exit code of zero is therefore not artifact completion or test acceptance.
+
+Known tracked CLI inference spend is now **$40.6191975**, excluding manual smoke
+sessions and application-side charges. No further inference, application rerun or
+source write followed this failure. Task **27.3 remains open**: actual capture was
+exercised, but the genuine automatic review/render handoff did not finish.
+
+## Plain concern, human fix and technical prompt separation (2026-11-15)
+
+The subsequent annotated-page feedback is implemented separately in the source
+checkout. Draft **1.4** assembles snapshot **1.10**; original draft 1.3/snapshot 1.9
+retain their own closed contracts. The installed plugin remained frozen at 1.9
+throughout the native test above, so that test does not validate these later UI
+changes and was not silently reloaded.
+
+The new authored fields are distinct and source/digest-bound:
+
+1. `concern.explanation` explains the possible conflict with the application's goal
+   in plain language, rather than repeating event/source paragraphs or an outcome enum.
+2. `suggested_feedback.explanation` describes the supported application change in
+   short, active STE-style instructions, using familiar page elements where possible.
+3. `suggested_feedback.text` is the separate technical Claude Code prompt. The
+   **Add suggested fix to prompt** button queues that exact text, not the human
+   explanation. An unsupported remedy is not invented; its control is disabled.
+
+Human fix copy has a distinct ASD-STE100 review route. Structural sentence rules
+are instructed and tested; dictionary-level STE certification is not claimed.
+Dismiss is an inline sibling immediately beside **Possibly incorrect behavior**,
+outside its summary. It changes local concern visibility only, preserves queued
+items/evidence and restores on reload. Legacy technical-only suggestions are not
+misrepresented as human-readable fix explanations.
+
+Verification passed **245/245 unit tests**, **13/13 synthetic fixture outcomes**
+(12 HTML files), strict directory-plugin/OpenSpec validation, reproducible offline
+UI assets and whitespace checks. Unit checks cover all three authored passages,
+review routing, exact technical cart bytes, immutable sources, legacy contracts,
+optional private diagnostics and unsupported-fix behavior.
+
+Clean local Chromium verified the requested 1728×873 view, desktop and mobile,
+including short mobile height and reduced motion. Closed/open Dismiss geometry
+has an 8-pixel adjacent gap without overlap; concern content remains within its
+container. Keyboard focus, scoped dismissal, preserved cart, reload, strict CSP,
+privacy and exact technical prompt inclusion pass. Initial mobile layout and
+obsolete test-locator failures are retained in earlier output directories, not
+counted as final passing evidence. Final browser/fixture reports are under:
+
+- `.../opencode/concern-final-browser-v3/`
+- `.../opencode/concern-cart-browser-v3/`
+- `.../opencode/concern-temporal-browser-v4/`
+- `.../opencode/concern-fixtures-v3/`
+
+These are explicitly synthetic UI regressions, not a replacement native artifact.
+No new paid run, source write, Figma edit/reply, CLI reload or acceptance was made
+for this source-only update. Tasks 8.1 and 18.5 remain open.
+
+## Application-owned session evidence; observer feature removed (2026-11-15)
+
+The user replaced the observer architecture with build-time evidence requirements,
+then explicitly requested removal of the entire observer feature. Removed:
+
+- `skills/visualize-scenario-run/scripts/capture-live.mjs`
+- `skills/visualize-scenario-run/scripts/capture-host.mjs`
+- `skills/visualize-scenario-run/tests/capture-live.test.mjs`
+
+Package discovery/import requirements and active observer configuration/commands
+are removed. There is no supported manual observer fallback. The old records above
+are historical, not current instructions. No retained session/capture data, temp
+evidence, application session/document, ledger, native fixture/grader/threshold or
+running isolated CLI snapshot was deleted, rewritten or reloaded. Temporal
+`artifact-versions.mjs`, source provenance checks, normal full 1.10 renderer/diff,
+loading-page progress server, privacy/cart/concern/Dismiss/CSP and native wait
+safeguards remain intact. Existing unrelated dirty/untracked work is preserved.
+
+### Supported mechanism and actual retained evidence
+
+The copied SDK reference (`skills/agent-development/references/sdk.md`, task
+properties and consoleTools section) specifies `consoleTools` plus awaited
+`task.console.info(message)`, dispatched as console_log. Plain JavaScript
+console.log is not established as session persistence. The retained sealed session
+file at `.../opencode/live-capture-fork-yiyfruu3/live-capture-Sjq57B/collected-events.json`
+has 226 events, including 103 console runtime_start messages and their 103 paired
+runtime_done events. Actual example `01a1e094-184d-431e-0000-e53a4b443fa5` at
+`2026-11-15T18:59:24.365738+00:00` has task.tool_name console_log,
+tool_call_id console_log-hRWeMO9fD0UXCQntDPMS3A and content `{level: info, message:
+STRING}`. The matching done contains only `{result: ok}`. Ordinary nested
+dejargonizer/provider/model debug records are not goal-evidence timeline events.
+The portable retained-data test reads this file only and confirms zero newly
+marked evidence records; no historical messages were converted to new proof.
+
+LLM guidance uses actually exposed console tools, for example documented llmAgent
+tools with consoleTools. It does not invent configure guild_tools values, assume
+JavaScript executes in prompt prose or promise deterministic model compliance.
+Unavailable prompt-only evidence tooling remains a capability gap; a must-preserve
+destructive sequence needs code-controlled emission/await within approved scope.
+
+### Implementation and integration
+
+New dependency-free `scripts/session-evidence.mjs` exports:
+
+- `validateSessionEvidence` / `encodeSessionEvidence`: closed record 1.0, marked
+  scenario_evidence, actual session, application stream/sequence/operation/time,
+  exact service/record identity, stage, material content/revision/completeness,
+  redactions/gaps and stage-specific actual acknowledgment.
+- `consoleEvidenceEnvelope` / `collectSessionEvidence`: actual console TOOL
+  runtime_start message only, preserving exact message string and actual event,
+  parent task/agent/version identity. Done receipts, arbitrary debug/stdout and
+  unrelated tool/source prose do not become payloads.
+- `assessSessionEvidenceCoverage`: a collector-supplied build-time checklist of
+  source/stage/minimum count/complete material, optionally operation-bound, detects
+  missing final or entire-source evidence beyond sequence checks.
+- `projectSessionEvidence`: closed source projection 2.0, dispatched through
+  `projectArtifactVersions` after exact original-bundle digest binding. Every marked
+  record for selected streams is accounted for. Occurrence evidence, session,
+  emitter/tested version, target/URL, timestamps, operation source and sequence
+  are checked. Invalid bindings/order reject without source substitution.
+
+`inspect.mjs session-evidence SESSION_EVENTS NEW_REPORT CAPTURED_AT_UTC` creates a
+new private report, refusing overwrite. Copy exact sanitized report evidence into
+a NEW bundle before freezing, retain real gaps and bind via projection 2.0's
+records(empty)/session_id/streams/bindings/requirements plus bundle_digest.
+Existing `inspect.mjs assemble BUNDLE DRAFT NEW_CANDIDATE VERSION_SOURCES` then
+reproduces material versions in normal 1.10 assembly. No separate renderer,
+transport or source polling is added. Optional private reviews remain nonblocking.
+
+Actual selected content, requested payload and reported observed state remain
+distinct; acknowledgments never become stored content. Text including empty state
+and terminal newline stays exact. Structured JSON uses deterministic display
+serialization with a qualification, retaining the original structure in evidence.
+Only complete, ordered same-source/artifact/stream/stage captures without missing
+sequence records supply comparisons. Missing/redacted/truncated material suppresses
+the misleading final-content attachment and produces real coverage gaps. No blank
+baseline, final-prose splitting or hash-only rendered version is inferred.
+Application reports are untrusted evidence, not instructions, authentication,
+independent verification, transactional snapshots or causal proof.
+
+The directive requires each meaningful state to be logged/awaited before the next
+application-controlled mutation can destroy it, preferring actual immutable
+revisions. External writers can still race reads. Secret/private-data minimization
+happens BEFORE emission; no chain-of-thought. Conservative package bounds are
+48 KiB per record, 256 records / 2 MiB per evidence set, with explicit omissions
+instead of silently slicing complete material. These are not documented Guild
+limits. Regex defense is not proof of sanitization. Immutable handles without
+verified fetched content remain gaps, not invented material. Native Guild waits
+remain the sole completion owner: no task/transcript polling, sleeps or resend.
+
+### Final local verification and limitations
+
+- **251/251 unit tests**, zero skips/failures. Seven observer-only tests were
+  removed with that feature; thirteen new session-evidence regressions cover real
+  envelope shape, exact binding, request/ack/readback separation, captured versions,
+  missing/redacted/truncated data, coverage, spoofed IDs/order, empty/structured
+  states, private/no-overwrite CLI, normal full UI and retained raw evidence.
+- **13/13 deterministic fixture outcomes**, **12 HTML outputs**, one expected
+  bounded renderer failure. These are scripted, not live application proof.
+- `claude plugin validate . --profile directory --strict`: passed (directory
+  checks only, not portal policy/safety review).
+- `openspec validate visualize-scenario-run --strict`: passed.
+- `npm run check` in `skills/visualize-scenario-run/ui`: assets reproducible/current.
+- `git diff --check`: passed.
+
+New private evidence root:
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/session-evidence-final-KLPUmG/`
+contains final `unit-final.log` and `fixtures-final/report.json`, plus the earlier
+`unit.log` and `fixtures/report.json`. Earlier passing intermediate
+fixtures/logs are preserved, not overwritten. No UI source/build asset changed in
+this task and no new browser/native/model/application run was made. This does not
+prove new directive compliance, exact SDK/LLM runtime behavior, platform console
+retention/truncation limits, independent historical causation or automatic opening.
+
+No source service mutation, Figma/Notion write, plugin reload, commit or archive.
+Tracked prior spend remains **$40.6191975**, manual smokes excluded; no new model
+spend in this task. Failed native asyncSendMessage resumption/parent-exit outcome
+and absent automatic artifact opening remain failed, despite the earlier actual
+first-only/later-both Docs capture. Tasks 8.1, 18.5 and 27.3 stay open.
+
+### Follow-up: valid cross-stage missing-material regression (2026-11-15)
+
+Independent review identified a possible stale baseline across a bound gap. The
+valid existing fixture confirmed it: complete artifact_observed seq1 → explicit
+gap/metadata_only seq2 bound to the same artifact/source/stream → complete
+artifact_observed seq3 produced a successful projection but incorrectly retained
+seq1 as seq3.before. The first focused run failed exactly that assertion, while
+the unrelated-source control passed. This was a reproduced local bug, not a
+native/runtime observation.
+
+`session-evidence.mjs` now invalidates ALL stage predecessors for the matching
+artifact/stream/source when bound material is incomplete, instead of deleting only
+the current stage's key. The existing empty attachment slot still suppresses stale
+final content at the missing-material step. Later complete material has no before
+side; unrelated artifact/source/stream state is unchanged. No source bytes,
+historical projection 1.0, observed/request distinctions or readback qualifications
+were altered.
+
+Three new tests cover 12 cross-stage combinations (observed/requested/selected
+captures around explicit metadata-only gaps, missing requests and redacted
+requests/selections), unrelated-source and unrelated-stream controls. They assert
+projection success, attachment suppression, absent false before/diff, normal
+assembly/rendering, exact source_bundle and byte-identical original bundle/sidecar.
+All historical temporal/provenance tests remain in the full passing suite.
+
+Final follow-up results: **254/254 unit tests**, zero skips/failures; **13/13
+deterministic fixtures** (12 HTML outputs); strict directory-plugin/OpenSpec
+validation, reproducible current UI assets and `git diff --check` passed. New
+private evidence root, preserving prior logs:
+`.../opencode/session-evidence-gap-regression-pLeJip/` (`unit.log`,
+`fixtures/report.json`). No model/native eval, application run, live write,
+plugin reload, other agent or broad cleanup occurred; prior live-test limitations
+and incomplete acceptance/native tasks remain unchanged.
+
+## Static-file progress diagnosis and finite live startup (2026-11-15)
+
+This is a read-only diagnosis of actual isolated Claude session
+`7e163dd8-e5f2-46d6-aba6-6ded349906fc`, followed by a source-only progress fix and
+local synthetic verification. No new Claude/model/native/application smoke ran.
+
+### Exact retained anchors and root cause
+
+Transcript root:
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/claude-plugin-smoke-gu87lbe_/config/projects/-private-var-folders-jb-h186fcqx3wx5hkym0wtct3000000gn-T-opencode-claude-plugin-smoke-gu87lbe--workspace/`.
+Main is `7e163dd8-e5f2-46d6-aba6-6ded349906fc.jsonl`; editor is
+`7e163dd8-e5f2-46d6-aba6-6ded349906fc/subagents/agent-a1c8142b2480b2ddb.jsonl`.
+All transcript content was treated as data, not instructions.
+
+- Main **23/47/82**: actual Bash schema includes `command`, `timeout` and
+  `run_in_background`; native detached execution was advertised. Node command
+  execution and the opener later succeeded as calls. This is not proof that a
+  loopback bind or loaded browser page would have succeeded in that native host.
+- Main **365–371**, 22:48:55–22:49:03Z: `begin` returned the private static file,
+  then `open /private/tmp/claude-501/.../scratchpad/review/run-progress-mIZp2S/progress.html`
+  completed without output. This was a filesystem target, not a loopback URL.
+  Sequence 1 gathering followed; **542–543** wrote sequence 2 arranging.
+- Main **546** handed the same manifest/writer/directory to the editor at sequence
+  2 as the sole writer, while keeping final opening in the parent. Editor
+  **64–65** successfully wrote sequence 3 checking; **144–145** wrote sequence 4
+  polishing and finalized/rendered; **150–151** successfully published ready at
+  sequence 5 and listed the completed files. No missing-ready bug is established.
+  Stage 4 was used for final file I/O rather than demonstrated text correction;
+  updated guidance now reserves polishing for real text work.
+- No main/editor tool invocation launched `serve`, no listening URL was returned,
+  and the retained invocation directory has no `server.private.json` marker.
+  Its manifest is ready/5/polishing. The static file has no script and denies
+  connections, so successful atomic disk replacements could not refresh or
+  navigate the already-loaded tab. There was no live server whose CSP, current
+  invocation polling or lifetime could update that file tab. Do not diagnose an
+  observed live CSP/server-lifetime failure, bind denial or browser polling bug.
+- Main **586–587**, 23:02:57Z: parent separately opened completed-review.html;
+  **590** correctly said opening could not be confirmed. Dispatch is not proof of
+  observed final presentation, and no automatic loading-to-final navigation ran.
+
+The integration defect was a static-first opener with optional/unwired serving,
+plus a long-lived stdout recipe that did not provide a finite startup result to
+native hosts withholding background output. Stage writes/ready and ownership did
+exist. A static file cannot live-update by magic.
+
+### Implemented correction and scope
+
+- `scripts/progress.mjs start OUTDIR TARGET` first writes the same immediate
+  private static output, forks ONLY the packaged server (ignored stdio, no shell),
+  awaits its listening receipt over Node IPC for at most ten seconds, and returns
+  one finite foreground JSON receipt. Only a validated exact invocation loopback
+  URL produces `live:true`; spawn/exit/timeout/invalid-receipt failures retain static
+  output with `live:false`, no URL and a safe private diagnostic, without retry.
+- Existing 127.0.0.1/ephemeral-port/three-route/Host+Origin/method/file limits,
+  strict hash CSP, one-second bounded browser polling, writer/target/sequence and
+  terminal guards remain. Ready still requires exact source-bound snapshot,
+  target and normal-renderer bytes, then captures immutable final content. The
+  owned server survives launcher/editor exit, closes on invocation retirement and
+  retains its one-hour bound. It is not a native task/evidence observer.
+- Development/main/parent/completion/editor/host instructions now explicitly call
+  finite start and open its returned live URL before long work. They retain one
+  writer/sequence and parent cleanup through ready navigation and durable handoff.
+  No duplicate final tab after observed navigation; static-only hosts receive an
+  honest chat limitation without restoring the removed static-page notice.
+- The loading title stays **Generating test run timeline**. No progress-page UI,
+  normal-renderer layout, metadata cleanup, source evidence, artifact/parser/
+  contracts/assembly/diff logic or installed plugin snapshot was changed here.
+  The parent independently owns the artifact diagnosis. No observer, alternative
+  final mode, fabricated review approval or generation machinery was added.
+
+API grounding: Context7 was attempted but quota-exhausted; the official
+`https://nodejs.org/api/child_process.html` documentation verified fork IPC,
+detached stdio, disconnect and unref. Actual local CLI/browser tests, not API
+presence or a personal-browser session, provide implementation evidence.
+
+### Local verification
+
+NEW private evidence root:
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/progress-live-fix-kq3u7wpm/`.
+
+- **262/262 unit tests**, zero failures/skips (`unit-final.log`), including real
+  HTTP/security/CLI/ready guards, finite startup surviving launcher exit, safe
+  failed startup/no retry, private source/byte guards and active entrypoint policy.
+- **13/13 deterministic fixtures**, 12 HTML outputs (`fixtures-final/report.json`).
+- Actual local Chromium with the pre-existing Playwright path
+  `/Users/kristof/.npm/_npx/cbf1b8a072280925/node_modules/playwright`:
+  `browser-final/report.json` proves the finite CLI receipt/live URL flow,
+  static tab staying stale despite disk writes, real gathering → arranging →
+  checking → polishing stage changes, and one matching ready navigation to the
+  SAME normal source-bound **1.10** UI with both optional reviews absent. Exact
+  final response bytes/CSP and durable offline HTML after server retirement match.
+  Desktop/mobile/reduced-motion, blocked/disconnected stopping, unchanged source,
+  no overflow, no unexpected console/page errors or external requests pass.
+  Three connection-refused errors are deliberately induced disconnect evidence.
+- `normal-browser/verification.json`: 1280×900, 390×700, 390×560 cart/dialog/sticky/
+  privacy/overflow checks and reduced-motion pass, no errors/external requests.
+  `concern-browser/report.json`: four desktop/mobile/reduced-motion cases preserve
+  inline Dismiss, distinct human/technical copy, exact cart prompt and strict CSP.
+- Strict directory-plugin validation, OpenSpec validation and reproducible UI
+  check pass (`plugin-validation.log`, `spec-validation.log`, `ui-check.log`);
+  `git diff --check` passes. Reproducibility check does not rewrite dist.
+
+### Separate per-edit logging instruction follow-up
+
+The parent updated ONLY artifact-capture.md and its new artifact-edit-policy tests;
+this progress owner updated the development/main entrypoints, docs and OpenSpec to
+match the user's explicit **EACH EDIT** requirement. Every actual create/first
+insert/append/replacement/clear across artifact types needs actual source readback
+and exact material or verified accessible immutable revision, awaited session
+emission before the next application-controlled edit, and per-operation coverage
+on branches that actually executed. An empty creation baseline requires actual
+observation and is internal evidence, not an empty public card. Requests/acks stay
+distinct from observed state; gaps/races/redaction/access/privacy remain honest.
+Final state never substitutes for earlier edits; no wider access is granted.
+The parent's three policy regressions and the entrypoint regression pass in the
+full 262-test suite. This changes instructions, not artifact runtime behavior or
+the retained native evidence; diagnosed artifact-version bugs are NOT claimed fixed.
+
+No reload/refresh, live write, Figma/Notion edit, commit, archive, reset or additional
+agent occurred. The isolated CLI still uses its frozen installed copy: a separately
+authorized snapshot refresh/reload remains necessary to use these source changes,
+and a later separately authorized native run would be needed to prove compliance.
+Tasks **8.1** (explicit visual acceptance), **18.5** (unsupported comment replies)
+and **27.3** (failed previous native capture/render) remain open; no acceptance,
+new native smoke success or automatic real-host opening is claimed.
+
+Independent parent verification reproduced **262/262** passing unit tests, strict
+plugin/OpenSpec validation, reproducible UI and a clean diff check. The parent
+also confirmed main transcript lines 365/368: `begin` followed by opening the
+static file. A separate real Chromium run passed at
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/progress-parent-verified-v2/report.json`,
+including actual stage updates, exact final navigation, mobile reduced motion
+and usable offline HTML after shutdown, with no unexpected browser errors or
+external requests. Its initial v1 check failed because intentional server
+shutdown produced Chromium's `ERR_SOCKET_NOT_CONNECTED` variant. The checker now
+classifies that variant as expected only inside the deliberate disconnect phase;
+all other console errors remain failures. No product-runtime change was needed.
+
+## Concurrent generation improvements, artifact diffs and header layout (2026-11-15)
+
+The user authorized all five latency recommendations and the artifact repair in
+the same concurrent implementation wave, followed by integration and independent
+review. An additional concurrent UI task moved prompt state into the upper-right
+header and replaced inner-panel scrolling with document scrolling. Implementation
+did not authorize a paid/native/application run, source write or CLI reload.
+
+### Implemented paths and unchanged quality boundaries
+
+- `source-grounding.mjs` creates a closed candidate/original-source-bound private
+  report before either current copy claim. It catches unsupported literal
+  implementation details without editing prose, claiming semantic truth or
+  consuming/refunding a claim. Unresolved quality is not a render gate. Author-only
+  assistance is never forwarded to the independent copy callback or public output.
+- `postrun-package.mjs` builds the ordinary bundle/projection from exact structured
+  application logs, actual explicit context/targets/emitters and a per-executed-
+  operation checklist. It preserves requests, receipts, observations, empty states,
+  source identity, qualification, ordering and gaps. It neither observes a running
+  application nor invents metadata, baselines or effects. Author selection and
+  interpretation remain separate.
+- `review-codec.mjs` losslessly compacts complete packets and genuine responses with
+  candidate/rule/inventory-bound references. `packet-copy`/`packet-fact` use this
+  format; explicit `*-full` commands retain full compatibility. Expansion restores
+  only identities/paths/digests and explicit wire aliases, then runs the original
+  full validators. No passage, rule, judgment, finding, clock or approval is filled
+  in. Small packets can grow.
+- `review-capture.mjs` supports the observed completed async native hand-back plus
+  exact parent/dispatch/agent/final-receipt correlation and the original strict
+  end-turn format. Unsupported foreground/future formats remain unsupported; a
+  genuine complete JSON hand-back can still be saved unchanged. No path guessing,
+  transcript polling, format-only model retry or file-based authenticity claim.
+- `source-navigation.mjs` adds private claim/event/source/artifact navigation and
+  supported read suggestions to factual packets. The checker still performs its
+  own authorized reads and reports genuine read clocks, inaccessible history and
+  uncertainty. Guild `from_id` means AFTER, not an invented older-page cursor.
+
+Native role instructions and actual `inspect.mjs` commands wire these paths
+together. Sonnet author/copy, distinct restricted Opus factual review, two immutable
+copy claims, three render attempts, source/content/safety validation, normal full
+UI and private optional-quality semantics remain unchanged. Asynchronous resume
+receipts do not let the parent exit before final native child completion.
+
+Independent review additionally found and fixed duplicate-key review JSON that
+could discard an earlier verdict, codec intermediate-memory amplification, and
+sub-millisecond source ordering that had been truncated by `Date.parse`. Strict
+duplicate-key parsing now applies before review/packet expansion. Codec resource
+limits fail with typed bounds rather than truncation; a 2 MiB/70-wrapper packet
+round-trips under a 128 MiB heap. Precise source times retain their original bytes
+and nanosecond comparison, with conservative outward millisecond display bounds.
+
+### Artifact root cause and retained-source regression
+
+The supplied retired loopback page belonged to Claude session
+`9d584e51-ca23-40a5-b977-3b0df2e8d7c1`. Its three content-free metadata
+acknowledgments were rejected as missing material. Sequence gaps then correctly
+invalidated every predecessor, leaving correct single-sided versions but no
+`before` for the diff renderer. This was not a missing green CSS rule. The corrected
+collector retains those acknowledgments as receipts, not readback or gaps.
+An unresolved pre-creation target is retained only as explicit non-material gap;
+no target alias or empty baseline is invented. See
+`docs/visualization-artifact-diff-rca.md` for exact sources and event IDs.
+
+Independent combined proof:
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/integrated-artifact-diff-v2/report.json`.
+All seven original files, including the historical HTML, remain byte-identical.
+New offline collection/assembly uses all 11 exact records. The genuinely empty
+initial document remains an internal baseline without an empty public card.
+Step 4 shows **1,389 additions** against the real newline baseline; step 6 shows
+**1,390 unchanged characters plus 4,151 SEC additions**. Exact source SHA-256s:
+
+- Initial: `01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b`.
+- First-only: `4edfd7100358ae2b1d8fb80805e8afa0da5ae8732891c203426759a49a5b29d9`.
+- Final: `f11b863e2ac8ec5bc233e54018ed451b9ba077df954fce329e04904ee98dc58c`.
+
+The initial combined v1 checker wrongly required the *new* header/scroll renderer
+to reproduce the old presentation byte-for-byte. The corrected v2 report records
+that presentation difference explicitly while retaining exact old-file assertions.
+No old HTML, snapshot, source or reviewer judgment was rewritten. Original gap
+prose remains historical, not newly authored approval. This is offline source
+reassembly, not a native generation, independent service verification or substitute
+for the user's original artifact.
+
+### Header prompt controls and document scrolling
+
+The normal UI now shows the prompt-item count and Review prompt control in the
+upper-right application header. There is no bottom bar, reserved footer space,
+shopping wording or basket icon. The document scrolls over header, queue, steps
+and blank areas; scenario/timeline panels have no private scroller. Compact desktop
+headers may stick; narrow/tall headers scroll normally. Dialog/textarea scrolling
+remains intentional. Exact in-memory inclusion/edit/remove, technical-fix payload,
+manual copy fallback, concern Dismiss/focus, animation and reduced motion remain.
+
+Independent real Chromium proof:
+`/private/var/folders/jb/h186fcqx3wx5hkym0wtct3000000gn/T/opencode/integrated-header-prompt-v1/report.json`.
+Ten synthetic/exact-retained-source viewport cases cover 1728×873, 1280×900,
+390×844, 390×560 and 320×560. Actual wheel input scrolls the document over each
+page region while inner panel scroll positions remain zero. Long copy, keyboard
+focus, dialogs, Dismiss, exact prompt values, stubbed clipboard fallback,
+forced colors, reduced motion, strict hash-only CSP, source immutability and no
+overflow pass. The retained-source diff checker separately passes desktop,
+mobile-reduced and forced-color views, with semantic additions and non-color signs.
+Both reports contain no console errors or external requests. Screenshots were
+read visually; no personal browser or actual clipboard/submission was used.
+
+### Final local verification and measurement limits
+
+- **504 cases: 502 passed, zero failed, two optional retained-candidate checks
+  skipped**, using explicit read-only paths for all three genuine historical
+  reviewer hand-backs. Native/forwarded parsing returns their exact original JSON,
+  including the factual clock capability diagnostic rather than invented times.
+  All four source transcripts retain their hashes. Log/audit:
+  `.../opencode/generation-final-verified-1x4vy6rd.log` and `.log.audit.json`.
+  Without explicit retained paths all five retained-file checks are opt-in skips;
+  no external path is discovered automatically. A failed optional local author
+  notification remains a safe private diagnostic, not a review/render gate or an
+  exception-text leak. This path adds no model or independent reviewer dispatch.
+- **13/13 expected synthetic fixture outcomes**, 12 HTML outputs, existing one
+  expected exhaustion: `.../opencode/generation-integrated-fixtures-v1/report.json`.
+- Strict local directory plugin validation, OpenSpec validation, whitespace checks
+  and reproducible UI assets all pass. Directory validation is not a portal safety
+  scan or policy review.
+- Final exact round-trip packet measurement on the offline retained-source
+  candidate: copy **118,321 → 111,969 bytes (5.37%)**, facts including source index
+  **210,574 → 157,755 bytes (25.08%)**. Median five local pack operations were
+  approximately 13.77 ms / 18.80 ms. The complete input expands exactly and the
+  candidate remains unchanged. Report: `.../opencode/generation-packet-final-measurement-v1.json`.
+  Earlier guide/index samples differ; byte savings are not measured native time.
+
+No paid/model/native/application run, observer, source/service write, CLI refresh/
+reload, Figma/Notion edit or reply, install, commit, archive or merge occurred.
+Known tracked historical inference remains **$40.6191975**, excluding manual smoke
+usage and application charges. The proposed 4–6 minute saving remains an estimate;
+no faster-generation or fresh quality/acceptance claim is made. The running isolated
+CLI still uses its older frozen snapshot. Tasks **8.1**, **18.5** and failed **27.3**
+remain open.
+
+## General operation stories and private validation (2026-11-15)
+
+The user distinguished meaningful application work from implementation-only
+validation, then explicitly required general principles rather than rules tied to
+one service, source or transformation. Goal-relevant external interactions remain
+eligible steps. Internal work is eligible when the original specification explicitly
+requires it and actual evidence supports it. Keep distinct input selection,
+specified processing and resulting changes separate by purpose. Validation mechanics
+must not become a row, renamed row or public explanation of another row.
+
+### Cause and implemented boundary
+
+The former input 1.0 packager created one occurrence for each structured log stage.
+An author could therefore select a request and its later observation as two events;
+the source-bound version correctly followed the latter evidence, but the public story
+exposed a validation procedure instead of showing the result on its business action.
+This was not a reason to move later content onto an earlier point timestamp or to
+infer execution from a submitted request.
+
+Opt-in postrun input **1.1** and projection **2.1** now group exact records by pinned
+stream and operation into one source-bound occurrence. The actual enclosing interval
+covers the original request through the resulting observation, without claiming an
+exact mutation instant or causation. Only the supported result becomes the inline
+artifact/diff; requests and receipts remain private evidence, not content cards.
+Original input **1.0**, projection **2.0**, record **1.0** and historical contracts
+retain their behavior. Normal draft **1.4** / source-bound snapshot **1.10** remains
+the same full renderer with private optional genuine judgments, not a new mode.
+
+The closed operation roles are `goal_action`, `specified_process` and `supporting`.
+A specified process needs original-specification references and actual `process_result`
+evidence under record **1.1**. A pointer resolving to specification text is not proof
+of semantic relevance or execution. Supporting operations cannot be selected by a
+draft or smuggled into a source-bound snapshot. Current grouped public serialization
+omits private validation envelopes and artifact dumps, including from opened source
+details; copied feedback retains business context, not the proof procedure. Detailed
+collection gaps remain private while meaningful source uncertainty remains visible.
+This does not rewrite verbatim external artifact content or invent missing events.
+
+Actual empty versions remain internal comparison baselines. Missing state interrupts
+continuity; overlapping changes to the same physical target suppress ambiguous
+attribution instead of assigning a shared later state to one action. No observer,
+source subscription, permission expansion, new logging API or application rerun is
+introduced. Build/author/copy/factual guidance and the general
+`references/operation-timeline.md` contract now describe the same boundaries.
+
+### Independent local checks
+
+- **509 cases: 507 passed, zero failed, two optional retained-candidate checks skipped**.
+  Five new operation tests cover grouped identity/time/source binding, private and
+  unselectable supporting work, explicitly specified processes, real empty/missing
+  baselines, successive action diffs, overlapping writes and legacy compatibility.
+  Three genuine historical handbacks were supplied explicitly; all four original
+  source transcripts retain their hashes, and parsing does not convert the genuine
+  factual clock diagnostic into an approval. Log/audit:
+  `.../opencode/operation-complete-verified-o0zufkfw.log` and `.log.audit.json`.
+- **13/13 expected synthetic fixture outcomes**, 12 HTML outputs and the existing
+  one expected renderer exhaustion:
+  `.../opencode/operation-story-final-eccrljgn/fixtures/report.json`.
+- Real clean Chromium at 1280×900, 390×700, 390×560 reduced motion and desktop forced
+  colors shows four scripted business steps across multiple services, an explicitly
+  specified internal process and two exact source-backed diffs on their actions.
+  All evidence disclosures were opened and the local feedback prompt checked:
+  no validation row, envelope or explanatory procedure appeared. Source JSON and
+  CRLF bytes remain unchanged; DOM-only comparisons account for HTML newline
+  normalization. The initial v1 checker incorrectly expected literal CRLF in DOM
+  text; the corrected v2 changes only that comparison, not source content.
+  Report and visually read desktop/mobile screenshots:
+  `.../opencode/operation-timeline-browser-v2/`. No console errors, external requests
+  or horizontal overflow; no OS clipboard or submission action.
+- Exact retained `9cfdeeb0-abda-4fd5-8904-d94d5eb82d6f` records also repackage offline.
+  Only protocol/role declarations were added to a copied input; session/context bytes
+  and the original file remain unchanged. Three mutation records form one action.
+  The first insertion has the actual one-character baseline and 897-character result.
+  The later 5,565-character result still has **no before**: the historical source
+  selection's query-bearing URL remains invalid and its sequence gap is retained.
+  No historical source was silently sanitized, missing specified process invented,
+  or second comparison fabricated. Source SHA-256:
+  `e0c770156e9a64b5c06005838321abee3d78e6a499cdabe02e9209d66c4f4aa6`.
+  Report: `.../opencode/operation-retained-proof-YFfDK2/report.json`.
+- Strict local directory-plugin/OpenSpec validation, whitespace checks and
+  reproducible bundled UI pass. Directory validation is not a portal safety/policy
+  scan. Browser fixtures and offline packaging are not a new native generation,
+  independent service verification, application instrumentation or user acceptance.
+
+All abbreviated paths use the approved temp base stated above. No paid/native/model/
+application run, new source call, CLI refresh/reload, Figma/Notion mutation or reply,
+install, commit, archive or merge occurred. The previously reloaded 189-file isolated
+plugin is unchanged and does not yet contain this source update. Tracked historical
+inference remains **$40.6191975**, excluding manual smokes/application charges.
+Section **35** is complete locally; **8.1**, **18.5** and failed **27.3** remain open.
+
+## Native replay passes, presentation follow-up and regression case (2026-11-15)
+
+The first two review-only forks generated pages but failed feedback acceptance.
+The third genuine CLI fork, `1166649c-028e-4922-83b0-6bf0b5b9f74d`, completed all
+four foreground agents in 18m50s for **$10.8269197** incremental inference. Its nine
+business steps retain both source queries and both explicitly requested processes;
+the two material differences belong to the two insertion actions, not validation
+events. Actual initial text was one newline, followed by 897 and 5,565 UTF-16
+units. The first comparison adds 896 units; the second adds 4,668. Existing
+captured-field projection 1.0 preserves that actual empty baseline without
+widening bundle 1.0, fabricating source content or backdating observations.
+
+Independent source/renderer and real Chromium checks passed against the native
+artifact. This establishes the requested core UI behavior, not independent source
+truth, universal agent compliance, quality approval or explicit user acceptance.
+The native handoff was still more verbose than requested. The original sources,
+earlier failed pages, private judgments and consumed claims remain unchanged.
+Tracked inference is now **$66.2466479**, excluding manual smokes/application
+charges. No further paid invocation was made for the follow-up below.
+
+Only after that pass, the presentation follow-up added `react-diff-view` 3.3.3
+(MIT), composed with the owned shadcn Card, and trailing `lucide-react` 1.73.0
+(ISC) external-link icons. Changes display by default; complete unchanged regions
+remain accessible through disclosure. Safe resource links name their actual type.
+Dismiss is an inline link-style real button. The duplicate visible prompt heading
+is removed; the animated count, accessible status and review control remain.
+All runtime assets remain offline with hash-only CSP.
+
+The production renderer read the exact successful native snapshot, SHA-256
+`6a88fc0baff9609881dc564ab41aecd67aad9addb54e1bc071b0529280445e47`, without
+changing its content digest or genuine judgments. The presentation-only output is
+`artifact-ux-parent-v1/actual-review.html`, SHA-256
+`8d420ced9fe081492f6c0e933f769c394809fda47b16ea64307a379f34364350`.
+The original native HTML remains unchanged. **21** independent browser checks
+passed, including actual desktop/mobile inputs, context reveal, Unicode/CRLF,
+forced colors, reduced motion, source safety and manual feedback. No unexpected
+console errors or external requests occurred. Actual screenshots were read.
+One integrated-browser open timed out at connection; it was not retried or
+reported as an observed open. The local HTML and real Chromium screenshots are
+the honest display fallback, not a new native generation or review.
+
+The new case `evals/visualize-scenario-run/operation-timeline-replay` uses only
+fictional raw source fixtures and case-local service mocks. It contains no private
+run data, authored timeline, draft, review or HTML answer. Its isolated scaffold,
+production-verifier positive/negative cases and source immutability checks pass
+locally. File graders and an actual verifier-command witness follow the supported
+eval format; this agent-visible verifier is not a tamper-proof security boundary.
+Old cases and graders are unchanged. **The new case has not been run as a paid
+native eval.**
+
+Final local verification: **523 cases / 521 passed / zero failures / two optional
+skips** (`operation-ux-eval-final-fe7l_qjy.log`); **13/13** expected fixture outcomes
+and 12 HTML files (`operation-ux-eval-fixtures-v1/report.json`); strict directory
+plugin/OpenSpec validation, whitespace and reproducible UI checks pass. Browser
+proof is `artifact-ux-parent-v1/report.json`; native core proof is under
+`operation-ui-replay-7v4hlpny/core-feedback-audit/`. Abbreviated paths use the
+approved temp base. No application rerun, new source call, installed CLI refresh,
+Figma/Notion mutation, commit or archive accompanied this follow-up. The installed
+189-file CLI snapshot is unchanged. **8.1**, **18.5** and historical **27.3** remain
+open; the still-visible `Comment` label is not falsely recorded as `Add comment`.
